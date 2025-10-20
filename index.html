@@ -12,11 +12,8 @@
     --bg-dark: #0d1117; /* Основной фон (почти черный) */
     --card-bg: #161b22; /* Фон карточек */
     --text-color: #e6edf3; /* Светлый текст */
-    --gradient-blue: linear-gradient(135deg, #007bff, #0056b3);
     --gradient-button: linear-gradient(90deg, #007bff, #00c6ff);
     --accent-red: #dc3545;
-    --accent-yellow: #ffc107;
-    /* Новый акцент для кнопки канала */
     --channel-gradient: linear-gradient(90deg, #1e90ff, #00bfff); 
 }
 * { 
@@ -74,10 +71,10 @@ h2 { font-size: 1.8em; margin: 20px 0; border-bottom: 2px solid rgba(255,255,255
 h3,h4 { margin:15px 0; }
 p { margin:10px 0; line-height:1.6; color: #b0b8c2; } 
 
-/* === Главное меню (сетка для 8 элементов) === */
+/* === Главное меню (БЕЗ ИЗМЕНЕНИЙ) === */
 .menu-grid { 
     display:grid; 
-    grid-template-columns:1fr 1fr; /* 2 колонки по умолчанию */
+    grid-template-columns:1fr 1fr; 
     gap:15px; 
     max-width:500px; 
     margin:20px auto; 
@@ -153,7 +150,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     box-shadow:0 6px 15px rgba(30, 144, 255, 0.7);
 }
 
-
 /* === Кнопка Назад === */
 .back-button {
     position: absolute;
@@ -176,138 +172,143 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 .back-button i { margin-right: 5px; }
 
 
-/* === ТАРИФЫ (УЛУЧШЕННЫЙ ДИЗАЙН) === */
+/* === ТАРИФЫ (НОВЫЙ ВЕРТИКАЛЬНЫЙ ДИЗАЙН) === */
 .tariffs-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 15px; 
-    max-width: 600px; /* Увеличим для вместимости */
+    max-width: 500px; /* Оптимальная ширина для вертикального списка */
     margin: 20px auto;
 }
 /* Карточка тарифа - новый вид */
 .tariff-card {
     background: var(--card-bg);
     border-radius: 15px;
-    padding: 15px; 
+    padding: 20px; 
     color: var(--text-color);
-    text-align: center;
+    text-align: left; /* Текст слева */
     transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    border: 2px solid transparent; 
+    border: 1px solid rgba(255,255,255,0.05); 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; /* Центрируем по вертикали */
+    flex-wrap: wrap; /* Для мобильной адаптации */
     position: relative;
     overflow: hidden;
-    display: flex; 
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 280px; /* Увеличим высоту для контента */
 }
 .tariff-card:hover {
-    transform: translateY(-5px);
+    transform: scale(1.01);
     box-shadow: 0 10px 20px rgba(0,123,255,0.3);
 }
 /* Выделение популярного тарифа */
 .tariff-card.popular {
     border-color: var(--primary-color);
-    background: #1f262f; /* Немного светлее, чтобы выделить */
-    box-shadow: 0 0 20px rgba(0,123,255,0.5);
+    background: #1f262f; 
 }
 .tariff-card.popular::before {
-    content: "🔥 Популярный";
+    content: "🔥 ХИТ";
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    padding: 5px 0;
+    right: 0;
+    padding: 5px 10px;
     background: var(--secondary-color);
     color: #fff;
     font-size: 0.8em;
     font-weight: bold;
-    border-radius: 13px 13px 0 0;
+    border-radius: 0 14px 0 10px;
     z-index: 5;
 }
-.tariff-card.popular h3 {
-    margin-top: 20px; /* С учетом баннера */
-}
 
+/* Блок с ценой и названием */
+.tariff-info {
+    flex: 1; /* Занимает доступное место слева */
+    min-width: 150px; /* Минимальная ширина, чтобы не сжимался */
+}
 /* Заголовок тарифа */
 .tariff-card h3 {
-    margin: 0 0 5px;
-    font-size: 1.3em;
+    margin: 0;
+    font-size: 1.5em;
     color: var(--primary-color);
 }
 /* Цена */
 .price { 
-    font-size: 2.2em; 
+    font-size: 1.8em; 
     font-weight: 700; 
-    margin: 5px 0 15px; 
+    margin: 5px 0 0; 
     color: var(--text-color);
 }
 .price span {
-    font-size: 0.5em;
+    font-size: 0.6em;
     font-weight: normal;
     color: #b0b8c2;
-    display: block;
-    margin-top: -5px; 
-}
-/* Список преимуществ */
-.tariff-features {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 20px;
-    text-align: left;
-    flex-grow: 1; /* Чтобы список занимал место */
-}
-.tariff-features li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    color: #b0b8c2;
-    font-size: 0.9em;
-}
-.tariff-features li i {
-    color: var(--secondary-color);
-    margin-right: 8px;
-    font-size: 1em;
+    margin-left: 5px; 
 }
 
+/* Список преимуществ */
+.tariff-features-list {
+    flex: 2; /* Занимает в 2 раза больше места, чем кнопка */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 15px;
+    min-width: 250px; /* Минимальная ширина для списка */
+}
+.tariff-features-list div {
+    text-align: center;
+    font-size: 0.9em;
+    color: #b0b8c2;
+    margin: 5px 0;
+}
+.tariff-features-list i {
+    color: var(--secondary-color);
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 5px;
+}
+.tariff-features-list .highlight i {
+    color: var(--primary-color); /* Выделим ключевой параметр */
+}
+
+/* Кнопка */
 .tariff-card .button {
     width: 100%;
-    max-width: none;
-    margin: 0; /* Удаляем лишние отступы */
+    max-width: 150px; /* Фиксированная ширина кнопки */
+    margin: 0; 
     padding: 10px 0; 
     font-size: 1em;
     border-radius: 8px;
     transition: 0.3s;
-}
-.tariff-card .button:hover {
-    transform: translateY(-1px);
+    text-align: center;
+    flex-shrink: 0; /* Чтобы кнопка не сжималась */
 }
 
-/* Мобильная адаптация для тарифов */
-@media (max-width: 550px) {
-    .tariffs-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 колонки на средних экранах */
-        gap: 10px;
-    }
+/* Мобильная адаптация */
+@media (max-width: 450px) {
     .tariff-card {
-        min-height: 260px;
-        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-bottom: 70px; /* Место для кнопки внизу */
     }
-    .tariff-card h3 { font-size: 1.1em; }
-    .price { font-size: 1.8em; }
-    .tariff-features li { font-size: 0.85em; }
-}
-@media (max-width: 380px) {
-    .tariffs-container {
-        grid-template-columns: 1fr; /* 1 колонка на самых узких экранах */
+    .tariff-info {
+        margin-bottom: 15px;
     }
-    .tariff-card {
-        min-height: 10px; /* Адаптируем высоту */
+    .tariff-features-list {
+        padding: 0;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .tariff-card .button {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        max-width: 120px;
     }
 }
 
 
-/* === Стили для FAQ, Install, Status и т.д. (ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ) === */
+/* === Стили для FAQ, Install, Status и т.д. (БЕЗ ИЗМЕНЕНИЙ) === */
 .install-section { margin-top: 30px; padding: 15px; background: #1a202c; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 .faq-card { background: var(--card-bg); border-radius: 10px; margin: 10px 0; max-width: none; box-shadow: 0 3px 8px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
 .faq-header { padding: 15px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: #1f262f; transition: background 0.2s; color: var(--text-color); }
@@ -373,52 +374,54 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     
     <div class="tariffs-container">
         <div class="tariff-card">
-            <h3>1 Месяц</h3>
-            <div class="price">100 руб<span>/ 30 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> 1 устройство</li>
-                <li><i class="fas fa-globe"></i> Стандартный набор серверов</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>1 Месяц</h3>
+                <div class="price">100 руб<span>/ 30 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Купить</a>
         </div>
         
         <div class="tariff-card popular">
-            <h3>2 Месяца</h3>
-            <div class="price">200 руб<span>/ 60 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> **Макс. скорость**</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> **2 устройства**</li>
-                <li><i class="fas fa-globe"></i> Все серверы доступны</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>2 Месяца</h3>
+                <div class="price">200 руб<span>/ 60 дней (🔥 Лучшая цена)</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Купить</a>
         </div>
 
         <div class="tariff-card">
-            <h3>3 Месяца</h3>
-            <div class="price">300 руб<span>/ 90 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> 3 устройства</li>
-                <li><i class="fas fa-globe"></i> Все серверы доступны</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>3 Месяца</h3>
+                <div class="price">300 руб<span>/ 90 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Купить</a>
         </div>
-    </div>
-    
-    <div class="tariffs-container" style="grid-template-columns: 1fr;">
-        <div class="tariff-card" style="max-width:320px; margin: 0 auto; min-height: 250px;">
-            <h3>Пол года</h3>
-            <div class="price">600 руб<span>/ 180 дней (Экономия 100 руб)</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-bolt"></i> **Приоритетный доступ**</li>
-                <li><i class="fas fa-headset"></i> Приоритет в поддержке</li>
-                <li><i class="fas fa-desktop"></i> 5 устройств</li>
-                <li><i class="fas fa-globe"></i> Премиум-серверы</li>
-            </ul>
+        
+        <div class="tariff-card">
+            <div class="tariff-info">
+                <h3>Пол года</h3>
+                <div class="price">600 руб<span>/ 180 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Купить</a>
         </div>
     </div>
@@ -431,52 +434,54 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     
     <div class="tariffs-container">
         <div class="tariff-card">
-            <h3>1 Месяц</h3>
-            <div class="price">100 руб<span>/ 30 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> 1 устройство</li>
-                <li><i class="fas fa-globe"></i> Стандартный набор серверов</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>1 Месяц</h3>
+                <div class="price">100 руб<span>/ 30 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Продлить</a>
         </div>
         
         <div class="tariff-card popular">
-            <h3>2 Месяца</h3>
-            <div class="price">200 руб<span>/ 60 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> **Макс. скорость**</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> **2 устройства**</li>
-                <li><i class="fas fa-globe"></i> Все серверы доступны</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>2 Месяца</h3>
+                <div class="price">200 руб<span>/ 60 дней (🔥 Лучшая цена)</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Продлить</a>
         </div>
 
         <div class="tariff-card">
-            <h3>3 Месяца</h3>
-            <div class="price">300 руб<span>/ 90 дней</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Неограниченный трафик</li>
-                <li><i class="fas fa-desktop"></i> 3 устройства</li>
-                <li><i class="fas fa-globe"></i> Все серверы доступны</li>
-            </ul>
+            <div class="tariff-info">
+                <h3>3 Месяца</h3>
+                <div class="price">300 руб<span>/ 90 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Продлить</a>
         </div>
-    </div>
-
-    <div class="tariffs-container" style="grid-template-columns: 1fr;">
-        <div class="tariff-card" style="max-width:320px; margin: 0 auto; min-height: 250px;">
-            <h3>Пол года</h3>
-            <div class="price">600 руб<span>/ 180 дней (Экономия 100 руб)</span></div>
-            <ul class="tariff-features">
-                <li><i class="fas fa-bolt"></i> **Приоритетный доступ**</li>
-                <li><i class="fas fa-headset"></i> Приоритет в поддержке</li>
-                <li><i class="fas fa-desktop"></i> 5 устройств</li>
-                <li><i class="fas fa-globe"></i> Премиум-серверы</li>
-            </ul>
+        
+        <div class="tariff-card">
+            <div class="tariff-info">
+                <h3>Пол года</h3>
+                <div class="price">600 руб<span>/ 180 дней</span></div>
+            </div>
+            <div class="tariff-features-list">
+                <div><i class="fas fa-infinity"></i> Безлимитный трафик</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+            </div>
             <a href="https://t.me/on1xVPN_bot" class="button">Продлить</a>
         </div>
     </div>
