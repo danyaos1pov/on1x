@@ -14,6 +14,8 @@
     --text-color: #e6edf3; /* Светлый текст */
     --gradient-blue: linear-gradient(135deg, #007bff, #0056b3);
     --gradient-button: linear-gradient(90deg, #007bff, #00c6ff);
+    --accent-red: #dc3545;
+    --accent-yellow: #ffc107;
 }
 * { 
     box-sizing: border-box; 
@@ -26,19 +28,19 @@ body {
     color: var(--text-color); 
     text-align: center; 
     min-height: 100vh; 
-    padding-bottom: 50px; /* Чтобы нижний контент не прилипал */
+    padding-bottom: 50px; 
 }
 a { text-decoration: none; color: inherit; }
 
 /* === Плавные переходы страниц (улучшено) === */
 .page {
     display: none;
-    padding: 20px 15px; /* Уменьшаем горизонтальный паддинг для моб. */
+    padding: 20px 15px; 
     opacity: 0;
-    transform: translateY(10px); /* Меньший сдвиг */
+    transform: translateY(10px); 
     transition: opacity 0.3s ease, transform 0.3s ease;
     position: relative;
-    max-width: 600px; /* Ограничиваем ширину контента */
+    max-width: 600px; 
     margin: 0 auto;
 }
 .page.active {
@@ -47,14 +49,14 @@ a { text-decoration: none; color: inherit; }
     transform: translateY(0);
 }
 
-/* === Логотип и анимация (более тонкий пульс) === */
+/* === Логотип и анимация === */
 .pulse-container { position: relative; width: 120px; height: 120px; margin: 30px auto; }
 .pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:4px solid var(--primary-color); object-fit: cover; }
 .pulse-circle {
     position: absolute; top:50%; left:50%; width:120px; height:120px;
-    border-radius:50%; border:1px solid rgba(0,123,255,0.5); /* Более светлый */
+    border-radius:50%; border:1px solid rgba(0,123,255,0.5); 
     transform: translate(-50%,-50%) scale(0);
-    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Более плавное */
+    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
 }
 .pulse-circle:nth-child(2) { animation-delay:0.5s; }
 .pulse-circle:nth-child(3) { animation-delay:1s; }
@@ -68,10 +70,27 @@ a { text-decoration: none; color: inherit; }
 h1 { font-size: 2.2em; margin-bottom: 5px; color: var(--primary-color); }
 h2 { font-size: 1.8em; margin: 20px 0; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
 h3,h4 { margin:15px 0; }
-p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий текст */
+p { margin:10px 0; line-height:1.6; color: #b0b8c2; } 
 
-/* === Главное меню (более выразительные карточки) === */
-.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:500px; margin:20px auto; }
+/* === Главное меню (сетка для 7 элементов) === */
+.menu-grid { 
+    display:grid; 
+    grid-template-columns:1fr 1fr; 
+    gap:15px; 
+    max-width:500px; 
+    margin:20px auto; 
+}
+@media (min-width: 400px) and (max-width: 500px) {
+    .menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+@media (max-width: 399px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 .menu-card { 
     background: var(--card-bg); 
     padding:25px 15px; 
@@ -81,7 +100,8 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
     font-weight:600; 
     color: var(--text-color);
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05); /* Легкий контур */
+    border: 1px solid rgba(255,255,255,0.05); 
+    min-height: 100px; 
 }
 .menu-card:hover { 
     transform: translateY(-3px); 
@@ -90,10 +110,10 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
 }
 .menu-card i { font-size:28px; margin-bottom:10px; color: var(--primary-color); }
 
-/* === Кнопки (более плоский дизайн) === */
+/* === Кнопки === */
 .button { 
     display:block; width:100%; max-width:250px; margin:20px auto; padding:12px 0; 
-    border-radius:10px; /* Угловая кнопка */
+    border-radius:10px; 
     background: var(--gradient-button); 
     color:white; font-weight:bold;
     transition:0.3s; 
@@ -122,11 +142,82 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
     transition: 0.2s;
     padding: 5px 10px;
     border-radius: 5px;
+    z-index: 20;
 }
 .back-button:hover { color: #00c6ff; background: rgba(255,255,255,0.05); }
 .back-button i { margin-right: 5px; }
 
-/* === Тарифы (более структурировано) === */
+/* === Раздел Установки / FAQ (Основные стили) === */
+
+/* Контейнеры для V2RayTun и Happ */
+.install-section {
+    margin-top: 30px;
+    padding: 15px;
+    background: #1a202c; /* Отдельный фон для секции */
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.install-section h3 {
+    font-size: 1.5em;
+    color: var(--accent-yellow);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+/* Карточки для OS внутри секции */
+.faq-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin: 10px 0; /* Убрал auto, чтобы прилипали к краям install-section */
+    max-width: none; /* Убрал ограничение ширины */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.faq-header {
+    padding: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1f262f;
+    transition: background 0.2s;
+    color: var(--text-color);
+}
+.faq-header:hover { background: #242a32; }
+.faq-header i.arrow { transition: transform 0.2s; }
+.faq-header.active i.arrow { transform: rotate(90deg); } 
+.faq-body {
+    display: none;
+    padding: 15px;
+    text-align: left;
+    background: var(--card-bg);
+    border-top: 1px solid #1f262f;
+    color: #b0b8c2;
+}
+.faq-body p, .faq-body ul {
+    text-align: left;
+    margin-bottom: 10px;
+}
+.faq-body a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.faq-body strong {
+    color: var(--primary-color);
+}
+.faq-body ol {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+.faq-body ol li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+/* === Тарифы / Задания / Победители / Статус (без изменений) === */
 .tariffs-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -151,13 +242,13 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
 }
 .tariff-card.popular { 
     border: 2px solid var(--primary-color); 
-    background: linear-gradient(145deg, #1a202c, #161b22); /* Немного другой фон для акцента */
+    background: linear-gradient(145deg, #1a202c, #161b22); 
 }
 .popular-badge {
     position: absolute;
-    top: 15px; /* Смещаем вниз */
+    top: 15px; 
     right: 15px;
-    background: #ffc107; /* Желтый акцент */
+    background: var(--accent-yellow); 
     color: #0d1117;
     font-weight: bold;
     font-size: 12px;
@@ -165,85 +256,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
     border-radius: 50px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-.tariff-card h3 {
-    margin: 0 0 5px;
-    font-size: 1.4em;
-    color: var(--primary-color);
-}
-.price { 
-    font-size: 2.2em; 
-    font-weight: 700; 
-    margin: 5px 0 15px; 
-    color: var(--text-color);
-}
-.price span {
-    font-size: 0.5em;
-    font-weight: normal;
-    color: #b0b8c2;
-    display: block;
-}
-.tariff-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0;
-    text-align: left;
-}
-.tariff-card ul li {
-    padding: 5px 0;
-    display: flex;
-    align-items: center;
-    color: #b0b8c2;
-    font-size: 0.9em;
-}
-.tariff-card ul li i {
-    margin-right: 8px;
-    color: var(--secondary-color);
-    font-size: 1em;
-}
-.tariff-card .button {
-    width: 100%;
-    max-width: none;
-    margin: 10px auto 0;
-    padding: 10px 0;
-    border-radius: 8px;
-    background: var(--gradient-button);
-}
-.tariff-card .button:hover { transform: translateY(-1px); }
-
-/* === FAQ (более чистый аккордеон) === */
-.faq-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    margin: 10px auto;
-    max-width: 500px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-.faq-header {
-    padding: 15px;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #1f262f;
-    transition: background 0.2s;
-    color: var(--text-color);
-}
-.faq-header:hover { background: #242a32; }
-.faq-header i.arrow { transition: transform 0.2s; }
-.faq-header.active i.arrow { transform: rotate(90deg); } /* Стрелка-индикатор */
-.faq-body {
-    display: none;
-    padding: 15px;
-    text-align: left;
-    background: var(--card-bg);
-    border-top: 1px solid #1f262f;
-    color: #b0b8c2;
-}
-
-/* === Бесплатный VPN / Задания === */
 .task { 
     background: var(--card-bg); 
     padding: 20px; 
@@ -254,26 +266,22 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
 }
 .task p { color: var(--text-color); }
 .task a.button { max-width: 200px; }
-
-/* === Победители === */
 .winners ul { 
     list-style: none; 
-    text-align: center; /* Центрируем список */
+    text-align: center; 
     margin-top: 20px; 
     padding: 0; 
 }
 .winners li { 
     background: var(--card-bg); 
     padding: 12px; 
-    margin: 8px auto; /* Центрируем элементы списка */
+    margin: 8px auto; 
     border-radius: 10px; 
     max-width: 400px;
     text-align: center;
     font-weight: 500;
     border-left: 3px solid var(--secondary-color);
 }
-
-/* === Статус систем (более четкие индикаторы) === */
 .status-section {
     background: var(--card-bg);
     border-radius: 15px;
@@ -300,7 +308,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
     gap: 5px;
 }
 .status-dot.green { color: var(--secondary-color); }
-.status-dot.red { color: #dc3545; } /* Красный */
+.status-dot.red { color: var(--accent-red); } 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -318,11 +326,159 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий
 
     <div class="menu-grid">
         <div class="menu-card" onclick="showPage('tariffs')"><i class="fas fa-rocket"></i>Тарифы</div>
-        <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
-        <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-hand-holding-heart"></i>Бесплатный VPN</div>
-        <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-        <div class="menu-card" onclick="showPage('winners')"><i class="fas fa-trophy"></i>Победители</div>
         <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
+        <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
+        <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
+        <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-hand-holding-heart"></i>Бесплатный VPN</div>
+        <div class="menu-card" onclick="showPage('winners')"><i class="fas fa-trophy"></i>Победители</div>
+        <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
+    </div>
+</div>
+
+<div id="install" class="page">
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Установка приложения</h2>
+    <p>Выберите удобный для вас клиент приложения, а затем необходимо устройство:</p>
+
+    <div class="install-section">
+        <h3><i class="fas fa-satellite-dish"></i> V2RayTun (Рекомендуется)</h3>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun App Store</a></p>
+                <ol>
+                    <li>Установите приложение **V2RayTun** из App Store.</li>
+                    <li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li>
+                    <li>В приложении V2RayTun нажмите на **+** и выберите "Импорт через QR-код" или "Import from URL".</li>
+                    <li>Сохраните и активируйте профиль.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Google Play</a></p>
+                <ol>
+                    <li>Установите **V2RayTun** из Google Play.</li>
+                    <li>В боте получите **ссылку** на конфигурацию.</li>
+                    <li>Откройте V2RayTun, нажмите **+** и выберите "Import config from Clipboard" или "Import from URL".</li>
+                    <li>Нажмите кнопку активации (Круг) для запуска.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Desktop</a> (или аналогичный V2Ray клиент)</p>
+                <ol>
+                    <li>Скачайте и установите V2Ray клиент.</li>
+                    <li>В Telegram-боте запросите **конфигурационный файл (.json)**.</li>
+                    <li>Импортируйте файл в программу, затем активируйте соединение.</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Используйте клиент **V2RayX** или **Qv2ray**.</p>
+                <ol>
+                    <li>Установите выбранный клиент.</li>
+                    <li>Используйте **QR-код** или **ссылку** для быстрого импорта конфигурации.</li>
+                    <li>Запустите соединение в клиенте.</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Используйте **Qv2ray** или командную строку V2Ray.</p>
+                <ol>
+                    <li>Установите V2Ray.</li>
+                    <li>Вручную скопируйте и настройте полученный **.json** файл конфигурации.</li>
+                    <li>Запустите службу V2Ray.</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="faq-card">
+            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Установите **V2RayTun** через сторонние магазины или APK файл, если он не доступен в основном Google Play TV.</p>
+                <ol>
+                    <li>Скачайте **V2RayTun APK** и установите на ТВ (через флешку или файловый менеджер).</li>
+                    <li>Используйте **QR-код** для импорта (отсканируйте с телефона).</li>
+                    <li>Активируйте соединение.</li>
+                </ol>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="install-section">
+        <h3><i class="fas fa-smile"></i> Happ</h3>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p>
+                <ol>
+                    <li>Установите приложение **Happ** из App Store.</li>
+                    <li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li>
+                    <li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li>
+                    <li>Сохраните и включите профиль.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
+                <ol>
+                    <li>Установите **Happ** из Google Play.</li>
+                    <li>В боте получите **ссылку** на конфигурацию.</li>
+                    <li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li>
+                    <li>Нажмите кнопку активации.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>На данный момент Happ ориентирован в основном на мобильные устройства. Используйте V2RayTun (или аналоги) для Windows.</p>
+                <p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Happ не имеет официального клиента для macOS. Пожалуйста, используйте V2Ray-клиенты или другие VPN-протоколы.</p>
+                <p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p>
+            </div>
+        </div>
+        
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Использование Happ на Linux не поддерживается.</p>
+                <p><strong>Рекомендация:</strong> Воспользуйтесь клиентами V2Ray, такими как Qv2ray.</p>
+            </div>
+        </div>
+        
+        <div class="faq-card">
+            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p>
+                <p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -469,19 +625,11 @@ function showPage(id){
     setTimeout(()=>{ next.classList.add('active'); }, 10);
 }
 
-// Скрипт для раскрытия FAQ (обновлен)
+// Скрипт для раскрытия FAQ/Установки
 document.querySelectorAll('.faq-header').forEach(header=>{
     header.addEventListener('click',()=>{
         const body = header.nextElementSibling;
         const arrow = header.querySelector('.arrow');
-        
-        // Закрыть все открытые, кроме текущего
-        document.querySelectorAll('.faq-body').forEach(b => {
-            if (b !== body && b.style.display === 'block') {
-                b.style.display = 'none';
-                b.previousElementSibling.classList.remove('active');
-            }
-        });
         
         // Открыть/закрыть текущий
         if(body.style.display === 'block'){
@@ -491,6 +639,17 @@ document.querySelectorAll('.faq-header').forEach(header=>{
             body.style.display = 'block';
             header.classList.add('active');
         }
+        
+        // Примечание: Мы не закрываем другие аккордеоны, чтобы пользователь мог сравнивать инструкции
+        // Но если нужно закрывать другие, нужно добавить логику
+        /*
+        document.querySelectorAll('.faq-body').forEach(b => {
+            if (b !== body && b.style.display === 'block') {
+                b.style.display = 'none';
+                b.previousElementSibling.classList.remove('active');
+            }
+        });
+        */
     });
 });
 
