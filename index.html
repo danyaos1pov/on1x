@@ -16,6 +16,8 @@
     --gradient-button: linear-gradient(90deg, #007bff, #00c6ff);
     --accent-red: #dc3545;
     --accent-yellow: #ffc107;
+    /* Новый акцент для кнопки канала */
+    --channel-gradient: linear-gradient(90deg, #1e90ff, #00bfff); 
 }
 * { 
     box-sizing: border-box; 
@@ -81,7 +83,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     margin:20px auto; 
 }
 @media (min-width: 400px) {
-    /* 8 элементов лучше всего смотрятся как 4x2 или 3x3 с пустым местом. Оставим 3x3 с пустым местом для сохранения стиля */
     .menu-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
@@ -111,7 +112,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 }
 .menu-card i { font-size:28px; margin-bottom:10px; color: var(--primary-color); }
 
-/* === Кнопки === */
+/* === Кнопки (стандартные) === */
 .button { 
     display:block; width:100%; max-width:250px; margin:20px auto; padding:12px 0; 
     border-radius:10px; 
@@ -126,6 +127,32 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     transform:translateY(-2px); 
     box-shadow:0 6px 15px rgba(0,123,255,0.6); 
 }
+
+/* === Специальная кнопка канала (для главной страницы) === */
+.channel-promo {
+    margin: 30px auto 10px; 
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    max-width: 500px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.channel-promo p {
+    margin: 5px 0 15px;
+    color: #b0b8c2;
+    font-size: 0.95em;
+}
+.channel-promo .button {
+    max-width: 100%; 
+    margin: 0;
+    background: var(--channel-gradient);
+    box-shadow:0 3px 10px rgba(30, 144, 255, 0.5);
+}
+.channel-promo .button:hover {
+    box-shadow:0 6px 15px rgba(30, 144, 255, 0.7);
+}
+
 
 /* === Кнопка Назад === */
 .back-button {
@@ -149,43 +176,47 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 .back-button i { margin-right: 5px; }
 
 
-/* === ТАРИФЫ (ДИЗАЙН) - используется для #buy, #renew) === */
+/* === ТАРИФЫ (ДИЗАЙН ВОССТАНОВЛЕН - #buy, #renew) === */
+/* Сетка из трех карточек с тарифами */
 .tariffs-container {
-    display: block; 
-    max-width: 400px; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; 
+    max-width: 500px; 
     margin: 20px auto;
 }
 .tariff-card {
     background: var(--card-bg);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px; 
+    border-radius: 15px;
+    padding: 15px 10px; 
     color: var(--text-color);
     text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-    transition: none; 
-    border: 1px solid rgba(255,255,255,0.1); 
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px; 
 }
 .tariff-card:hover {
-    transform: none; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,123,255,0.2);
 }
-.tariff-card.popular { 
-    border: 1px solid var(--primary-color); 
-    background: var(--card-bg); 
+.tariff-card.popular {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0,123,255,0.5);
 }
-.popular-badge { display: none; }
 .tariff-card h3 {
     margin: 0 0 5px;
-    font-size: 1.4em;
+    font-size: 1.2em;
     color: var(--primary-color);
 }
 .price { 
-    font-size: 2.2em; 
+    font-size: 1.6em; 
     font-weight: 700; 
-    margin: 5px 0 15px; 
+    margin: 5px 0 10px; 
     color: var(--text-color);
 }
 .price span {
@@ -193,154 +224,48 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     font-weight: normal;
     color: #b0b8c2;
     display: block;
-}
-.tariff-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0;
-    text-align: center; 
-}
-.tariff-card ul li {
-    padding: 5px 0;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    color: #b0b8c2;
-    font-size: 0.9em;
-}
-.tariff-card ul li i {
-    margin-right: 8px;
-    color: var(--secondary-color);
-    font-size: 1em;
+    margin-top: -5px; 
 }
 .tariff-card .button {
     width: 100%;
     max-width: none;
-    margin: 15px auto 0; 
-    padding: 12px 0; 
+    margin: 10px auto 0; 
+    padding: 8px 0; 
+    font-size: 0.9em;
     border-radius: 8px;
-    background: var(--gradient-button);
 }
-.tariff-card .button:hover { transform: none; } 
-
-
-/* === FAQ / Установка (аккордеон) === */
-.install-section {
-    margin-top: 30px;
-    padding: 15px;
-    background: #1a202c; 
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-}
-.install-section h3 {
-    font-size: 1.5em;
-    color: var(--accent-yellow);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(255,255,255,0.1);
-}
-.faq-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    margin: 10px 0; 
-    max-width: none; 
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-.faq-header {
-    padding: 15px;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #1f262f;
-    transition: background 0.2s;
-    color: var(--text-color);
-}
-.faq-header:hover { background: #242a32; }
-.faq-header i.arrow { transition: transform 0.2s; }
-.faq-header.active i.arrow { transform: rotate(90deg); } 
-.faq-body {
-    display: none;
-    padding: 15px;
-    text-align: left;
-    background: var(--card-bg);
-    border-top: 1px solid #1f262f;
-    color: #b0b8c2;
-}
-.faq-body p, .faq-body ul {
-    text-align: left;
-    margin-bottom: 10px;
-}
-.faq-body a {
-    color: var(--primary-color);
-    font-weight: bold;
-}
-.faq-body strong {
-    color: var(--primary-color);
-}
-.faq-body ol {
-    padding-left: 20px;
-    margin-top: 10px;
-}
-.faq-body ol li {
-    margin-bottom: 8px;
-    line-height: 1.4;
+/* Мобильная адаптация для тарифов */
+@media (max-width: 400px) {
+    .tariffs-container {
+        grid-template-columns: 1fr; /* 1 колонка на узких экранах */
+    }
 }
 
-/* === Другие секции (без изменений) === */
-.task { 
+
+/* === Стили для FAQ, Install, Status (АККОРДЕОН ВОССТАНОВЛЕН) === */
+.install-section { margin-top: 30px; padding: 15px; background: #1a202c; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.faq-card { background: var(--card-bg); border-radius: 10px; margin: 10px 0; max-width: none; box-shadow: 0 3px 8px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+.faq-header { padding: 15px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: #1f262f; transition: background 0.2s; color: var(--text-color); }
+.faq-header:hover { background: #2a3443; }
+.faq-header.active .arrow { transform: rotate(90deg); }
+.faq-body { 
+    display: none; 
+    padding: 15px; 
+    text-align: left; 
     background: var(--card-bg); 
-    padding: 20px; 
-    border-radius: 15px; 
-    margin: 20px auto; 
-    max-width: 400px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border-top: 1px solid #1f262f; 
+    color: #b0b8c2; 
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
-.task p { color: var(--text-color); }
-.task a.button { max-width: 200px; }
-.winners ul { 
-    list-style: none; 
-    text-align: center; 
-    margin-top: 20px; 
-    padding: 0; 
-}
-.winners li { 
-    background: var(--card-bg); 
-    padding: 12px; 
-    margin: 8px auto; 
-    border-radius: 10px; 
-    max-width: 400px;
-    text-align: center;
-    font-weight: 500;
-    border-left: 3px solid var(--secondary-color);
-}
-.status-section {
-    background: var(--card-bg);
-    border-radius: 15px;
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 400px;
-    text-align: left;
-}
-.status-section h3 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-.status-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #1f262f;
-    font-weight: 500;
-}
-.status-item:last-child { border-bottom: none; }
-.status-dot { 
-    font-weight: bold; 
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+.faq-body p { margin-top: 0; }
+.faq-body ol { margin-left: 20px; padding-left: 0; }
+
+
+/* === Стили для Status, Tasks, Winners (ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ) === */
+.task { background: var(--card-bg); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.winners li { background: var(--card-bg); padding: 12px; margin: 8px auto; border-radius: 10px; max-width: 400px; text-align: center; font-weight: 500; border-left: 3px solid var(--secondary-color); }
+.status-section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 400px; text-align: left; }
+.status-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1f262f; font-weight: 500; }
 .status-dot.green { color: var(--secondary-color); }
 .status-dot.red { color: var(--accent-red); } 
 </style>
@@ -372,6 +297,11 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
         
         <div class="menu-card" style="visibility:hidden; height:0; padding:0; border:none; box-shadow:none;"></div>
     </div>
+    
+    <div class="channel-promo">
+        <p>Следите за новостями, обновлениями и акциями:</p>
+        <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
+    </div>
 </div>
 
 <div id="buy" class="page">
@@ -379,49 +309,12 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     <h2>Купить подписку</h2>
     <p>Выберите подходящий тариф и получите ключ для активации в Telegram-боте.</p>
     <div class="tariffs-container">
-        <div class="tariff-card">
-            <h3>Месяц</h3>
-            <div class="price">100 руб<span>/ 30 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 1 устройство</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 100 ₽</a>
-        </div>
-        
-        <div class="tariff-card popular">
-            <h3>2 Месяца</h3>
-            <div class="price">200 руб<span>/ 60 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 2 устройства</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Купить за 200 ₽</a>
-        </div>
-        
-        <div class="tariff-card">
-            <h3>3 Месяца</h3>
-            <div class="price">300 руб<span>/ 90 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 3 устройства</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 300 ₽</a>
-        </div>
-        
-        <div class="tariff-card">
-            <h3>Пол года</h3>
-            <div class="price">600 руб<span>/ 180 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Макс. скорость</li>
-                <li><i class="fas fa-check-circle"></i> Приоритет в поддержке</li>
-                <li><i class="fas fa-check-circle"></i> 5 устройств</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 600 ₽</a>
-        </div>
+        <div class="tariff-card"><h3>1 Месяц</h3><div class="price">100 руб<span>/ 30 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Купить</a></div>
+        <div class="tariff-card popular"><h3>2 Месяца</h3><div class="price">200 руб<span>/ 60 дней</span></div><a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Купить</a></div>
+        <div class="tariff-card"><h3>3 Месяца</h3><div class="price">300 руб<span>/ 90 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Купить</a></div>
+    </div>
+    <div style="max-width:320px; margin: 15px auto;">
+        <div class="tariff-card"><h3>Пол года</h3><div class="price">600 руб<span>/ 180 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Купить</a></div>
     </div>
 </div>
 
@@ -430,49 +323,12 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     <h2>Продлить подписку</h2>
     <p>Для продления выберите действующий или новый тариф. Срок подписки будет автоматически добавлен к текущему.</p>
     <div class="tariffs-container">
-        <div class="tariff-card">
-            <h3>Месяц</h3>
-            <div class="price">100 руб<span>/ 30 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 1 устройство</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на 1 месяц</a>
-        </div>
-        
-        <div class="tariff-card popular">
-            <h3>2 Месяца</h3>
-            <div class="price">200 руб<span>/ 60 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 2 устройства</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Продлить на 2 месяца</a>
-        </div>
-        
-        <div class="tariff-card">
-            <h3>3 Месяца</h3>
-            <div class="price">300 руб<span>/ 90 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
-                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
-                <li><i class="fas fa-check-circle"></i> 3 устройства</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на 3 месяца</a>
-        </div>
-        
-        <div class="tariff-card">
-            <h3>Пол года</h3>
-            <div class="price">600 руб<span>/ 180 дней</span></div>
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Макс. скорость</li>
-                <li><i class="fas fa-check-circle"></i> Приоритет в поддержке</li>
-                <li><i class="fas fa-check-circle"></i> 5 устройств</li>
-            </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на пол года</a>
-        </div>
+        <div class="tariff-card"><h3>1 Месяц</h3><div class="price">100 руб<span>/ 30 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Продлить</a></div>
+        <div class="tariff-card popular"><h3>2 Месяца</h3><div class="price">200 руб<span>/ 60 дней</span></div><a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Продлить</a></div>
+        <div class="tariff-card"><h3>3 Месяца</h3><div class="price">300 руб<span>/ 90 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Продлить</a></div>
+    </div>
+    <div style="max-width:320px; margin: 15px auto;">
+        <div class="tariff-card"><h3>Пол года</h3><div class="price">600 руб<span>/ 180 дней</span></div><a href="https://t.me/on1xVPN_bot" class="button">Продлить</a></div>
     </div>
 </div>
 
@@ -480,25 +336,85 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
     <h2>Установка приложения</h2>
     <p>Выберите рекомендованный клиент и ваше устройство для получения инструкции:</p>
-
+    
     <div class="install-section">
         <h3><i class="fas fa-satellite-dish"></i> V2RayTun (Рекомендуется)</h3>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun App Store</a></p><ol><li>Установите приложение **V2RayTun** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении V2RayTun нажмите на **+** и выберите "Импорт через QR-код" или "Import from URL".</li><li>Сохраните и активируйте профиль.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Google Play</a></p><ol><li>Установите **V2RayTun** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте V2RayTun, нажмите **+** и выберите "Import config from Clipboard" или "Import from URL".</li><li>Нажмите кнопку активации (Круг) для запуска.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Desktop</a> (или аналогичный V2Ray клиент)</p><ol><li>Скачайте и установите V2Ray клиент.</li><li>В Telegram-боте запросите **конфигурационный файл (.json)**.</li><li>Импортируйте файл в программу, затем активируйте соединение.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Используйте клиент **V2RayX** или **Qv2ray**.</p><ol><li>Установите выбранный клиент.</li><li>Используйте **QR-код** или **ссылку** для быстрого импорта конфигурации.</li><li>Запустите соединение в клиенте.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Используйте **Qv2ray** или командную строку V2Ray.</p><ol><li>Установите V2Ray.</li><li>Вручную скопируйте и настройте полученный **.json** файл конфигурации.</li><li>Запустите службу V2Ray.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Установите **V2RayTun** через сторонние магазины или APK файл, если он не доступен в основном Google Play TV.</p><ol><li>Скачайте **V2RayTun APK** и установите на ТВ (через флешку или файловый менеджер).</li><li>Используйте **QR-код** для импорта (отсканируйте с телефона).</li><li>Активируйте соединение.</li></ol></div></div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun App Store</a></p>
+                <ol><li>Установите приложение **V2RayTun** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении V2RayTun нажмите на **+** и выберите "Импорт через QR-код" или "Import from URL".</li><li>Сохраните и активируйте профиль.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Google Play</a></p>
+                <ol><li>Установите **V2RayTun** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте V2RayTun, нажмите **+** и выберите "Import config from Clipboard" или "Import from URL".</li><li>Нажмите кнопку активации (Круг) для запуска.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Desktop</a> (или аналогичный V2Ray клиент)</p>
+                <ol><li>Скачайте и установите V2Ray клиент.</li><li>В Telegram-боте запросите **конфигурационный файл (.json)**.</li><li>Импортируйте файл в программу, затем активируйте соединение.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Используйте клиент **V2RayX** или **Qv2ray**.</p>
+                <ol><li>Установите выбранный клиент.</li><li>Используйте **QR-код** или **ссылку** для быстрого импорта конфигурации.</li><li>Запустите соединение в клиенте.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Используйте **Qv2ray** или командную строку V2Ray.</p>
+                <ol><li>Установите V2Ray.</li><li>Вручную скопируйте и настройте полученный **.json** файл конфигурации.</li><li>Запустите службу V2Ray.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p>Установите **V2RayTun** через сторонние магазины или APK файл, если он не доступен в основном Google Play TV.</p>
+                <ol><li>Скачайте **V2RayTun APK** и установите на ТВ (через флешку или файловый менеджер).</li><li>Используйте **QR-код** для импорта (отсканируйте с телефона).</li><li>Активируйте соединение.</li></ol>
+            </div>
+        </div>
     </div>
-
+    
     <div class="install-section">
         <h3><i class="fas fa-smile"></i> Happ</h3>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p><ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p><ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>На данный момент Happ ориентирован в основном на мобильные устройства. Используйте V2RayTun (или аналоги) для Windows.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Happ не имеет официального клиента для macOS. Пожалуйста, используйте V2Ray-клиенты или другие VPN-протоколы.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Использование Happ на Linux не поддерживается.</p><p><strong>Рекомендация:</strong> Воспользуйтесь клиентами V2Ray, такими как Qv2ray.</p></div></div>
-        <div class="faq-card"><div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p><p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p></div></div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p>
+                <ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body">
+                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
+                <ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol>
+            </div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body"><p>На данный момент Happ ориентирован в основном на мобильные устройства. Используйте V2RayTun (или аналоги) для Windows.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body"><p>Happ не имеет официального клиента для macOS. Пожалуйста, используйте V2Ray-клиенты или другие VPN-протоколы.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body"><p>Использование Happ на Linux не поддерживается.</p><p><strong>Рекомендация:</strong> Воспользуйтесь клиентами V2Ray, такими как Qv2ray.</p></div>
+        </div>
+        <div class="faq-card">
+            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
+            <div class="faq-body"><p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p><p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p></div>
+        </div>
     </div>
 </div>
 
@@ -578,7 +494,7 @@ function showPage(id){
     setTimeout(()=>{ next.classList.add('active'); }, 10);
 }
 
-// Скрипт для раскрытия FAQ/Установки
+// Скрипт для раскрытия FAQ/Установки (ВОССТАНОВЛЕН)
 document.querySelectorAll('.faq-header').forEach(header=>{
     header.addEventListener('click',()=>{
         const body = header.nextElementSibling;
@@ -588,9 +504,21 @@ document.querySelectorAll('.faq-header').forEach(header=>{
         if(body.style.display === 'block'){
             body.style.display = 'none';
             header.classList.remove('active');
+            arrow.style.transform = 'rotate(0deg)';
         } else {
+            // Закрыть все остальные (чтобы открывался только один)
+            document.querySelectorAll('.faq-header').forEach(otherHeader => {
+                if (otherHeader !== header) {
+                    otherHeader.nextElementSibling.style.display = 'none';
+                    otherHeader.classList.remove('active');
+                    otherHeader.querySelector('.arrow').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            // Открыть текущий
             body.style.display = 'block';
             header.classList.add('active');
+            arrow.style.transform = 'rotate(90deg)';
         }
     });
 });
@@ -600,20 +528,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.querySelector('.page.active')) {
         showPage('home');
     }
-    // Также обновляем текст в FAQ, чтобы он соответствовал новым кнопкам
-    const faqTexts = [
-        { header: 'Как подключиться?', newText: 'Нажмите "Купить подписку" или "Продлить подписку" на главной странице, чтобы перейти в наш Telegram бот. Все дальнейшие инструкции будут там.' },
-        { header: 'Стоимость подписки?', newText: 'Стоимость варьируется от 100 до 600 рублей в зависимости от выбранного тарифа. Самый выгодный - 60 дней за 200 руб. См. раздел "Купить подписку".' },
-        { header: 'Как обновить подписку?', newText: 'Для продления или смены тарифа воспользуйтесь разделом "Продлить подписку" или купите новый тариф через наш Telegram бот. Он автоматически заменит или продлит текущую подписку.' }
-    ];
-    
-    document.querySelectorAll('#faq .faq-card').forEach(card => {
-        const headerText = card.querySelector('.faq-header').textContent.trim().split(' ')[0] + '?'; // Берем только заголовок
-        const match = faqTexts.find(item => item.header.startsWith(headerText));
-        if (match) {
-            card.querySelector('.faq-body').innerHTML = match.newText;
-        }
-    });
 });
 </script>
 </body>
