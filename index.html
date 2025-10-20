@@ -5,336 +5,501 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <style>
-* { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI', Tahoma, sans-serif; }
-body { background:#0d1117; color:#fff; text-align:center; min-height:100vh; }
-a { text-decoration:none; color:inherit; }
+/* === Глобальные стили и переменные === */
+:root {
+    --primary-color: #007bff; /* Ярко-синий */
+    --secondary-color: #28a745; /* Зеленый для успеха/активности */
+    --bg-dark: #0d1117; /* Основной фон (почти черный) */
+    --card-bg: #161b22; /* Фон карточек */
+    --text-color: #e6edf3; /* Светлый текст */
+    --gradient-blue: linear-gradient(135deg, #007bff, #0056b3);
+    --gradient-button: linear-gradient(90deg, #007bff, #00c6ff);
+}
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; 
+}
+body { 
+    background: var(--bg-dark); 
+    color: var(--text-color); 
+    text-align: center; 
+    min-height: 100vh; 
+    padding-bottom: 50px; /* Чтобы нижний контент не прилипал */
+}
+a { text-decoration: none; color: inherit; }
 
-/* === Плавные переходы страниц === */
+/* === Плавные переходы страниц (улучшено) === */
 .page {
-  display: none;
-  padding: 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  position: relative;
+    display: none;
+    padding: 20px 15px; /* Уменьшаем горизонтальный паддинг для моб. */
+    opacity: 0;
+    transform: translateY(10px); /* Меньший сдвиг */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+    max-width: 600px; /* Ограничиваем ширину контента */
+    margin: 0 auto;
 }
 .page.active {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* === Логотип и анимация === */
-.pulse-container { position: relative; width: 150px; height: 150px; margin: 30px auto; }
-.pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:3px solid #1a73e8; }
+/* === Логотип и анимация (более тонкий пульс) === */
+.pulse-container { position: relative; width: 120px; height: 120px; margin: 30px auto; }
+.pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:4px solid var(--primary-color); object-fit: cover; }
 .pulse-circle {
-  position: absolute; top:50%; left:50%; width:150px; height:150px;
-  border-radius:50%; border:2px solid rgba(26,115,232,0.5);
-  transform: translate(-50%,-50%) scale(0);
-  animation: pulse 2.5s infinite ease-out;
+    position: absolute; top:50%; left:50%; width:120px; height:120px;
+    border-radius:50%; border:1px solid rgba(0,123,255,0.5); /* Более светлый */
+    transform: translate(-50%,-50%) scale(0);
+    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Более плавное */
 }
 .pulse-circle:nth-child(2) { animation-delay:0.5s; }
 .pulse-circle:nth-child(3) { animation-delay:1s; }
 @keyframes pulse {
-  0% { transform: translate(-50%,-50%) scale(0); opacity:1; }
-  70% { transform: translate(-50%,-50%) scale(1); opacity:0.5; }
-  100% { transform: translate(-50%,-50%) scale(1.2); opacity:0; }
+    0% { transform: translate(-50%,-50%) scale(0.6); opacity:1; }
+    80% { transform: translate(-50%,-50%) scale(1.1); opacity:0; }
+    100% { transform: translate(-50%,-50%) scale(1.1); opacity:0; }
 }
 
-/* === Заголовки === */
-h1,h2,h3,h4 { margin:15px 0; }
-p { margin:10px 0; line-height:1.5; }
+/* === Заголовки и текст === */
+h1 { font-size: 2.2em; margin-bottom: 5px; color: var(--primary-color); }
+h2 { font-size: 1.8em; margin: 20px 0; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+h3,h4 { margin:15px 0; }
+p { margin:10px 0; line-height:1.6; color: #b0b8c2; } /* Более мягкий текст */
 
-/* === Главное меню === */
-.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:500px; margin:20px auto; }
-.menu-card { background: linear-gradient(135deg,#1a73e8,#4cafeb); padding:20px; border-radius:20px;
-             display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;
-             transition: transform 0.3s, box-shadow 0.3s; font-weight:bold; }
-.menu-card:hover { transform: translateY(-5px); box-shadow:0 10px 20px rgba(26,115,232,0.5); }
-.menu-card i { font-size:30px; margin-bottom:10px; }
+/* === Главное меню (более выразительные карточки) === */
+.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:500px; margin:20px auto; }
+.menu-card { 
+    background: var(--card-bg); 
+    padding:25px 15px; 
+    border-radius:15px; 
+    display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;
+    transition: transform 0.2s, box-shadow 0.2s; 
+    font-weight:600; 
+    color: var(--text-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05); /* Легкий контур */
+}
+.menu-card:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 15px rgba(0,123,255,0.2); 
+    border-color: var(--primary-color);
+}
+.menu-card i { font-size:28px; margin-bottom:10px; color: var(--primary-color); }
 
-/* === Кнопки === */
-.button { display:block; width:220px; margin:15px auto; padding:12px 0; border-radius:50px;
-          background: linear-gradient(90deg,#1a73e8,#4cafeb); color:white; font-weight:bold;
-          transition:0.3s; box-shadow:0 5px 15px rgba(26,115,232,0.4);}
-.button:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(26,115,232,0.6); }
+/* === Кнопки (более плоский дизайн) === */
+.button { 
+    display:block; width:100%; max-width:250px; margin:20px auto; padding:12px 0; 
+    border-radius:10px; /* Угловая кнопка */
+    background: var(--gradient-button); 
+    color:white; font-weight:bold;
+    transition:0.3s; 
+    box-shadow:0 3px 10px rgba(0,123,255,0.4);
+    border: none;
+    cursor: pointer;
+}
+.button:hover { 
+    transform:translateY(-2px); 
+    box-shadow:0 6px 15px rgba(0,123,255,0.6); 
+}
 
 /* === Кнопка Назад === */
 .back-button {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: transparent;
-  color: #1a73e8;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: 0.2s;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    color: var(--primary-color);
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
-.back-button:hover { color: #4cafeb; }
+.back-button:hover { color: #00c6ff; background: rgba(255,255,255,0.05); }
 .back-button i { margin-right: 5px; }
 
-/* === Тарифы === */
+/* === Тарифы (более структурировано) === */
 .tariffs-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px auto;
 }
 .tariff-card {
-  background: linear-gradient(135deg,#1a73e8,#4cafeb);
-  border-radius: 20px;
-  padding: 25px 15px;
-  color: #fff;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(26,115,232,0.3);
-  transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    color: var(--text-color);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+    border: 1px solid transparent;
 }
 .tariff-card:hover {
-  transform: translateY(-8px) rotateZ(-1deg);
-  box-shadow: 0 12px 25px rgba(26,115,232,0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,123,255,0.2);
 }
-.tariff-card.popular { border: 2px solid #fff; }
+.tariff-card.popular { 
+    border: 2px solid var(--primary-color); 
+    background: linear-gradient(145deg, #1a202c, #161b22); /* Немного другой фон для акцента */
+}
 .popular-badge {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ff9800;
-  color: #fff;
-  font-weight: bold;
-  font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    position: absolute;
+    top: 15px; /* Смещаем вниз */
+    right: 15px;
+    background: #ffc107; /* Желтый акцент */
+    color: #0d1117;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-.price { font-size: 22px; font-weight: bold; margin: 10px 0; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);}
+.tariff-card h3 {
+    margin: 0 0 5px;
+    font-size: 1.4em;
+    color: var(--primary-color);
+}
+.price { 
+    font-size: 2.2em; 
+    font-weight: 700; 
+    margin: 5px 0 15px; 
+    color: var(--text-color);
+}
+.price span {
+    font-size: 0.5em;
+    font-weight: normal;
+    color: #b0b8c2;
+    display: block;
+}
+.tariff-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    text-align: left;
+}
+.tariff-card ul li {
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    color: #b0b8c2;
+    font-size: 0.9em;
+}
+.tariff-card ul li i {
+    margin-right: 8px;
+    color: var(--secondary-color);
+    font-size: 1em;
+}
 .tariff-card .button {
-  width: 180px;
-  margin: 10px auto 0;
-  padding: 10px 0;
-  border-radius: 50px;
-  background: #fff;
-  color: #1a73e8;
-  font-weight: bold;
-  transition: 0.3s;
+    width: 100%;
+    max-width: none;
+    margin: 10px auto 0;
+    padding: 10px 0;
+    border-radius: 8px;
+    background: var(--gradient-button);
 }
-.tariff-card .button:hover {
-  background: linear-gradient(90deg,#4cafeb,#1a73e8);
-  color: #fff;
-  transform: translateY(-3px) rotateZ(1deg);
-}
+.tariff-card .button:hover { transform: translateY(-1px); }
 
-/* === FAQ === */
+/* === FAQ (более чистый аккордеон) === */
 .faq-card {
-  background:#161b22;
-  border-radius:15px;
-  margin:15px auto;
-  max-width:500px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.5);
-  overflow:hidden;
-  transition:0.3s;
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin: 10px auto;
+    max-width: 500px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
 }
-.faq-card:hover { transform:scale(1.02); }
 .faq-header {
-  padding:15px 20px;
-  cursor:pointer;
-  font-weight:bold;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background:linear-gradient(90deg,#1a73e8,#4cafeb);
-  border-radius:15px;
-  transition:0.3s;
+    padding: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1f262f;
+    transition: background 0.2s;
+    color: var(--text-color);
 }
-.faq-header:hover { background:linear-gradient(90deg,#4cafeb,#1a73e8); }
+.faq-header:hover { background: #242a32; }
+.faq-header i.arrow { transition: transform 0.2s; }
+.faq-header.active i.arrow { transform: rotate(90deg); } /* Стрелка-индикатор */
 .faq-body {
-  display:none;
-  padding:15px 20px;
-  background:#1f262f;
-  border-top:1px solid #161b22;
-  line-height:1.5;
+    display: none;
+    padding: 15px;
+    text-align: left;
+    background: var(--card-bg);
+    border-top: 1px solid #1f262f;
+    color: #b0b8c2;
 }
 
-/* === Бесплатный VPN === */
-.task { background:#161b22; padding:20px; border-radius:15px; margin:20px auto; max-width:400px; box-shadow:0 5px 15px rgba(0,0,0,0.5);}
-.task a { margin-top:10px; }
+/* === Бесплатный VPN / Задания === */
+.task { 
+    background: var(--card-bg); 
+    padding: 20px; 
+    border-radius: 15px; 
+    margin: 20px auto; 
+    max-width: 400px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.task p { color: var(--text-color); }
+.task a.button { max-width: 200px; }
 
 /* === Победители === */
-.winners ul { list-style:none; text-align:left; display:inline-block; margin-top:10px; padding-left:0; }
-.winners li { background:#161b22; padding:10px; margin:5px 0; border-radius:10px; }
+.winners ul { 
+    list-style: none; 
+    text-align: center; /* Центрируем список */
+    margin-top: 20px; 
+    padding: 0; 
+}
+.winners li { 
+    background: var(--card-bg); 
+    padding: 12px; 
+    margin: 8px auto; /* Центрируем элементы списка */
+    border-radius: 10px; 
+    max-width: 400px;
+    text-align: center;
+    font-weight: 500;
+    border-left: 3px solid var(--secondary-color);
+}
 
-/* === Статус систем === */
+/* === Статус систем (более четкие индикаторы) === */
 .status-section {
-  background:#161b22;
-  border-radius:15px;
-  padding:20px;
-  margin:20px auto;
-  max-width:400px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.5);
-  text-align:left;
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    text-align: left;
 }
+.status-section h3 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
 .status-item {
-  display:flex;
-  justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px solid #1f262f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #1f262f;
+    font-weight: 500;
 }
-.status-item:last-child { border-bottom:none; }
-.status-dot.green { color:#4caf50; font-weight:bold; }
-.status-dot.red { color:#e53935; font-weight:bold; }
+.status-item:last-child { border-bottom: none; }
+.status-dot { 
+    font-weight: bold; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.status-dot.green { color: var(--secondary-color); }
+.status-dot.red { color: #dc3545; } /* Красный */
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
 
-<!-- === Главная === -->
 <div id="home" class="page active">
-  <div class="pulse-container">
-    <div class="pulse-circle"></div>
-    <div class="pulse-circle"></div>
-    <div class="pulse-circle"></div>
-    <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
-  </div>
-  <h1>ON1X VPN</h1>
+    <div class="pulse-container">
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle"></div>
+        <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
+    </div>
+    <h1>ON1X VPN</h1>
+    <p style="color:#b0b8c2;">Ваш надежный VPN-сервис в один клик. Быстро, безопасно, анонимно.</p>
 
-  <div class="menu-grid">
-    <div class="menu-card" onclick="showPage('tariffs')"><i class="fas fa-wallet"></i>Тарифы</div>
-    <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-question-circle"></i>FAQ</div>
-    <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-gift"></i>Бесплатный VPN</div>
-    <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-    <div class="menu-card" onclick="showPage('winners')"><i class="fas fa-trophy"></i>Победители</div>
-    <div class="menu-card" onclick="showPage('status')"><i class="fas fa-server"></i>Статус систем</div>
-  </div>
+    <div class="menu-grid">
+        <div class="menu-card" onclick="showPage('tariffs')"><i class="fas fa-rocket"></i>Тарифы</div>
+        <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
+        <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-hand-holding-heart"></i>Бесплатный VPN</div>
+        <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
+        <div class="menu-card" onclick="showPage('winners')"><i class="fas fa-trophy"></i>Победители</div>
+        <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
+    </div>
 </div>
 
-<!-- === Тарифы === -->
 <div id="tariffs" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Тарифы</h2>
-  <div class="tariffs-container">
-    <div class="tariff-card">
-      <div class="price">30 дней - 100 руб</div>
-      <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Тарифы</h2>
+    <div class="tariffs-container">
+        <div class="tariff-card">
+            <h3>Месяц</h3>
+            <div class="price">100 руб<span>/ 30 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 1 устройство</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+        </div>
+        
+        <div class="tariff-card popular">
+            <div class="popular-badge">🔥 Выгодно</div>
+            <h3>2 Месяца</h3>
+            <div class="price">200 руб<span>/ 60 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 2 устройства</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Подключиться</a>
+        </div>
+        
+        <div class="tariff-card">
+            <h3>3 Месяца</h3>
+            <div class="price">300 руб<span>/ 90 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 3 устройства</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+        </div>
+        
+        <div class="tariff-card">
+            <h3>Пол года</h3>
+            <div class="price">600 руб<span>/ 180 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Макс. скорость</li>
+                <li><i class="fas fa-check-circle"></i> Приоритет в поддержке</li>
+                <li><i class="fas fa-check-circle"></i> 5 устройств</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+        </div>
     </div>
-    <div class="tariff-card popular">
-      <div class="popular-badge">Популярный</div>
-      <div class="price">60 дней - 200 руб</div>
-      <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Подключиться</a>
-    </div>
-    <div class="tariff-card">
-      <div class="price">90 дней - 300 руб</div>
-      <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
-    </div>
-    <div class="tariff-card">
-      <div class="price">180 дней - 600 руб</div>
-      <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
-    </div>
-  </div>
 </div>
 
-<!-- === FAQ === -->
 <div id="faq" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Часто задаваемые вопросы</h2>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Часто задаваемые вопросы</h2>
 
-  <div class="faq-card">
-    <div class="faq-header"><i class="fas fa-question-circle"></i> Как подключиться?</div>
-    <div class="faq-body">Нажмите "Подключиться" на главной странице или в разделе тарифов через Telegram бот.</div>
-  </div>
+    <div class="faq-card">
+        <div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div>
+        <div class="faq-body">Нажмите "Подключиться" на главной странице или в разделе тарифов, чтобы перейти в наш Telegram бот. Все дальнейшие инструкции будут там.</div>
+    </div>
 
-  <div class="faq-card">
-    <div class="faq-header"><i class="fas fa-question-circle"></i> Стоимость подписки?</div>
-    <div class="faq-body">От 100 до 600 руб в зависимости от тарифа.</div>
-  </div>
+    <div class="faq-card">
+        <div class="faq-header">Стоимость подписки? <i class="fas fa-chevron-right arrow"></i></div>
+        <div class="faq-body">Стоимость варьируется от 100 до 600 рублей в зависимости от выбранного тарифа. Самый выгодный - 60 дней за 200 руб.</div>
+    </div>
 
-  <div class="faq-card">
-    <div class="faq-header"><i class="fas fa-question-circle"></i> Как обновить подписку?</div>
-    <div class="faq-body">Купите новый тариф через Telegram бот для продления подписки.</div>
-  </div>
+    <div class="faq-card">
+        <div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div>
+        <div class="faq-body">Для продления или смены тарифа просто купите новый тариф через наш Telegram бот. Он автоматически заменит или продлит текущую подписку.</div>
+    </div>
+    
+    <div class="faq-card">
+        <div class="faq-header">Какие гарантии? <i class="fas fa-chevron-right arrow"></i></div>
+        <div class="faq-body">Мы гарантируем стабильную работу. В случае проблем с подключением или скоростью, наша поддержка оперативно решит вопрос или предложит возврат средств.</div>
+    </div>
 </div>
 
-<!-- === Бесплатный VPN === -->
 <div id="tasks" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Бесплатный VPN за задания</h2>
-  <div class="task">
-    <p>Подпишитесь на наш канал <a href="https://t.me/ON1Xvpn" target="_blank">ON1Xvpn</a> и получите 10 дней подписки!</p>
-    <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
-  </div>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Бесплатный VPN за задания</h2>
+    <div class="task">
+        <p>Получите **10 дней** бесплатной подписки за выполнение простого задания:</p>
+        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a>.</p>
+        <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
+    </div>
 </div>
 
-<!-- === Поддержка === -->
 <div id="support" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Поддержка</h2>
-  <p>Свяжитесь с администратором в Telegram:</p>
-  <a href="https://t.me/on1xVPN_admin" class="button">Поддержка</a>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Поддержка</h2>
+    <p>Свяжитесь с администратором для оперативной помощи по любым вопросам, связанным с сервисом:</p>
+    <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
 </div>
 
-<!-- === Победители === -->
 <div id="winners" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Победители</h2>
-  <p>Следите за розыгрышами в нашем канале <a href="https://t.me/ON1Xvpn" target="_blank">ON1Xvpn</a></p>
-  <div class="winners">
-    <ul>
-      <li>Иван — 30 дней подписки</li>
-      <li>Мария — 60 дней подписки</li>
-      <li>Алексей — 90 дней подписки</li>
-    </ul>
-  </div>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Последние победители</h2>
+    <p>Следите за регулярными розыгрышами и акциями в нашем канале <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a></p>
+    <div class="winners">
+        <ul>
+            <li><i class="fas fa-user-check"></i> **Иван** — 30 дней подписки</li>
+            <li><i class="fas fa-user-check"></i> **Мария** — 60 дней подписки</li>
+            <li><i class="fas fa-user-check"></i> **Алексей** — 90 дней подписки</li>
+        </ul>
+    </div>
 </div>
 
-<!-- === Статус систем === -->
 <div id="status" class="page">
-  <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-  <h2>Статус систем</h2>
-  <div class="status-section">
-    <h3>Система</h3>
-    <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>API</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>Страница подписки</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>Уведомления</span><span class="status-dot green">🟢 Онлайн</span></div>
-  </div>
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Статус систем</h2>
+    <div class="status-section">
+        <h3>Система</h3>
+        <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>API Сервер</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>Страница подписки</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>Уведомления</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+    </div>
 
-  <div class="status-section">
-    <h3>Сервера</h3>
-    <div class="status-item"><span>Нидерланды #1</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>Нидерланды #2</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>Нидерланды #3</span><span class="status-dot green">🟢 Онлайн</span></div>
-    <div class="status-item"><span>Россия</span><span class="status-dot red">🔴 Оффлайн</span></div>
-    <div class="status-item"><span>Германия</span><span class="status-dot red">🔴 Оффлайн</span></div>
-  </div>
+    <div class="status-section">
+        <h3>Сервера VPN</h3>
+        <div class="status-item"><span>Нидерланды #1</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>Нидерланды #2</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>Нидерланды #3</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+        <div class="status-item"><span>Россия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
+        <div class="status-item"><span>Германия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
+    </div>
 </div>
 
 <script>
 function showPage(id){
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(p => {
-    if(p.classList.contains('active')){
-      p.classList.remove('active');
-      setTimeout(() => { p.style.display='none'; }, 400);
-    }
-  });
-  const next = document.getElementById(id);
-  next.style.display = 'block';
-  setTimeout(()=>{ next.classList.add('active'); }, 10);
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => {
+        if(p.classList.contains('active')){
+            p.classList.remove('active');
+            setTimeout(() => { p.style.display='none'; }, 300); // Соответствует transition: 0.3s
+        }
+    });
+    const next = document.getElementById(id);
+    next.style.display = 'block';
+    // Прокрутка вверх при смене страницы
+    window.scrollTo(0, 0); 
+    setTimeout(()=>{ next.classList.add('active'); }, 10);
 }
 
-// Скрипт для раскрытия FAQ
+// Скрипт для раскрытия FAQ (обновлен)
 document.querySelectorAll('.faq-header').forEach(header=>{
-  header.addEventListener('click',()=>{
-    const body = header.nextElementSibling;
-    body.style.display = body.style.display==='block'?'none':'block';
-  });
+    header.addEventListener('click',()=>{
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        
+        // Закрыть все открытые, кроме текущего
+        document.querySelectorAll('.faq-body').forEach(b => {
+            if (b !== body && b.style.display === 'block') {
+                b.style.display = 'none';
+                b.previousElementSibling.classList.remove('active');
+            }
+        });
+        
+        // Открыть/закрыть текущий
+        if(body.style.display === 'block'){
+            body.style.display = 'none';
+            header.classList.remove('active');
+        } else {
+            body.style.display = 'block';
+            header.classList.add('active');
+        }
+    });
+});
+
+// Инициализация первой страницы, если не активна
+document.addEventListener('DOMContentLoaded', () => {
+    if (!document.querySelector('.page.active')) {
+        showPage('home');
+    }
 });
 </script>
 </body>
 </html>
-
