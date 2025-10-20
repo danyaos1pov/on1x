@@ -177,23 +177,22 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     display: flex;
     flex-direction: column;
     gap: 15px; 
-    max-width: 500px; /* Оптимальная ширина для вертикального списка */
+    max-width: 500px; 
     margin: 20px auto;
 }
-/* Карточка тарифа - новый вид */
 .tariff-card {
     background: var(--card-bg);
     border-radius: 15px;
     padding: 20px; 
     color: var(--text-color);
-    text-align: left; /* Текст слева */
+    text-align: left; 
     transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.05); 
     display: flex; 
     justify-content: space-between;
-    align-items: center; /* Центрируем по вертикали */
-    flex-wrap: wrap; /* Для мобильной адаптации */
+    align-items: center; 
+    flex-wrap: wrap; 
     position: relative;
     overflow: hidden;
 }
@@ -201,7 +200,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     transform: scale(1.01);
     box-shadow: 0 10px 20px rgba(0,123,255,0.3);
 }
-/* Выделение популярного тарифа */
 .tariff-card.popular {
     border-color: var(--primary-color);
     background: #1f262f; 
@@ -219,19 +217,15 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     border-radius: 0 14px 0 10px;
     z-index: 5;
 }
-
-/* Блок с ценой и названием */
 .tariff-info {
-    flex: 1; /* Занимает доступное место слева */
-    min-width: 150px; /* Минимальная ширина, чтобы не сжимался */
+    flex: 1; 
+    min-width: 150px; 
 }
-/* Заголовок тарифа */
 .tariff-card h3 {
     margin: 0;
     font-size: 1.5em;
     color: var(--primary-color);
 }
-/* Цена */
 .price { 
     font-size: 1.8em; 
     font-weight: 700; 
@@ -244,15 +238,13 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     color: #b0b8c2;
     margin-left: 5px; 
 }
-
-/* Список преимуществ */
 .tariff-features-list {
-    flex: 2; /* Занимает в 2 раза больше места, чем кнопка */
+    flex: 2; 
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 0 15px;
-    min-width: 250px; /* Минимальная ширина для списка */
+    min-width: 250px; 
 }
 .tariff-features-list div {
     text-align: center;
@@ -267,28 +259,24 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     margin-bottom: 5px;
 }
 .tariff-features-list .highlight i {
-    color: var(--primary-color); /* Выделим ключевой параметр */
+    color: var(--primary-color); 
 }
-
-/* Кнопка */
 .tariff-card .button {
     width: 100%;
-    max-width: 150px; /* Фиксированная ширина кнопки */
+    max-width: 150px; 
     margin: 0; 
     padding: 10px 0; 
     font-size: 1em;
     border-radius: 8px;
     transition: 0.3s;
     text-align: center;
-    flex-shrink: 0; /* Чтобы кнопка не сжималась */
+    flex-shrink: 0; 
 }
-
-/* Мобильная адаптация */
 @media (max-width: 450px) {
     .tariff-card {
         flex-direction: column;
         align-items: flex-start;
-        padding-bottom: 70px; /* Место для кнопки внизу */
+        padding-bottom: 70px; 
     }
     .tariff-info {
         margin-bottom: 15px;
@@ -308,8 +296,29 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 }
 
 
-/* === Стили для FAQ, Install, Status и т.д. (БЕЗ ИЗМЕНЕНИЙ) === */
-.install-section { margin-top: 30px; padding: 15px; background: #1a202c; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+/* === Стили для FAQ, Install, Status и т.д. === */
+.install-section { 
+    position: relative;
+    margin-top: 30px; 
+    padding: 15px; 
+    background: #1a202c; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+}
+.recommended-badge {
+    position: absolute;
+    top: -10px; 
+    right: 15px;
+    background: var(--primary-color); 
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 700;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 15; 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 .faq-card { background: var(--card-bg); border-radius: 10px; margin: 10px 0; max-width: none; box-shadow: 0 3px 8px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
 .faq-header { padding: 15px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: #1f262f; transition: background 0.2s; color: var(--text-color); }
 .faq-header:hover { background: #2a3443; }
@@ -326,7 +335,80 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 .faq-body p { margin-top: 0; }
 .faq-body ol { margin-left: 20px; padding-left: 0; }
 .task { background: var(--card-bg); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.winners li { background: var(--card-bg); padding: 12px; margin: 8px auto; border-radius: 10px; max-width: 400px; text-align: center; font-weight: 500; border-left: 3px solid var(--secondary-color); }
+
+
+/* НОВЫЕ СТИЛИ ДЛЯ ПОБЕДИТЕЛЕЙ */
+.winners {
+    list-style: none;
+    padding: 0;
+}
+.winners ul {
+    list-style: none; 
+    padding: 0;
+}
+.winners li {
+    background: var(--card-bg); 
+    padding: 15px 20px;
+    margin: 10px auto;
+    border-radius: 12px; 
+    max-width: 450px; 
+    text-align: left; 
+    font-weight: 500;
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    display: flex; 
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.winners li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); 
+}
+
+/* Стили для иконки победителя */
+.winners li i {
+    font-size: 1.4em;
+    color: var(--secondary-color); 
+    margin-right: 15px;
+    min-width: 25px;
+    text-align: center;
+}
+/* Стили для выделения имени/приза */
+.winners li strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Стили плашек статуса */
+.winner-status {
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-left: auto; /* Сдвигает плашку вправо */
+    white-space: nowrap; 
+    border: 1px solid transparent;
+}
+.winner-status.success {
+    background: #1e452a; 
+    color: var(--secondary-color); 
+    border-color: var(--secondary-color);
+}
+.winner-status.pending {
+    background: #333d47; 
+    color: #b0b8c2; 
+    border-color: #6c757d;
+}
+.winner-status.refused {
+    background: #5c1b1f; 
+    color: var(--accent-red); 
+    border-color: var(--accent-red);
+}
+/* КОНЕЦ НОВЫХ СТИЛЕЙ */
+
 .status-section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 400px; text-align: left; }
 .status-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1f262f; font-weight: 500; }
 .status-dot.green { color: var(--secondary-color); }
@@ -493,7 +575,8 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     <p>Выберите рекомендованный клиент и ваше устройство для получения инструкции:</p>
     
     <div class="install-section">
-        <h3><i class="fas fa-satellite-dish"></i> V2RayTun (Рекомендуется)</h3>
+        <div class="recommended-badge">Рекомендуется</div>
+        <h3><i class="fas fa-satellite-dish"></i> V2RayTun</h3>
         <div class="faq-card">
             <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
             <div class="faq-body">
@@ -623,12 +706,25 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 <div id="winners" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
     <h2>Последние победители</h2>
-    <p>Следите за регулярными розыгрышами и акциями в нашем канале <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a></p>
+    <p>Мы проводили розыгрыше в нашем канале и тут находятся участники, которые выиграли:</p>
+    <p>Следите за новыми розыгрышами и акциями: <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a></p>
     <div class="winners">
         <ul>
-            <li><i class="fas fa-user-check"></i> **Иван** — 30 дней подписки</li>
-            <li><i class="fas fa-user-check"></i> **Мария** — 60 дней подписки</li>
-            <li><i class="fas fa-user-check"></i> **Алексей** — 90 дней подписки</li>
+            <li>
+                <i class="fas fa-crown"></i> 
+                <strong>Иван</strong> &mdash; 30 дней подписки
+                <span class="winner-status success">Приз выдан</span>
+            </li>
+            <li>
+                <i class="fas fa-crown"></i> 
+                <strong>Мария</strong> &mdash; 60 дней подписки
+                <span class="winner-status pending">Ожидание</span>
+            </li>
+            <li>
+                <i class="fas fa-crown"></i> 
+                <strong>Алексей</strong> &mdash; 90 дней подписки
+                <span class="winner-status refused">Отказ</span>
+            </li>
         </ul>
     </div>
 </div>
@@ -684,5 +780,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
