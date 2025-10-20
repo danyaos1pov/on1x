@@ -32,7 +32,7 @@ body {
 }
 a { text-decoration: none; color: inherit; }
 
-/* === Плавные переходы страниц (улучшено) === */
+/* === Плавные переходы страниц === */
 .page {
     display: none;
     padding: 20px 15px; 
@@ -72,15 +72,16 @@ h2 { font-size: 1.8em; margin: 20px 0; border-bottom: 2px solid rgba(255,255,255
 h3,h4 { margin:15px 0; }
 p { margin:10px 0; line-height:1.6; color: #b0b8c2; } 
 
-/* === Главное меню (сетка для 7 элементов) === */
+/* === Главное меню (сетка для 8 элементов) === */
 .menu-grid { 
     display:grid; 
-    grid-template-columns:1fr 1fr; 
+    grid-template-columns:1fr 1fr; /* 2 колонки по умолчанию */
     gap:15px; 
     max-width:500px; 
     margin:20px auto; 
 }
-@media (min-width: 400px) and (max-width: 500px) {
+@media (min-width: 400px) {
+    /* 8 элементов лучше всего смотрятся как 4x2 или 3x3 с пустым местом. Оставим 3x3 с пустым местом для сохранения стиля */
     .menu-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
@@ -147,13 +148,87 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
 .back-button:hover { color: #00c6ff; background: rgba(255,255,255,0.05); }
 .back-button i { margin-right: 5px; }
 
-/* === Раздел Установки / FAQ (Основные стили) === */
 
-/* Контейнеры для V2RayTun и Happ */
+/* === ТАРИФЫ (ДИЗАЙН) - используется для #buy, #renew) === */
+.tariffs-container {
+    display: block; 
+    max-width: 400px; 
+    margin: 20px auto;
+}
+.tariff-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px; 
+    color: var(--text-color);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    transition: none; 
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+.tariff-card:hover {
+    transform: none; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.tariff-card.popular { 
+    border: 1px solid var(--primary-color); 
+    background: var(--card-bg); 
+}
+.popular-badge { display: none; }
+.tariff-card h3 {
+    margin: 0 0 5px;
+    font-size: 1.4em;
+    color: var(--primary-color);
+}
+.price { 
+    font-size: 2.2em; 
+    font-weight: 700; 
+    margin: 5px 0 15px; 
+    color: var(--text-color);
+}
+.price span {
+    font-size: 0.5em;
+    font-weight: normal;
+    color: #b0b8c2;
+    display: block;
+}
+.tariff-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    text-align: center; 
+}
+.tariff-card ul li {
+    padding: 5px 0;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    color: #b0b8c2;
+    font-size: 0.9em;
+}
+.tariff-card ul li i {
+    margin-right: 8px;
+    color: var(--secondary-color);
+    font-size: 1em;
+}
+.tariff-card .button {
+    width: 100%;
+    max-width: none;
+    margin: 15px auto 0; 
+    padding: 12px 0; 
+    border-radius: 8px;
+    background: var(--gradient-button);
+}
+.tariff-card .button:hover { transform: none; } 
+
+
+/* === FAQ / Установка (аккордеон) === */
 .install-section {
     margin-top: 30px;
     padding: 15px;
-    background: #1a202c; /* Отдельный фон для секции */
+    background: #1a202c; 
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
@@ -164,13 +239,11 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     padding-bottom: 10px;
     border-bottom: 2px solid rgba(255,255,255,0.1);
 }
-
-/* Карточки для OS внутри секции */
 .faq-card {
     background: var(--card-bg);
     border-radius: 10px;
-    margin: 10px 0; /* Убрал auto, чтобы прилипали к краям install-section */
-    max-width: none; /* Убрал ограничение ширины */
+    margin: 10px 0; 
+    max-width: none; 
     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.05);
@@ -217,45 +290,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     line-height: 1.4;
 }
 
-/* === Тарифы / Задания / Победители / Статус (без изменений) === */
-.tariffs-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin: 20px auto;
-}
-.tariff-card {
-    background: var(--card-bg);
-    border-radius: 15px;
-    padding: 20px;
-    color: var(--text-color);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
-    border: 1px solid transparent;
-}
-.tariff-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,123,255,0.2);
-}
-.tariff-card.popular { 
-    border: 2px solid var(--primary-color); 
-    background: linear-gradient(145deg, #1a202c, #161b22); 
-}
-.popular-badge {
-    position: absolute;
-    top: 15px; 
-    right: 15px;
-    background: var(--accent-yellow); 
-    color: #0d1117;
-    font-weight: bold;
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 50px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
+/* === Другие секции (без изменений) === */
 .task { 
     background: var(--card-bg); 
     padding: 20px; 
@@ -288,7 +323,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     padding: 20px;
     margin: 20px auto;
     max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     text-align: left;
 }
 .status-section h3 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
@@ -325,166 +359,25 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
     <p style="color:#b0b8c2;">Ваш надежный VPN-сервис в один клик. Быстро, безопасно, анонимно.</p>
 
     <div class="menu-grid">
-        <div class="menu-card" onclick="showPage('tariffs')"><i class="fas fa-rocket"></i>Тарифы</div>
+        <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить подписку</div>
+        <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить подписку</div>
+        <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
+        
         <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
         <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
         <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
+
         <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-hand-holding-heart"></i>Бесплатный VPN</div>
         <div class="menu-card" onclick="showPage('winners')"><i class="fas fa-trophy"></i>Победители</div>
-        <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
+        
+        <div class="menu-card" style="visibility:hidden; height:0; padding:0; border:none; box-shadow:none;"></div>
     </div>
 </div>
 
-<div id="install" class="page">
+<div id="buy" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Установка приложения</h2>
-    <p>Выберите удобный для вас клиент приложения, а затем необходимо устройство:</p>
-
-    <div class="install-section">
-        <h3><i class="fas fa-satellite-dish"></i> V2RayTun (Рекомендуется)</h3>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun App Store</a></p>
-                <ol>
-                    <li>Установите приложение **V2RayTun** из App Store.</li>
-                    <li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li>
-                    <li>В приложении V2RayTun нажмите на **+** и выберите "Импорт через QR-код" или "Import from URL".</li>
-                    <li>Сохраните и активируйте профиль.</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Google Play</a></p>
-                <ol>
-                    <li>Установите **V2RayTun** из Google Play.</li>
-                    <li>В боте получите **ссылку** на конфигурацию.</li>
-                    <li>Откройте V2RayTun, нажмите **+** и выберите "Import config from Clipboard" или "Import from URL".</li>
-                    <li>Нажмите кнопку активации (Круг) для запуска.</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Desktop</a> (или аналогичный V2Ray клиент)</p>
-                <ol>
-                    <li>Скачайте и установите V2Ray клиент.</li>
-                    <li>В Telegram-боте запросите **конфигурационный файл (.json)**.</li>
-                    <li>Импортируйте файл в программу, затем активируйте соединение.</li>
-                </ol>
-            </div>
-        </div>
-        
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Используйте клиент **V2RayX** или **Qv2ray**.</p>
-                <ol>
-                    <li>Установите выбранный клиент.</li>
-                    <li>Используйте **QR-код** или **ссылку** для быстрого импорта конфигурации.</li>
-                    <li>Запустите соединение в клиенте.</li>
-                </ol>
-            </div>
-        </div>
-        
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Используйте **Qv2ray** или командную строку V2Ray.</p>
-                <ol>
-                    <li>Установите V2Ray.</li>
-                    <li>Вручную скопируйте и настройте полученный **.json** файл конфигурации.</li>
-                    <li>Запустите службу V2Ray.</li>
-                </ol>
-            </div>
-        </div>
-        
-        <div class="faq-card">
-            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Установите **V2RayTun** через сторонние магазины или APK файл, если он не доступен в основном Google Play TV.</p>
-                <ol>
-                    <li>Скачайте **V2RayTun APK** и установите на ТВ (через флешку или файловый менеджер).</li>
-                    <li>Используйте **QR-код** для импорта (отсканируйте с телефона).</li>
-                    <li>Активируйте соединение.</li>
-                </ol>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="install-section">
-        <h3><i class="fas fa-smile"></i> Happ</h3>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p>
-                <ol>
-                    <li>Установите приложение **Happ** из App Store.</li>
-                    <li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li>
-                    <li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li>
-                    <li>Сохраните и включите профиль.</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
-                <ol>
-                    <li>Установите **Happ** из Google Play.</li>
-                    <li>В боте получите **ссылку** на конфигурацию.</li>
-                    <li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li>
-                    <li>Нажмите кнопку активации.</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>На данный момент Happ ориентирован в основном на мобильные устройства. Используйте V2RayTun (или аналоги) для Windows.</p>
-                <p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p>
-            </div>
-        </div>
-
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Happ не имеет официального клиента для macOS. Пожалуйста, используйте V2Ray-клиенты или другие VPN-протоколы.</p>
-                <p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p>
-            </div>
-        </div>
-        
-        <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Использование Happ на Linux не поддерживается.</p>
-                <p><strong>Рекомендация:</strong> Воспользуйтесь клиентами V2Ray, такими как Qv2ray.</p>
-            </div>
-        </div>
-        
-        <div class="faq-card">
-            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
-            <div class="faq-body">
-                <p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p>
-                <p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="tariffs" class="page">
-    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Тарифы</h2>
+    <h2>Купить подписку</h2>
+    <p>Выберите подходящий тариф и получите ключ для активации в Telegram-боте.</p>
     <div class="tariffs-container">
         <div class="tariff-card">
             <h3>Месяц</h3>
@@ -494,11 +387,10 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
                 <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
                 <li><i class="fas fa-check-circle"></i> 1 устройство</li>
             </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 100 ₽</a>
         </div>
         
         <div class="tariff-card popular">
-            <div class="popular-badge">🔥 Выгодно</div>
             <h3>2 Месяца</h3>
             <div class="price">200 руб<span>/ 60 дней</span></div>
             <ul>
@@ -506,7 +398,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
                 <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
                 <li><i class="fas fa-check-circle"></i> 2 устройства</li>
             </ul>
-            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Подключиться</a>
+            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Купить за 200 ₽</a>
         </div>
         
         <div class="tariff-card">
@@ -517,7 +409,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
                 <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
                 <li><i class="fas fa-check-circle"></i> 3 устройства</li>
             </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 300 ₽</a>
         </div>
         
         <div class="tariff-card">
@@ -528,63 +420,85 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
                 <li><i class="fas fa-check-circle"></i> Приоритет в поддержке</li>
                 <li><i class="fas fa-check-circle"></i> 5 устройств</li>
             </ul>
-            <a href="https://t.me/on1xVPN_bot" class="button">Подключиться</a>
+            <a href="https://t.me/on1xVPN_bot" class="button">Купить за 600 ₽</a>
         </div>
     </div>
 </div>
 
-<div id="faq" class="page">
+<div id="renew" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Часто задаваемые вопросы</h2>
-
-    <div class="faq-card">
-        <div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div>
-        <div class="faq-body">Нажмите "Подключиться" на главной странице или в разделе тарифов, чтобы перейти в наш Telegram бот. Все дальнейшие инструкции будут там.</div>
-    </div>
-
-    <div class="faq-card">
-        <div class="faq-header">Стоимость подписки? <i class="fas fa-chevron-right arrow"></i></div>
-        <div class="faq-body">Стоимость варьируется от 100 до 600 рублей в зависимости от выбранного тарифа. Самый выгодный - 60 дней за 200 руб.</div>
-    </div>
-
-    <div class="faq-card">
-        <div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div>
-        <div class="faq-body">Для продления или смены тарифа просто купите новый тариф через наш Telegram бот. Он автоматически заменит или продлит текущую подписку.</div>
-    </div>
-    
-    <div class="faq-card">
-        <div class="faq-header">Какие гарантии? <i class="fas fa-chevron-right arrow"></i></div>
-        <div class="faq-body">Мы гарантируем стабильную работу. В случае проблем с подключением или скоростью, наша поддержка оперативно решит вопрос или предложит возврат средств.</div>
+    <h2>Продлить подписку</h2>
+    <p>Для продления выберите действующий или новый тариф. Срок подписки будет автоматически добавлен к текущему.</p>
+    <div class="tariffs-container">
+        <div class="tariff-card">
+            <h3>Месяц</h3>
+            <div class="price">100 руб<span>/ 30 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 1 устройство</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на 1 месяц</a>
+        </div>
+        
+        <div class="tariff-card popular">
+            <h3>2 Месяца</h3>
+            <div class="price">200 руб<span>/ 60 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 2 устройства</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Продлить на 2 месяца</a>
+        </div>
+        
+        <div class="tariff-card">
+            <h3>3 Месяца</h3>
+            <div class="price">300 руб<span>/ 90 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Высокая скорость</li>
+                <li><i class="fas fa-check-circle"></i> Без ограничений трафика</li>
+                <li><i class="fas fa-check-circle"></i> 3 устройства</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на 3 месяца</a>
+        </div>
+        
+        <div class="tariff-card">
+            <h3>Пол года</h3>
+            <div class="price">600 руб<span>/ 180 дней</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Макс. скорость</li>
+                <li><i class="fas fa-check-circle"></i> Приоритет в поддержке</li>
+                <li><i class="fas fa-check-circle"></i> 5 устройств</li>
+            </ul>
+            <a href="https://t.me/on1xVPN_bot" class="button">Продлить на пол года</a>
+        </div>
     </div>
 </div>
 
-<div id="tasks" class="page">
+<div id="install" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Бесплатный VPN за задания</h2>
-    <div class="task">
-        <p>Получите **10 дней** бесплатной подписки за выполнение простого задания:</p>
-        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a>.</p>
-        <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
+    <h2>Установка приложения</h2>
+    <p>Выберите рекомендованный клиент и ваше устройство для получения инструкции:</p>
+
+    <div class="install-section">
+        <h3><i class="fas fa-satellite-dish"></i> V2RayTun (Рекомендуется)</h3>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun App Store</a></p><ol><li>Установите приложение **V2RayTun** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении V2RayTun нажмите на **+** и выберите "Импорт через QR-код" или "Import from URL".</li><li>Сохраните и активируйте профиль.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Google Play</a></p><ol><li>Установите **V2RayTun** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте V2RayTun, нажмите **+** и выберите "Import config from Clipboard" или "Import from URL".</li><li>Нажмите кнопку активации (Круг) для запуска.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">V2RayTun Desktop</a> (или аналогичный V2Ray клиент)</p><ol><li>Скачайте и установите V2Ray клиент.</li><li>В Telegram-боте запросите **конфигурационный файл (.json)**.</li><li>Импортируйте файл в программу, затем активируйте соединение.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Используйте клиент **V2RayX** или **Qv2ray**.</p><ol><li>Установите выбранный клиент.</li><li>Используйте **QR-код** или **ссылку** для быстрого импорта конфигурации.</li><li>Запустите соединение в клиенте.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Используйте **Qv2ray** или командную строку V2Ray.</p><ol><li>Установите V2Ray.</li><li>Вручную скопируйте и настройте полученный **.json** файл конфигурации.</li><li>Запустите службу V2Ray.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Установите **V2RayTun** через сторонние магазины или APK файл, если он не доступен в основном Google Play TV.</p><ol><li>Скачайте **V2RayTun APK** и установите на ТВ (через флешку или файловый менеджер).</li><li>Используйте **QR-код** для импорта (отсканируйте с телефона).</li><li>Активируйте соединение.</li></ol></div></div>
     </div>
-</div>
 
-<div id="support" class="page">
-    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Поддержка</h2>
-    <p>Свяжитесь с администратором для оперативной помощи по любым вопросам, связанным с сервисом:</p>
-    <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
-</div>
-
-<div id="winners" class="page">
-    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Последние победители</h2>
-    <p>Следите за регулярными розыгрышами и акциями в нашем канале <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a></p>
-    <div class="winners">
-        <ul>
-            <li><i class="fas fa-user-check"></i> **Иван** — 30 дней подписки</li>
-            <li><i class="fas fa-user-check"></i> **Мария** — 60 дней подписки</li>
-            <li><i class="fas fa-user-check"></i> **Алексей** — 90 дней подписки</li>
-        </ul>
+    <div class="install-section">
+        <h3><i class="fas fa-smile"></i> Happ</h3>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p><ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p><ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>На данный момент Happ ориентирован в основном на мобильные устройства. Используйте V2RayTun (или аналоги) для Windows.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Happ не имеет официального клиента для macOS. Пожалуйста, используйте V2Ray-клиенты или другие VPN-протоколы.</p><p><strong>Рекомендация:</strong> Перейдите в секцию **V2RayTun** выше.</p></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Использование Happ на Linux не поддерживается.</p><p><strong>Рекомендация:</strong> Воспользуйтесь клиентами V2Ray, такими как Qv2ray.</p></div></div>
+        <div class="faq-card"><div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body"><p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p><p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p></div></div>
     </div>
 </div>
 
@@ -606,6 +520,45 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; }
         <div class="status-item"><span>Нидерланды #3</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         <div class="status-item"><span>Россия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
         <div class="status-item"><span>Германия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
+    </div>
+</div>
+
+<div id="faq" class="page">
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Часто задаваемые вопросы</h2>
+    <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Нажмите "Купить подписку" или "Продлить подписку" на главной странице, чтобы перейти в наш Telegram бот. Все дальнейшие инструкции будут там.</div></div>
+    <div class="faq-card"><div class="faq-header">Стоимость подписки? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Стоимость варьируется от 100 до 600 рублей в зависимости от выбранного тарифа. Самый выгодный - 60 дней за 200 руб. См. раздел "Купить подписку".</div></div>
+    <div class="faq-card"><div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для продления или смены тарифа воспользуйтесь разделом "Продлить подписку" или купите новый тариф через наш Telegram бот. Он автоматически заменит или продлит текущую подписку.</div></div>
+    <div class="faq-card"><div class="faq-header">Какие гарантии? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Мы гарантируем стабильную работу. В случае проблем с подключением или скоростью, наша поддержка оперативно решит вопрос или предложит возврат средств.</div></div>
+</div>
+
+<div id="support" class="page">
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Поддержка</h2>
+    <p>Свяжитесь с администратором для оперативной помощи по любым вопросам, связанным с сервисом:</p>
+    <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
+</div>
+
+<div id="tasks" class="page">
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Бесплатный VPN за задания</h2>
+    <div class="task">
+        <p>Получите **10 дней** бесплатной подписки за выполнение простого задания:</p>
+        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a>.</p>
+        <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
+    </div>
+</div>
+
+<div id="winners" class="page">
+    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <h2>Последние победители</h2>
+    <p>Следите за регулярными розыгрышами и акциями в нашем канале <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a></p>
+    <div class="winners">
+        <ul>
+            <li><i class="fas fa-user-check"></i> **Иван** — 30 дней подписки</li>
+            <li><i class="fas fa-user-check"></i> **Мария** — 60 дней подписки</li>
+            <li><i class="fas fa-user-check"></i> **Алексей** — 90 дней подписки</li>
+        </ul>
     </div>
 </div>
 
@@ -639,17 +592,6 @@ document.querySelectorAll('.faq-header').forEach(header=>{
             body.style.display = 'block';
             header.classList.add('active');
         }
-        
-        // Примечание: Мы не закрываем другие аккордеоны, чтобы пользователь мог сравнивать инструкции
-        // Но если нужно закрывать другие, нужно добавить логику
-        /*
-        document.querySelectorAll('.faq-body').forEach(b => {
-            if (b !== body && b.style.display === 'block') {
-                b.style.display = 'none';
-                b.previousElementSibling.classList.remove('active');
-            }
-        });
-        */
     });
 });
 
@@ -658,6 +600,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.querySelector('.page.active')) {
         showPage('home');
     }
+    // Также обновляем текст в FAQ, чтобы он соответствовал новым кнопкам
+    const faqTexts = [
+        { header: 'Как подключиться?', newText: 'Нажмите "Купить подписку" или "Продлить подписку" на главной странице, чтобы перейти в наш Telegram бот. Все дальнейшие инструкции будут там.' },
+        { header: 'Стоимость подписки?', newText: 'Стоимость варьируется от 100 до 600 рублей в зависимости от выбранного тарифа. Самый выгодный - 60 дней за 200 руб. См. раздел "Купить подписку".' },
+        { header: 'Как обновить подписку?', newText: 'Для продления или смены тарифа воспользуйтесь разделом "Продлить подписку" или купите новый тариф через наш Telegram бот. Он автоматически заменит или продлит текущую подписку.' }
+    ];
+    
+    document.querySelectorAll('#faq .faq-card').forEach(card => {
+        const headerText = card.querySelector('.faq-header').textContent.trim().split(' ')[0] + '?'; // Берем только заголовок
+        const match = faqTexts.find(item => item.header.startsWith(headerText));
+        if (match) {
+            card.querySelector('.faq-body').innerHTML = match.newText;
+        }
+    });
 });
 </script>
 </body>
