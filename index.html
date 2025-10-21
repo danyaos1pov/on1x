@@ -102,7 +102,8 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     flex-grow: 1;
     background: transparent;
     border: none;
-    color: var(--primary-color);
+    /* Изменено на светлый текст */
+    color: var(--text-color);
     font-size: 1.2em;
     font-weight: 700;
     text-align: center;
@@ -121,10 +122,23 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     font-weight: bold;
     transition: 0.2s;
     box-shadow: 0 2px 5px rgba(0,123,255,0.3);
+    /* Задаем минимальную ширину/высоту, чтобы избежать изменения размера */
+    min-width: 45px; 
+    min-height: 45px;
+    display: flex; /* Для центрирования иконки */
+    align-items: center;
+    justify-content: center;
 }
 .copy-button:hover {
     background: linear-gradient(90deg, #00c6ff, #007bff);
 }
+
+/* НОВОЕ: Стиль для скопированного состояния (Зеленая кнопка) */
+.copy-button.copied {
+    background: var(--secondary-color); /* Зеленый цвет */
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.4); /* Зеленая тень */
+}
+
 
 /* === Главное меню (СЕТКА) === */
 .menu-grid { 
@@ -498,7 +512,7 @@ border-color: #6c757d;
     </div>
     <h1>ON1X VPN</h1>
     
-    <p style="color:var(--primary-color); font-weight:bold; margin-bottom: 5px;">Держи промокод на 10% на любой срок подписки</p>
+    <p style="color:var(--text-color); font-weight:bold; margin-bottom: 5px;">Держи промокод на 10% на любой срок подписки</p>
 
     <div class="promo-block">
         <input type="text" id="promoCodeInput" class="promo-input" value="MiniApp" readonly disabled>
@@ -969,31 +983,46 @@ if(p.classList.contains('active')){
     setTimeout(()=>{ next.classList.add('active'); }, 10);
 }
 
-// НОВАЯ ФУНКЦИЯ ДЛЯ КОПИРОВАНИЯ ПРОМОКОДА
+// ИЗМЕНЕНА: НОВАЯ ФУНКЦИЯ ДЛЯ КОПИРОВАНИЯ ПРОМОКОДА
 function copyPromoCode() {
     const copyText = document.getElementById("promoCodeInput");
-    
-    // Использование современного API navigator.clipboard
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(copyText.value).then(() => {
-            // Опционально: можно добавить визуальный фидбек, например, сменить иконку на галочку
-            alert("Промокод скопирован: " + copyText.value);
-            const button = document.querySelector('.copy-button');
-            const originalHtml = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check"></i> Скопировано';
-            setTimeout(() => {
-                button.innerHTML = originalHtml;
-            }, 2000);
-        }).catch(err => {
-            console.error('Не удалось скопировать текст: ', err);
-        });
-    } else {
-        // Запасной метод для старых браузеров (хотя он работает только в нативных браузерах)
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); /* Для мобильных */
-        document.execCommand("copy");
-        alert("Промокод скопирован (резервный метод): " + copyText.value);
-    }
+    const button = document.querySelector('.copy-button');
+    const originalIconClass = 'fas fa-copy'; // Исходная иконка
+
+    // Функция копирования
+    const performCopy = (text) => {
+        if (navigator.clipboard) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            // Резервный метод
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+            try {
+                document.execCommand("copy");
+                return Promise.resolve();
+            } catch (err) {
+                return Promise.reject(err);
+            }
+        }
+    };
+
+    performCopy(copyText.value).then(() => {
+        // 1. Уведомление
+        alert("Промокод скопирован: " + copyText.value);
+        
+        // 2. Визуальный фидбек: Зеленый цвет и иконка "галочка"
+        button.innerHTML = '<i class="fas fa-check"></i>'; // Иконка "галочка"
+        button.classList.add('copied');
+
+        // 3. Возвращаем исходный вид через 2 секунды
+        setTimeout(() => {
+            button.innerHTML = `<i class="${originalIconClass}"></i>`; // Исходная иконка
+            button.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Не удалось скопировать текст: ', err);
+        alert("Ошибка: Не удалось скопировать промокод. Попробуйте вручную."); 
+    });
 }
 
 // Скрипт для раскрытия FAQ/Установки
