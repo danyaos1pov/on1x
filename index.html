@@ -7,11 +7,14 @@
 <style>
 /* === Глобальные стили и переменные === */
 :root {
-    --primary-color: #007bff; /* Ярко-синий */
+    --primary-color: #007bff;
+/* Ярко-синий */
     --secondary-color: #28a745; /* Зеленый для успеха/активности */
-    --bg-dark: #0d1117; /* Основной фон (почти черный) */
+    --bg-dark: #0d1117;
+/* Основной фон (почти черный) */
     --card-bg: #161b22; /* Фон карточек */
-    --text-color: #e6edf3; /* Светлый текст */
+    --text-color: #e6edf3;
+/* Светлый текст */
     --gradient-button: linear-gradient(90deg, #007bff, #00c6ff);
     --accent-red: #dc3545;
     --channel-gradient: linear-gradient(90deg, #1e90ff, #00bfff);
@@ -20,105 +23,103 @@
     box-sizing: border-box; 
     margin: 0; 
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; /* */
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 body { 
-    background: var(--bg-dark); /* */
-    color: var(--text-color); /* */
-    text-align: center; /* */
-    min-height: 100vh; /* */
-    padding-bottom: 50px; /* */
+    background: var(--bg-dark); 
+    color: var(--text-color); 
+    text-align: center; 
+    min-height: 100vh; 
+    padding-bottom: 50px; 
 }
 a { text-decoration: none;
-    color: inherit; /* */
-}
+color: inherit; }
 
 /* === Плавные переходы страниц === */
 .page {
     display: none;
     padding: 20px 15px; 
     opacity: 0;
-    transform: translateY(10px); /* */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* */
+transform: translateY(10px); 
+    transition: opacity 0.3s ease, transform 0.3s ease;
     position: relative;
     max-width: 600px; 
-    margin: 0 auto; /* */
+    margin: 0 auto;
 }
 .page.active {
     display: block;
     opacity: 1;
-    transform: translateY(0); /* */
+    transform: translateY(0);
 }
 
 /* === Логотип и анимация === */
-.pulse-container { position: relative; width: 120px; height: 120px; margin: 30px auto; /* */
+.pulse-container { position: relative; width: 120px; height: 120px; margin: 30px auto;
 }
-.pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:4px solid var(--primary-color); object-fit: cover; /* */
+.pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:4px solid var(--primary-color); object-fit: cover;
 }
 .pulse-circle {
     position: absolute; top:50%; left:50%; width:120px; height:120px;
     border-radius:50%; border:1px solid rgba(0,123,255,0.5); 
     transform: translate(-50%,-50%) scale(0);
-    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); /* */
+animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
 }
 .pulse-circle:nth-child(2) { animation-delay:0.5s; }
-.pulse-circle:nth-child(3) { animation-delay:1s; /* */
+.pulse-circle:nth-child(3) { animation-delay:1s;
 }
 @keyframes pulse {
-    0% { transform: translate(-50%,-50%) scale(0.6); opacity:1; /* */
+    0% { transform: translate(-50%,-50%) scale(0.6); opacity:1;
 }
     80% { transform: translate(-50%,-50%) scale(1.1); opacity:0; }
-    100% { transform: translate(-50%,-50%) scale(1.1); opacity:0; /* */
+    100% { transform: translate(-50%,-50%) scale(1.1); opacity:0;
 }
 }
 
 /* === Заголовки и текст === */
 h1 { font-size: 2.2em; margin-bottom: 5px; color: var(--primary-color); }
 h2 { font-size: 1.8em;
-    margin: 20px 0; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; /* */
-}
+margin: 20px 0; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
 h3,h4 { margin:15px 0; }
-p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
+p { margin:10px 0; line-height:1.6; color: #b0b8c2;
 } 
 
 /* === Главное меню (СЕТКА) === */
 .menu-grid { 
     display:grid; 
-    /* ИЗМЕНЕНИЕ: Устанавливаем 3 колонки по умолчанию для всех мобильных */
-    grid-template-columns:1fr 1fr 1fr; 
+    grid-template-columns:1fr 1fr; 
     gap:15px; 
     max-width:500px;
-    margin:20px auto; /* */
+    margin:20px auto;
 }
 @media (min-width: 400px) {
     .menu-grid {
-        grid-template-columns: repeat(3, 1fr); /* */
-        gap: 10px; /* */
+        grid-template-columns: repeat(3, 1fr);
+gap: 10px;
     }
 }
-/* Удален медиа-запрос (max-width: 399px), чтобы 3 колонки работали на самых маленьких экранах */
-
+@media (max-width: 399px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+}
+}
 .menu-card { 
     background: var(--card-bg); 
-    /* ИЗМЕНЕНИЕ: Уменьшаем padding для лучшей вместимости 3-х колонок */
-    padding:15px 10px; 
+    padding:25px 15px; 
     border-radius:15px; 
-    display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; /* */
-    transition: transform 0.2s, box-shadow 0.2s; /* */
+    display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;
+transition: transform 0.2s, box-shadow 0.2s; 
     font-weight:600; 
     color: var(--text-color);
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     border: 1px solid rgba(255,255,255,0.05); 
-    min-height: 100px; /* */
+    min-height: 100px;
 }
 .menu-card:hover { 
     transform: translateY(-3px); 
     box-shadow: 0 8px 15px rgba(0,123,255,0.2); 
     border-color: var(--primary-color);
 }
-.menu-card i { font-size:28px; margin-bottom:10px; /* */
-    color: var(--primary-color); /* */
-}
+.menu-card i { font-size:28px; margin-bottom:10px;
+color: var(--primary-color); }
 
 /* === Кнопки (стандартные) === */
 .button { 
@@ -126,46 +127,46 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     width:100%; 
     max-width:250px; 
     margin:20px auto; 
-    padding:12px 0; /* */
-    border-radius:10px; /* */
-    background: var(--gradient-button); /* */
+    padding:12px 0;
+border-radius:10px; 
+    background: var(--gradient-button); 
     color:white; 
     font-weight:bold;
     transition:0.3s; 
     box-shadow:0 3px 10px rgba(0,123,255,0.4);
     border: none;
-    cursor: pointer; /* */
-    /* ИСПРАВЛЕНИЕ: Гарантирует, что текст центрирован */
-    text-align: center; /* */
+    cursor: pointer;
+/* ИСПРАВЛЕНИЕ: Гарантирует, что текст центрирован */
+    text-align: center;
 }
 .button:hover { 
-    transform:translateY(-2px); /* */
-    box-shadow:0 6px 15px rgba(0,123,255,0.6); /* */
+    transform:translateY(-2px);
+box-shadow:0 6px 15px rgba(0,123,255,0.6);
 }
 
 /* === Специальная кнопка канала (для главной страницы) === */
 .channel-promo {
-    margin: 30px auto 10px; /* */
-    padding: 15px; /* */
-    background: var(--card-bg);
+    margin: 30px auto 10px;
+padding: 15px;
+background: var(--card-bg);
     border-radius: 15px;
     max-width: 500px; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1); /* */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 .channel-promo p {
     margin: 5px 0 15px;
     color: #b0b8c2;
-    font-size: 0.95em; /* */
+    font-size: 0.95em;
 }
 .channel-promo .button {
     max-width: 100%; 
     margin: 0;
     background: var(--channel-gradient);
-    box-shadow:0 3px 10px rgba(30, 144, 255, 0.5); /* */
+    box-shadow:0 3px 10px rgba(30, 144, 255, 0.5);
 }
 .channel-promo .button:hover {
-    box-shadow:0 6px 15px rgba(30, 144, 255, 0.7); /* */
+    box-shadow:0 6px 15px rgba(30, 144, 255, 0.7);
 }
 
 /* === Кнопка Назад === */
@@ -174,8 +175,8 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     top: 15px;
     left: 15px;
     background: transparent;
-    color: var(--primary-color); /* */
-    border: none; /* */
+    color: var(--primary-color);
+border: none;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -183,11 +184,11 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     align-items: center;
     transition: 0.2s;
     padding: 5px 10px;
-    border-radius: 5px; /* */
-    z-index: 20; /* */
+    border-radius: 5px;
+z-index: 20;
 }
 .back-button:hover { color: #00c6ff; background: rgba(255,255,255,0.05); }
-.back-button i { margin-right: 5px; /* */
+.back-button i { margin-right: 5px;
 }
 
 
@@ -196,28 +197,28 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     display: flex;
     flex-direction: column;
     gap: 15px; 
-    max-width: 500px; /* */
-    margin: 20px auto; /* */
+    max-width: 500px;
+margin: 20px auto;
 }
 .tariff-card {
     background: var(--card-bg);
     border-radius: 15px;
     padding: 20px; 
     color: var(--text-color);
-    text-align: left; /* */
-    transition: transform 0.3s, box-shadow 0.3s, background 0.3s; /* */
+    text-align: left;
+transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.05); 
     display: flex; 
-    justify-content: space-between; /* */
-    align-items: center; /* */
+    justify-content: space-between;
+align-items: center; 
     flex-wrap: wrap; 
     position: relative;
     overflow: hidden;
 }
 .tariff-card:hover {
     transform: scale(1.01);
-    box-shadow: 0 10px 20px rgba(0,123,255,0.3); /* */
+    box-shadow: 0 10px 20px rgba(0,123,255,0.3);
 }
 .tariff-card.popular {
     border-color: var(--primary-color);
@@ -225,37 +226,37 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
 }
 .tariff-card.popular::before {
     content: "🔥 Популярный";
-    position: absolute; /* */
-    top: 0; /* */
+    position: absolute;
+top: 0;
     right: 0;
     padding: 5px 10px;
     background: var(--secondary-color);
     color: #fff;
     font-size: 0.8em;
     font-weight: bold;
-    border-radius: 0 14px 0 10px; /* */
-    z-index: 5; /* */
+    border-radius: 0 14px 0 10px;
+z-index: 5;
 }
 .tariff-info {
     flex: 1; 
     min-width: 150px; 
 }
 .tariff-card h3 {
-    margin: 0; /* */
-    font-size: 1.5em; /* */
+    margin: 0;
+font-size: 1.5em;
     color: var(--primary-color);
 }
 .price { 
     font-size: 1.8em; 
     font-weight: 700; 
     margin: 5px 0 0; 
-    color: var(--text-color); /* */
+    color: var(--text-color);
 }
 .price span {
     font-size: 0.6em;
     font-weight: normal;
     color: #b0b8c2;
-    margin-left: 5px; /* */
+    margin-left: 5px;
 }
 .tariff-features-list {
     flex: 2; 
@@ -263,150 +264,147 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     justify-content: space-around;
     align-items: center;
     padding: 0 15px;
-    min-width: 250px; /* */
+    min-width: 250px;
 }
 .tariff-features-list div {
     text-align: center;
     font-size: 0.9em;
     color: #b0b8c2;
-    margin: 5px 0; /* */
+    margin: 5px 0;
 }
 .tariff-features-list i {
     color: var(--secondary-color);
     font-size: 1.2em;
     display: block;
-    margin-bottom: 5px; /* */
+    margin-bottom: 5px;
 }
 .tariff-features-list .highlight i {
     color: var(--primary-color); 
 }
 .tariff-card .button {
     width: 100%;
-    max-width: 150px; /* */
-    margin: 0; /* */
-    padding: 10px 0; /* */
+    max-width: 150px;
+margin: 0; 
+    padding: 10px 0; 
     font-size: 1em;
     border-radius: 8px;
     transition: 0.3s;
     text-align: center;
-    flex-shrink: 0; /* */
+    flex-shrink: 0;
 }
 @media (max-width: 450px) {
     .tariff-card {
         flex-direction: column;
-        align-items: flex-start; /* */
-        padding-bottom: 70px; /* */
+        align-items: flex-start;
+padding-bottom: 70px; 
     }
     .tariff-info {
-        margin-bottom: 15px; /* */
-    }
+        margin-bottom: 15px;
+}
     .tariff-features-list {
         padding: 0;
         justify-content: space-between;
-        width: 100%; /* */
-        margin-bottom: 15px; /* */
+        width: 100%;
+margin-bottom: 15px;
     }
     .tariff-card .button {
         position: absolute;
-        bottom: 15px; /* */
-        right: 15px; /* */
+        bottom: 15px;
+right: 15px;
         max-width: 120px;
     }
 }
 
 
 /* === Стили для FAQ, Install, Status и т.д.
- === */
+=== */
 .install-section { 
     position: relative;
     margin-top: 30px; 
     padding: 15px; 
     background: #1a202c; 
-    border-radius: 15px; /* */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* */
+    border-radius: 15px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
 }
 .recommended-badge {
     position: absolute;
     top: -10px; 
     right: 15px;
     background: var(--primary-color); 
-    color: white; /* */
-    padding: 5px 10px; /* */
+    color: white;
+padding: 5px 10px;
     border-radius: 8px;
     font-size: 0.85em;
     font-weight: 700;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    z-index: 15; /* */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* */
+    z-index: 15;
+border: 1px solid rgba(255, 255, 255, 0.2);
 }
-.faq-card { background: var(--card-bg); border-radius: 10px; margin: 10px 0; max-width: none; /* */
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); /* */
-}
-.faq-header { padding: 15px; cursor: pointer; font-weight: 600; /* */
-    display: flex; justify-content: space-between; align-items: center; background: #1f262f; transition: background 0.2s; color: var(--text-color); /* */
-}
-.faq-header:hover { background: #2a3443; /* */
+.faq-card { background: var(--card-bg); border-radius: 10px; margin: 10px 0; max-width: none;
+box-shadow: 0 3px 8px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+.faq-header { padding: 15px; cursor: pointer; font-weight: 600;
+display: flex; justify-content: space-between; align-items: center; background: #1f262f; transition: background 0.2s; color: var(--text-color); }
+.faq-header:hover { background: #2a3443;
 }
 .faq-header.active .arrow { transform: rotate(90deg); }
 .faq-body { 
     display: none; 
     padding: 15px; 
     text-align: left; 
-    background: var(--card-bg); /* */
-    border-top: 1px solid #1f262f; /* */
+    background: var(--card-bg);
+border-top: 1px solid #1f262f; 
     color: #b0b8c2; 
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* */
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
-.faq-body p { margin-top: 0; /* */
+.faq-body p { margin-top: 0;
 }
 .faq-body ol { margin-left: 20px; padding-left: 0; }
-.task { background: var(--card-bg); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 400px; /* */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* */
-}
+.task { background: var(--card-bg); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 400px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
 
 /* НОВЫЕ СТИЛИ ДЛЯ ПОБЕДИТЕЛЕЙ */
 .winners {
     list-style: none;
-    padding: 0; /* */
+    padding: 0;
 }
 .winners ul {
     list-style: none; 
-    padding: 0; /* */
+    padding: 0;
 }
 .winners li {
-    background: var(--card-bg); /* */
-    padding: 15px 20px; /* */
+    background: var(--card-bg);
+padding: 15px 20px;
     margin: 10px auto;
     border-radius: 12px; 
     max-width: 450px; 
     text-align: left; 
-    font-weight: 500; /* */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* */
+    font-weight: 500;
+border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     
     display: flex; 
-    align-items: center; /* */
-    transition: transform 0.2s, box-shadow 0.2s; /* */
+    align-items: center;
+transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .winners li:hover {
-    transform: translateY(-2px); /* */
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* */
+    transform: translateY(-2px);
+box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); 
 }
 
 /* Стили для иконки победителя */
 .winners li i {
-    font-size: 1.4em; /* */
-    color: var(--secondary-color); /* */
+    font-size: 1.4em;
+color: var(--secondary-color); 
     margin-right: 15px;
     min-width: 25px;
     text-align: center;
 }
 /* Стили для выделения имени/приза */
 .winners li strong {
-    color: var(--primary-color); /* */
-    font-weight: 700; /* */
+    color: var(--primary-color);
+font-weight: 700;
 }
 
 /* Стили плашек статуса */
@@ -414,31 +412,31 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     font-size: 0.75em;
     font-weight: 700;
     padding: 3px 8px;
-    border-radius: 6px; /* */
-    margin-left: auto; /* Сдвигает плашку вправо */
+    border-radius: 6px;
+margin-left: auto; /* Сдвигает плашку вправо */
     white-space: nowrap; 
-    border: 1px solid transparent; /* */
+    border: 1px solid transparent;
 }
 .winner-status.success {
     background: #1e452a; 
     color: var(--secondary-color); 
-    border-color: var(--secondary-color); /* */
+    border-color: var(--secondary-color);
 }
 .winner-status.pending {
     background: #333d47; 
-    color: #b0b8c2; /* */
-    border-color: #6c757d; /* */
+    color: #b0b8c2;
+border-color: #6c757d;
 }
 .winner-status.refused {
     background: #5c1b1f; 
     color: var(--accent-red); 
-    border-color: var(--accent-red); /* */
+    border-color: var(--accent-red);
 }
 /* КОНЕЦ НОВЫХ СТИЛЕЙ */
 
-.status-section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 400px; text-align: left; /* */
+.status-section { background: var(--card-bg); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 400px; text-align: left;
 }
-.status-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1f262f; font-weight: 500; /* */
+.status-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1f262f; font-weight: 500;
 }
 .status-dot.green { color: var(--secondary-color); }
 .status-dot.red { color: var(--accent-red); } 
@@ -471,7 +469,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
         
         <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
       
- 
         <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
         
         <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
@@ -485,7 +482,6 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
     <div class="channel-promo">
         <p>Следите за новостями, обновлениями и акциями</p>
      
-   
         <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
     </div>
 </div>
@@ -500,15 +496,14 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2; /* */
             <div class="tariff-info">
      
             <h3>30 дней</h3>
-         
+           
             <div class="price">100 руб</div>
             </div>
             <div class="tariff-features-list">
                 <div><i class="fas fa-infinity"></i> Трафик</div>
                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
       
-           <div class="highlight"><i class="fas 
-fa-tachometer-alt"></i> 25 Гбит/с</div>
+           <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
        
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2089758" class="button">Купить</a>
@@ -518,15 +513,13 @@ fa-tachometer-alt"></i> 25 Гбит/с</div>
             <div class="tariff-info">
                 <h3>60 дней
    
-      
                 <div class="price">200 руб</div>
     
             </div>
             <div class="tariff-features-list">
                 <div><i class="fas fa-infinity"></i> Трафик</div>
                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
-                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 
-25 
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 
 Гбит/с</div>
             </div>
        
@@ -537,15 +530,13 @@ fa-tachometer-alt"></i> 25 Гбит/с</div>
             <div class="tariff-info">
                 <h3>90 дней</h3>
                 <div class="price">300 руб</div>
- 
          
             </div>
        
             <div class="tariff-features-list">
                 <div><i class="fas fa-infinity"></i> Трафик</div>
                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
-                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 
-Гбит/с</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
             </div>
             
 <a href="https://t.me/on1xVPN_bot?start=c_2300579" class="button">Купить</a>
@@ -555,7 +546,6 @@ fa-tachometer-alt"></i> 25 Гбит/с</div>
         <div class="tariff-card">
             <div class="tariff-info">
                 <h3>180 дней</h3>
-           
                 <div class="price">600 руб</div>
             </div>
             <div 
@@ -563,8 +553,7 @@ class="tariff-features-list">
           
                 <div><i class="fas fa-infinity"></i> Трафик</div>
                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
-                <div class="highlight"><i class="fas 
-fa-tachometer-alt"></i> 25 Гбит/с</div>
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2300580" class="button">Купить</a>
         </div>
@@ -581,7 +570,6 @@ class="page">
     <div class="tariffs-container">
         <div class="tariff-card">
             <div class="tariff-info">
-  
                 <h3>30 дней</h3>
                 <div class="price">100 руб</div>
             </div>
@@ -589,8 +577,7 @@ class="page">
             <div class="tariff-features-list">
    
                  <div><i class="fas fa-infinity"></i> Трафик</div>
-           
-                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
                 <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2173534" class="button">Продлить</a>
@@ -599,8 +586,7 @@ class="page">
        
   
        <div class="tariff-card popular">
-            <div 
-class="tariff-info">
+            <div class="tariff-info">
                 <h3>60 дней</h3>
                 <div class="price">200 руб</div>
             </div>
@@ -608,8 +594,7 @@ class="tariff-info">
       
                 <div><i class="fas fa-infinity"></i> 
 Трафик</div>
-               
-                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
+                <div><i class="fas fa-desktop"></i> 3 устройства</div>
                 <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2173536" class="button">Продлить</a>
@@ -619,8 +604,7 @@ class="tariff-info">
    
             <div class="tariff-info">
    
-            
-                <h3>90 дней</h3>
+                 <h3>90 дней</h3>
                 <div class="price">300 руб</div>
             </div>
             <div class="tariff-features-list">
@@ -628,8 +612,7 @@ class="tariff-info">
        
                 <div><i class="fas fa-desktop"></i> 3 устройства</div>
     
- 
-                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
+             <div class="highlight"><i class="fas fa-tachometer-alt"></i> 25 Гбит/с</div>
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2231867" class="button">Продлить</a>
         </div>
@@ -638,7 +621,6 @@ class="tariff-info">
             <div class="tariff-info">
  
                 <h3>180 дней</h3>
- 
   
                 <div class="price">600 руб</div>
             </div>
@@ -646,8 +628,7 @@ class="tariff-info">
                 <div><i class="fas fa-infinity"></i> Трафик</div>
                 <div><i class="fas fa-desktop"></i> 3 
 устройства</div>
-                <div 
-class="highlight"><i class="fas fa-tachometer-alt"></i> 
+                <div class="highlight"><i class="fas fa-tachometer-alt"></i> 
 25 Гбит/с</div>
             </div>
             <a href="https://t.me/on1xVPN_bot?start=c_2231869" class="button">Продлить</a>
@@ -669,7 +650,7 @@ class="highlight"><i class="fas fa-tachometer-alt"></i>
             <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
             <div class="faq-body">
                 
-                <p><strong>Клиент:</strong> V2RayTun App Store</p>
+<p><strong>Клиент:</strong> V2RayTun App Store</p>
                 <a href="https://apps.apple.com/ru/app/v2raytun/id6476628951" target="_blank" class="button">Скачать приложение</a>
                 <ol>
                     <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
@@ -677,9 +658,10 @@ class="highlight"><i class="fas fa-tachometer-alt"></i>
              
                     <li>Откройте приложение V2RayTun.</li>
                     <li>В правом верхнем углу нажмите на "+".</li>
+                    <li>Нажмите "Добавить из буфера".</li>
                     <li>Нажмите "Разрешить вставку".</li>
-       
-                    <li>Подключитесь к VPN.</li>
+                    
+<li>Подключитесь к VPN.</li>
                 </ol>
                 <p>✅ Готово!
 VPN настроен и готов к работе!</p>
@@ -692,7 +674,7 @@ VPN настроен и готов к работе!</p>
             <div class="faq-body">
                 <p><strong>Клиент:</strong> V2RayTun Google Play</p>
                 
-                <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button">Скачать приложение</a>
+<a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button">Скачать приложение</a>
                 <ol>
                     <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                     <li>Скачайте и установите приложение.</li>
@@ -702,7 +684,6 @@ VPN настроен и готов к работе!</p>
                     <li>Теперь нажмите "Импорт из буфера обмена".</li>
                     <li>Подключитесь к VPN.</li>
                 </ol>
-           
                 <p>✅ Готово!
 VPN настроен и готов к работе!</p>
                 <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ.
@@ -714,7 +695,7 @@ VPN настроен и готов к работе!</p>
             <div class="faq-body">
                 <p><strong>Клиент:</strong> V2RayTun Desktop</p>
                 <a 
-                href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button">Скачать приложение</a>
+href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button">Скачать приложение</a>
                 <ol>
                     <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                     <li>Скачайте и установите приложение.</li>
@@ -724,7 +705,6 @@ VPN настроен и готов к работе!</p>
                     <li>Теперь нажмите "Импорт из буфера обмена".</li>
                     <li>Подключитесь к VPN.</li>
                 </ol>
-           
                 <p>✅ Готово!
 VPN настроен и готов к работе!</p>
                 <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ.
@@ -736,18 +716,16 @@ VPN настроен и готов к работе!</p>
             <div class="faq-body">
                 <p><strong>Клиент:</strong> V2RayTun App Store</p>
                
-                <a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button">Скачать приложение</a>
+<a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button">Скачать приложение</a>
                 <ol>
                     <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                     <li>Скачайте и установите приложение.</li>
                     <li>Откройте приложение.</li>
           
- 
                     <li>В правом верхнем углу нажмите на "+".</li>
                     <li>Теперь нажмите "Импорт из буфера обмена".</li>
                     <li>Подключитесь к VPN.</li>
                 </ol>
-            
                 <p>✅ Готово!
 VPN настроен и готов к работе!</p>
                 <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ.
@@ -759,7 +737,7 @@ VPN настроен и готов к работе!</p>
             <div class="faq-body">
                 <p><strong>Клиент:</strong> Hiddify-Linux (V2Ray)</p>
                 <a 
-                href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button">Скачать приложение</a>
+href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button">Скачать приложение</a>
                 <ol>
                     <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                     <li>Скачайте и установите приложение.</li>
@@ -769,7 +747,6 @@ VPN настроен и готов к работе!</p>
                     <li>Теперь нажмите "Импорт из буфера обмена".</li>
                     <li>Подключитесь к VPN.</li>
                 </ol>
-           
                 <p>✅ Готово!
 VPN настроен и готов к работе!</p>
                 <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ.
@@ -789,8 +766,7 @@ VPN настроен и готов к работе!</p>
     <div class="install-section">
         <h3><i class="fas fa-smile"></i> Happ</h3>
         <div class="faq-card">
-            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas 
-fa-chevron-right arrow"></i></div>
+            <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
      
             <div class="faq-body">
                 <p><strong>Клиент:</strong> <a href="#" 
@@ -798,15 +774,13 @@ target="_blank">Happ App Store</a></p>
                 <ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol>
             </div>
         </div>
- 
         <div class="faq-card">
    
             <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
           <div class="faq-body">
                 <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
                 <ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol>
-  
-           </div>
+            </div>
     
         </div>
         <div class="faq-card">
@@ -825,7 +799,7 @@ target="_blank">Happ App Store</a></p>
         </div>
         <div class="faq-card">
             
-            <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
+<div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
             <div class="faq-body"><p>Для Android TV проще всего использовать **V2RayTun**, если Happ недоступен в магазине приложений ТВ.</p><p><strong>Рекомендация:</strong> Проверьте секцию **V2RayTun** для инструкции.</p></div>
         </div>
     </div>
@@ -838,7 +812,7 @@ target="_blank">Happ App Store</a></p>
         <h3>Система</h3>
         <div class="status-item"><span>MiniApp</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
      
-        <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+    <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         <div class="status-item"><span>API Сервер</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         <div class="status-item"><span>Страница подписки</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         <div class="status-item"><span>Уведомления</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
@@ -862,24 +836,17 @@ fa-check-circle"></i> Онлайн</span></div>
     
     <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу дружелюбную службу поддержки</p>
 
-    <div class="faq-card"><div class="faq-header">Как подключиться?
-<i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить.
-После оплаты вы автоматически получите ключ доступа.</div></div>
+    <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить. После оплаты вы автоматически получите ключ доступа.</div></div>
     
-    <div class="faq-card"><div class="faq-header">Как обновить подписку?
-<i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы обновить подписку, вам необходимо зайти в клиент приложения V2RayTun или Happ и рядом с названием нашего сервиса, необходимо нажать на кнопку 🔄.</div></div>
+    <div class="faq-card"><div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы обновить подписку, вам необходимо зайти в клиент приложения V2RayTun или Happ и рядом с названием нашего сервиса, необходимо нажать на кнопку 🔄.</div></div>
     
-    <div class="faq-card"><div class="faq-header">Сколько устройств можно подключить?
-<i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Подключить к одному ключу доступа можно 3 устройства.</div></div>
+    <div class="faq-card"><div class="faq-header">Сколько устройств можно подключить? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Подключить к одному ключу доступа можно 3 устройства.</div></div>
     
-    <div class="faq-card"><div class="faq-header">Превышен лимит устройств <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">При превышении лимита устройств, ключ доступа блокируется на 30 минут.
-Во время блокировки ключ отключается и не работает. Блокировка снимается автоматически по истечению времени.</div></div>
+    <div class="faq-card"><div class="faq-header">Превышен лимит устройств <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">При превышении лимита устройств, ключ доступа блокируется на 30 минут. Во время блокировки ключ отключается и не работает. Блокировка снимается автоматически по истечению времени.</div></div>
     
-    <div class="faq-card"><div class="faq-header">Как вернуть подписку?
-<i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вернуть подписку, вам необходимо обратиться в нашу службу поддержки.</div></div>
+    <div class="faq-card"><div class="faq-header">Как вернуть подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вернуть подписку, вам необходимо обратиться в нашу службу поддержки.</div></div>
 
-    <div class="faq-card"><div class="faq-header">Что за раздел "Бесплатный VPN"?
-<i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Это раздел, благодаря которому, вы можете пользоваться нашим сервисом бесплатно за простые задания.</div></div>
+    <div class="faq-card"><div class="faq-header">Что за раздел "Бесплатный VPN"? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Это раздел, благодаря которому, вы можете пользоваться нашим сервисом бесплатно за простые задания.</div></div>
     
     <div class="faq-card"><div class="faq-header">Бонус за приглашения друзей <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">После того, как ваш друг перешел по вашей реферальной ссылке, а затем приобрел или продлил свою подписку, вы будете получать 15% от суммы оплаты друга.</div></div>
 </div> 
@@ -888,8 +855,7 @@ fa-check-circle"></i> Онлайн</span></div>
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
     <h2>Поддержка</h2>
     <p>Если у вас возникли какие-либо трудности, вы всегда можете обратиться в нашу дружную поддержку 🩵</p>
-    <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab 
-fa-telegram-plane"></i> Чат с поддержкой</a>
+    <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
 </div>
 
 <div id="tasks" class="page">
@@ -899,8 +865,7 @@ fa-telegram-plane"></i> Чат с поддержкой</a>
         <p>Получите **10 
 дней** бесплатной подписки 
 за выполнение простого задания:</p>
-        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color);
-font-weight:bold;">@ON1Xvpn</a>.</p>
+        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color); font-weight:bold;">@ON1Xvpn</a>.</p>
         <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
     </div>
 </div>
@@ -919,14 +884,14 @@ font-weight:bold;">@ON1Xvpn</a></p>
                 <span class="winner-status success">Приз выдан</span>
             </li>
      
-            <li>
+        <li>
                 <i class="fas fa-crown"></i> 
                 <strong>Мария</strong> &mdash; 60 дней подписки
                 <span class="winner-status pending">Ожидание</span>
             </li>
             <li>
            
-                <i class="fas fa-crown"></i> 
+            <i class="fas fa-crown"></i> 
                 <strong>Алексей</strong> &mdash; 90 дней подписки
                 <span class="winner-status refused">Отказ</span>
             </li>
@@ -940,16 +905,16 @@ function showPage(id){
     pages.forEach(p => {
         
 if(p.classList.contains('active')){
- 
+         
             p.classList.remove('active');
             setTimeout(() => { p.style.display='none';
-}, 300); /* */
+}, 300); 
         }
     });
     const next = document.getElementById(id);
     next.style.display = 'block';
     window.scrollTo(0, 0); 
-    setTimeout(()=>{ next.classList.add('active'); }, 10); /* */
+    setTimeout(()=>{ next.classList.add('active'); }, 10);
 }
 
 // Скрипт для раскрытия FAQ/Установки
@@ -970,20 +935,20 @@ document.querySelectorAll('.faq-header').forEach(header=>{
                     otherHeader.nextElementSibling.style.display = 'none';
                     otherHeader.classList.remove('active');
      
-                    otherHeader.querySelector('.arrow').style.transform = 'rotate(0deg)'; /* */
+                    otherHeader.querySelector('.arrow').style.transform = 'rotate(0deg)';
                 }
             });
 
             // Открыть текущий
             body.style.display = 'block';
-            header.classList.add('active'); /* */
+header.classList.add('active');
             arrow.style.transform = 'rotate(90deg)';
         }
     });
 });
 document.addEventListener('DOMContentLoaded', () => {
     if (!document.querySelector('.page.active')) {
-        showPage('home'); /* */
+        showPage('home');
     }
 });
 </script>
