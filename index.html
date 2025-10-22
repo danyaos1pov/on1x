@@ -175,7 +175,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
 }
 .subscription-status-card .status-subtitle {
     margin: 0;
-    font-size: 0.75em; /* ИЗМЕНЕНО: Уменьшен размер шрифта */
+    font-size: 0.75em; /* Уменьшенный размер шрифта */
     color: #b0b8c2;
 }
 .subscription-status-card .status-arrow {
@@ -458,6 +458,25 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 }
 .status-dot.green { color: var(--secondary-color); }
 .status-dot.red { color: var(--accent-red); } 
+
+
+/* === Стили для страницы Speed Test === */
+#speedtest .speedtest-container {
+    max-width: 500px;
+    margin: 20px auto;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 10px;
+}
+#speedtest iframe {
+    width: 100%;
+    /* Увеличенная высота для лучшего отображения виджета */
+    height: 550px; 
+    border: none;
+    border-radius: 10px;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -485,47 +504,40 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         <div class="status-icon"><i class="fas fa-credit-card"></i></div>
         <div class="status-info">
             <p class="status-title">Подписка ON1X VPN</p>
-            <p class="status-subtitle">Покупка, продление, тестовый период и управление подпиской</p>
+            <p class="status-subtitle">Покупка, продление и управление подпиской</p>
         </div>
         <div class="status-arrow"><i class="fas fa-chevron-right"></i></div>
     </div>
     
     <div class="menu-grid">
-        <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить подписку</div>
-       
-        <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить подписку</div>
-        
-        <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
-            <i class="fas fa-flask"></i>Тестовый период (7 дней)
-        </div>
-
         <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
-    
-        
         <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
-      
- 
         <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
-        
         <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-
-        <div class="menu-card" onclick="showPage('tasks')"><i class="fas fa-hand-holding-heart"></i>Бесплатный VPN</div>
+        <div class="menu-card" onclick="showPage('speedtest')"><i class="fas fa-tachometer-alt"></i>Скорость интернета</div>
+        <div class="menu-card" style="background: transparent; box-shadow: none; border: none; cursor: default;"></div>
     </div>
     
   
     <div class="channel-promo">
         <p>Следите за новостями, обновлениями и акциями</p>
      
-   
       <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
     </div>
 </div>
 
 <div id="subscription" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Моя подписка</h2>
+    <h2>Подписка ON1X VPN</h2>
     <p>Здесь вы можете посмотреть текущий статус вашего ключа доступа и основную информацию о подписке. (Данные ниже являются примером)</p>
-
+    
+    <div class="menu-grid subscription-actions-grid" style="max-width: 400px; margin: 30px auto;">
+        <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить подписку</div>
+        <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить подписку</div>
+        <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
+            <i class="fas fa-flask"></i>Тестовый период
+        </div>
+    </div>
     <div class="status-section">
         <h3>Детали ключа</h3>
         <div class="status-item"><span>Ключ доступа</span><span style="font-weight: bold; color: var(--primary-color);">G5d3-fA2p-...</span></div>
@@ -541,7 +553,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
 
 <div id="buy" class="page">
-    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <button class="back-button" onclick="showPage('subscription')"><i class="fas fa-arrow-left"></i> Назад</button>
     <h2>Купить подписку</h2>
     <p>Выберите срок действия для нового ключа доступа</p>
     
@@ -608,7 +620,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
 <div id="renew" 
 class="page">
-    <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
+    <button class="back-button" onclick="showPage('subscription')"><i class="fas fa-arrow-left"></i> Назад</button>
  
     <h2>Продлить подписку</h2>
     <p>Выберите срок действия для активного ключа доступа</p>
@@ -908,8 +920,6 @@ fa-check-circle"></i> Онлайн</span></div>
     <div class="faq-card"><div class="faq-header">Как вернуть подписку?
  <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вернуть подписку, вам необходимо обратиться в нашу службу поддержки.</div></div>
 
-    <div class="faq-card"><div class="faq-header">Что за раздел "Бесплатный VPN"?
- <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Это раздел, благодаря которому, вы можете пользоваться нашим сервисом бесплатно за простые задания.</div></div>
     
     <div class="faq-card"><div class="faq-header">Бонус за приглашения друзей <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">После того, как ваш друг перешел по вашей реферальной ссылке, а затем приобрел или продлил свою подписку, вы будете получать 15% от суммы оплаты друга.</div></div>
 </div> 
@@ -922,19 +932,16 @@ fa-check-circle"></i> Онлайн</span></div>
 fa-telegram-plane"></i> Чат с поддержкой</a>
 </div>
 
-<div id="tasks" class="page">
+<div id="speedtest" class="page">
     <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
-    <h2>Бесплатный VPN за задания</h2>
-    <div class="task">
-        <p>Получите **10 
-дней** бесплатной подписки 
-за выполнение простого задания:</p>
-        <p>Подпишитесь на наш официальный Telegram-канал <a href="https://t.me/ON1Xvpn" target="_blank" style="color:var(--primary-color);
-font-weight:bold;">@ON1Xvpn</a>.</p>
-        <a href="https://t.me/ON1Xvpn" class="button">Выполнить задание</a>
+    <h2>Тест скорости интернета</h2>
+    <p>Проверьте реальную скорость вашего подключения (без учета VPN).</p>
+    
+    <div class="speedtest-container">
+        <iframe id="speedtest-iframe" src="//openspeedtest.com/speedtest" title="Интернет-тест скорости" loading="lazy"></iframe>
     </div>
+    <p style="font-size: 0.8em; color: #b0b8c2;">Тест скорости предоставлен <a href="https://openspeedtest.com" target="_blank" style="color: var(--primary-color);">OpenSpeedtest.com</a>.</p>
 </div>
-
 <script>
 function showPage(id){
     const pages = document.querySelectorAll('.page');
@@ -994,7 +1001,7 @@ header.classList.add('active');
     });
 });
 
-// === СКРИПТ ДЛЯ УПРАВЛЕНИЯ ЗАСТАВКОЙ ===
+// === СКРИПТ ДЛЯ УПРАВЛЕНИЯ ЗАСТАВКОЙ (ВОССТАНОВЛЕНО) ===
 document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
     const homePage = document.getElementById('home');
