@@ -107,27 +107,32 @@ transform: translateY(10px);
     transform: translateY(0);
  }
 
-/* === Логотип и анимация === */
+/* === Логотип и анимация (ОБНОВЛЕННАЯ СЕКЦИЯ) === */
 .pulse-container { position: relative; width: 120px; height: 120px; margin: 30px auto 10px;
  }
 .pulse-container img { position: absolute; top:0; left:0; width:100%; height:100%; border-radius:50%; z-index:10; border:4px solid var(--primary-color); object-fit: cover;
  }
 .pulse-circle {
     position: absolute; top:50%; left:50%; width:120px; height:120px;
-    border-radius:50%; border:1px solid rgba(0,123,255,0.5); 
+    border-radius:50%; 
+    /* ИЗМЕНЕНИЕ: Толщина рамки 2px для лучшей видимости */
+    border: 2px solid rgba(0,123,255,0.5); 
     transform: translate(-50%,-50%) scale(0);
- animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
 }
 .pulse-circle:nth-child(2) { animation-delay:0.5s; }
 .pulse-circle:nth-child(3) { animation-delay:1s;
  }
+/* КЛЮЧЕВЫЕ КАДРЫ ДЛЯ ПОСТОЯННОЙ ПУЛЬСАЦИИ */
 @keyframes pulse {
-    0% { transform: translate(-50%,-50%) scale(0.6); opacity:1;
+    /* ИЗМЕНЕНИЕ: Начинаем от scale(1) и полностью видимо */
+    0% { transform: translate(-50%,-50%) scale(1); opacity:1;
  }
-    80% { transform: translate(-50%,-50%) scale(1.1); opacity:0; }
-    100% { transform: translate(-50%,-50%) scale(1.1); opacity:0;
+    /* ИЗМЕНЕНИЕ: Увеличиваем расширение до scale(1.5) для заметности */
+    100% { transform: translate(-50%,-50%) scale(1.5); opacity:0;
  }
 }
+/* === КОНЕЦ ОБНОВЛЕННОЙ СЕКЦИИ === */
 
 /* === Заголовки и текст === */
 h1 { font-size: 2.2em; margin-bottom: 5px; color: var(--primary-color); }
@@ -532,10 +537,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         <div class="pulse-circle"></div>
         <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
     </div>
-    <h1>ON1X VPN</h1>
-    <p style="color:#b0b8c2;">Выберите интересующий 
- раздел ниже</p>
-
+    <h1><span style="color: var(--text-color);">ON1X</span> VPN</h1>
+    
     <div class="subscription-status-card" onclick="showPage('subscription')">
         <div class="status-icon"><i class="fas fa-credit-card"></i></div>
         <div class="status-info">
