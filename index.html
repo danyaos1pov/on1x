@@ -41,6 +41,75 @@ a { text-decoration: none;
     color: inherit; 
 }
 
+/* === СТИЛИ ДЛЯ КАСТОМНОГО УВЕДОМЛЕНИЯ (НОВОЕ) === */
+#custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
+    display: none; /* Изначально скрыто */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Выше всего остального */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#custom-alert.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.alert-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 30px 20px 20px;
+    border-radius: 15px;
+    max-width: 80%;
+    min-width: 280px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#custom-alert.visible .alert-content {
+    transform: scale(1);
+}
+
+.alert-icon {
+    font-size: 40px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.alert-message {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.alert-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+/* ИСПРАВЛЕНО: Добавлен :active */
+.alert-button:hover,
+.alert-button:active {
+    background: #0056b3;
+}
+
+
 /* === SPLASH SCREEN (Заставка с ракетой) === */
 #splash-screen {
     position: fixed;
@@ -159,7 +228,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     border: 1px solid rgba(255,255,255,0.05);
 }
-.subscription-status-card:hover { 
+/* ИСПРАВЛЕНО: Добавлен :active */
+.subscription-status-card:hover,
+.subscription-status-card:active { 
     transform: translateY(-3px);
     box-shadow: 0 8px 15px rgba(0,123,255,0.2); 
     border-color: var(--primary-color);
@@ -214,24 +285,29 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     font-size: 0.85em;
     position: relative;
 }
-.menu-card:hover { 
+/* ИСПРАВЛЕНО: Добавлен :active */
+.menu-card:hover,
+.menu-card:active { 
     transform: translateY(-3px); 
     box-shadow: 0 8px 15px rgba(0,123,255,0.2);
     border-color: var(--primary-color);
 }
 
-/* === Дополнительный стиль для неактивных кнопок в меню (ИЗМЕНЕНО) === */
+/* === Дополнительный стиль для неактивных кнопок в меню (НЕДОСТУПНЫЕ) === */
 .menu-card.disabled {
     opacity: 0.6;
-    cursor: not-allowed; /* ИЗМЕНЕНО: Курсор "Запрещено" */
+    cursor: not-allowed; 
     transform: none !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
     border-color: rgba(255,255,255,0.05) !important;
 }
-.menu-card.disabled:hover { 
-    /* ИЗМЕНЕНО: Убираем hover-эффект, чтобы они выглядели полностью недоступными */
+.menu-card.disabled:hover,
+.menu-card.disabled:active { 
+    /* Убираем hover-эффект, чтобы они выглядели полностью недоступными */
     transform: none !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; 
+    background: var(--card-bg) !important;
+    border-color: rgba(255,255,255,0.05) !important;
 }
 
 /* === СТИЛЬ ДЛЯ ПЛАШКИ "РАЗРАБОТКА" === */
@@ -274,7 +350,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     cursor: pointer;
     text-align: center;
 }
-.button:hover { 
+/* ИСПРАВЛЕНО: Добавлен :active */
+.button:hover,
+.button:active { 
     transform:translateY(-2px);
     box-shadow:0 6px 15px rgba(0,123,255,0.6);
 }
@@ -309,7 +387,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     background: var(--channel-gradient);
     box-shadow:0 3px 10px rgba(30, 144, 255, 0.5);
 }
-.channel-promo .button:hover {
+/* ИСПРАВЛЕНО: Добавлен :active */
+.channel-promo .button:hover,
+.channel-promo .button:active {
     box-shadow:0 6px 15px rgba(30, 144, 255, 0.7);
 }
 
@@ -332,7 +412,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     z-index: 100;
     box-shadow: none; /* Убираем стандартную тень */
 }
-.back-button:hover { 
+/* ИСПРАВЛЕНО: Добавлен :active */
+.back-button:hover,
+.back-button:active { 
     color: var(--primary-color);
     background: rgba(0, 123, 255, 0.1);
     border-color: var(--primary-color);
@@ -370,13 +452,16 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     border: 1px solid rgba(255,255,255,0.05);
     font-size: 0.9em;
 }
+/* ИСПРАВЛЕНО: Добавлен :active */
 .tariff-toggle-inside .toggle-button.active {
     background: var(--primary-color); /* Основной цвет для активного переключателя */
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 0 8px rgba(0,123,255,0.5);
 }
-.tariff-toggle-inside .toggle-button:hover:not(.active) {
+/* ИСПРАВЛЕНО: Добавлен :active для неактивных кнопок */
+.tariff-toggle-inside .toggle-button:hover:not(.active),
+.tariff-toggle-inside .toggle-button:active:not(.active) {
     background: rgba(255,255,255,0.05);
 }
 
@@ -391,6 +476,8 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.1);
 }
+
+/* НЕТ НЕОБХОДИМОСТИ В :hover/:active для .compact-tariff-card, так как это контейнер */
 
 /* Стили для объединенной карточки */
 .unified-tariff-card {
@@ -471,7 +558,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     transition: background 0.2s;
     border: 1px solid transparent;
 }
-.tariff-days-option:hover {
+/* ИСПРАВЛЕНО: Добавлен :active */
+.tariff-days-option:hover,
+.tariff-days-option:active {
     background: rgba(0,0,0,0.3);
     border-color: rgba(0,123,255,0.3);
 }
@@ -482,7 +571,7 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     border-color: var(--primary-color);
 }
 .tariff-days-option.active span {
-    color: var(--text-color);
+    font-weight: 700;
 }
 .tariff-days-option span {
     font-weight: 600;
@@ -532,7 +621,9 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     display: flex; justify-content: space-between; align-items: center; background: #1f262f;
     transition: background 0.2s; color: var(--text-color); 
 }
-.faq-header:hover { background: #2a3443;
+/* ИСПРАВЛЕНО: Добавлен :active */
+.faq-header:hover,
+.faq-header:active { background: #2a3443;
 }
 .faq-header.active .arrow { transform: rotate(90deg);
 }
@@ -603,18 +694,18 @@ onclick="showPage('install')"><i class="fas fa-download"></i>Установка<
         <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
         <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
         <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-        <div class="menu-card disabled" onclick="showUnderDevelopmentAlert()">
+        <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
             <span class="development-badge">Разработка</span>
             <i class="fas fa-star"></i>
             Отзывы
         </div>
    
-        <div class="menu-card disabled" onclick="showUnderDevelopmentAlert()">
+        <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
             <span class="development-badge">Разработка</span>
             <i class="fas fa-gifts"></i>
             Барабан подарков
         </div>
-        <div class="menu-card disabled" onclick="showUnderDevelopmentAlert()">
+        <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
             <span class="development-badge">Разработка</span>
             <i class="fas fa-scroll"></i>
      
@@ -1223,17 +1314,48 @@ fa-chevron-right arrow"></i></div>
     <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
 </div>
 
+<div id="custom-alert">
+    <div class="alert-content">
+        <i class="fas fa-tools alert-icon"></i> 
+        <p class="alert-message" id="custom-alert-message">Раздел находится в разработке.</p>
+        <button class="alert-button" onclick="closeCustomAlert()">Понятно</button>
+    </div>
+</div>
 <script>
 // === ОБЩИЕ ФУНКЦИИ УПРАВЛЕНИЯ СТРАНИЦАМИ ===
 
 /**
- * Новая функция для вывода уведомления о разработке.
- * Вызывается при нажатии на неактивные кнопки в главном меню.
+ * НОВАЯ ФУНКЦИЯ: Показать кастомное уведомление
  */
-function showUnderDevelopmentAlert() {
-    alert('Раздел находится в разработке.');
+function showCustomAlert(message) {
+    const alertBox = document.getElementById('custom-alert');
+    const alertMessage = document.getElementById('custom-alert-message');
+    
+    alertMessage.textContent = message;
+    alertBox.classList.add('visible');
+    alertBox.style.display = 'flex'; // Убеждаемся, что display установлен перед добавлением класса 'visible'
+    
+    // Дополнительно можно добавить обработчик нажатия Esc или клика вне окна
+    alertBox.onclick = function(event) {
+        if (event.target === alertBox) {
+            closeCustomAlert();
+        }
+    };
 }
 
+/**
+ * НОВАЯ ФУНКЦИЯ: Скрыть кастомное уведомление
+ */
+function closeCustomAlert() {
+    const alertBox = document.getElementById('custom-alert');
+    // Запускаем анимацию исчезновения
+    alertBox.classList.remove('visible');
+    // Устанавливаем display: none после завершения анимации
+    setTimeout(() => {
+        alertBox.style.display = 'none';
+        alertBox.onclick = null; // Удаляем обработчик, чтобы не мешал
+    }, 300); 
+}
 
 function showPage(id){
     const pages = document.querySelectorAll('.page');
@@ -1297,7 +1419,11 @@ document.querySelectorAll('.faq-header').forEach(header=>{
 // === ИСПРАВЛЕННЫЙ СКРИПТ ДЛЯ ЗАСТАВКИ ===
 document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
+    const customAlert = document.getElementById('custom-alert');
     
+    // Скрываем кастомное уведомление по умолчанию
+    customAlert.style.display = 'none';
+
     // Прячем все страницы, кроме splash, при загрузке.
     document.querySelectorAll('.page').forEach(p => {
         if (p.id !== 'splash-screen') p.style.display = 'none';
