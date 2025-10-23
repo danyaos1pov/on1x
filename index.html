@@ -220,18 +220,18 @@ p { margin:10px 0; line-height:1.6; color: #b0b8c2;
     border-color: var(--primary-color);
 }
 
-/* === Дополнительный стиль для неактивных кнопок в меню === */
+/* === Дополнительный стиль для неактивных кнопок в меню (ИЗМЕНЕНО) === */
 .menu-card.disabled {
     opacity: 0.6;
-    cursor: pointer; /* Оставляем курсор как pointer, чтобы было понятно, что клик сработает */
+    cursor: not-allowed; /* ИЗМЕНЕНО: Курсор "Запрещено" */
     transform: none !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
     border-color: rgba(255,255,255,0.05) !important;
 }
 .menu-card.disabled:hover { 
-    /* Возвращаем hover-эффект для disabled, но уменьшенный */
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 15px rgba(0,123,255,0.2) !important;
+    /* ИЗМЕНЕНО: Убираем hover-эффект, чтобы они выглядели полностью недоступными */
+    transform: none !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; 
 }
 
 /* === СТИЛЬ ДЛЯ ПЛАШКИ "РАЗРАБОТКА" === */
