@@ -8,11 +8,11 @@
 <style>
 /* === Глобальные стили и переменные === */
 :root {
-    --primary-color: #007bff; /* Ярко-синий */
+    --primary-color: #007bff; /* Ярко-синий (Голубой) */
     --secondary-color: #28a745; /* Зеленый для успеха/активности */
     --bg-dark: #0d1117; /* Основной фон (почти черный) */
     --card-bg: #161b22; /* Фон карточек */
-    --text-color: #e6edf3; /* Светлый текст */
+    --text-color: #e6edf3; /* Светлый текст (Белый/Серый) */
     --accent-red: #dc3545;
     /* === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТАРИФОВ === */
     --gold-color: #ffd700;
@@ -25,7 +25,7 @@
     box-sizing: border-box; 
     margin: 0; 
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 body { 
     background: var(--bg-dark); 
@@ -156,6 +156,15 @@ a {
 }
 @keyframes fadeIn {
     to { opacity: 1; }
+}
+
+/* === АНИМАЦИЯ ВРАЩЕНИЯ ДЛЯ КНОПКИ ОБНОВЛЕНИЯ === */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.spin {
+    animation: spin 1s linear infinite;
 }
 
 /* === Плавные переходы страниц === */
@@ -378,7 +387,7 @@ p {
     box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Темная тень */
 
     font-weight:700;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease, box-shadow 0.3s ease; /* Добавляем transition для box-shadow */
     cursor: pointer;
     text-align: center;
 }
@@ -553,8 +562,9 @@ p {
     color: #b0b8c2;
     line-height: 1.3;
 }
+/* ЗАДАНИЕ 1.1: Изменение цвета иконок на голубой (primary-color) */
 .tariff-features-list-v2 i {
-    color: var(--secondary-color);
+    color: var(--primary-color); /* Иконки стали голубыми */
     font-size: 1.6em; /* Увеличенный размер иконки */
     margin: 0 auto 5px auto; /* Центрирование иконки и отступ снизу */
     min-width: 0; 
@@ -603,9 +613,11 @@ p {
 .tariff-days-option span {
     font-weight: 600;
 }
+
+/* ЗАДАНИЕ 1.2: Изменение цвета цены на белый */
 .option-price {
     font-weight: 700;
-    color: var(--secondary-color);
+    color: var(--text-color); /* Цена стала белой */
 }
 
 .tariff-buy-button-container {
@@ -640,6 +652,14 @@ p {
     z-index: 15;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+/* ЗАДАНИЕ 3: Стиль для кнопок в разделе Установка (полная ширина) */
+#install .faq-body .button {
+    max-width: 100% !important; 
+    margin: 15px auto 10px auto; 
+}
+
+
 .faq-card { 
     background: var(--card-bg); 
     border-radius: 10px; 
@@ -682,6 +702,7 @@ p {
 .faq-body ol { 
     margin-left: 20px; 
     padding-left: 0;
+    margin-bottom: 15px; /* Отступ после списка */
 }
 .task { 
     background: var(--card-bg); 
@@ -715,6 +736,12 @@ p {
 .status-dot.red { 
     color: var(--accent-red); 
 } 
+
+/* ЗАДАНИЕ 2: Кнопка Обновить данные на всю ширину страницы */
+#status #refresh-status-button {
+    max-width: 100%; /* Убираем ограничение в 300px */
+    /* Наследует margin: 20px auto; от .button, что центрирует её */
+}
 </style>
 </head>
 <body>
@@ -787,14 +814,19 @@ p {
     доступа и 
     основную информацию о подписке. (Данные ниже являются примером)</p>
         
-        <div class="menu-grid subscription-actions-grid" style="max-width: 400px; margin: 30px auto;">
-            <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить подписку</div>
-            <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить подписку</div>
+        <div class="menu-grid subscription-actions-grid" style="max-width: 500px; margin: 30px auto; grid-template-columns: repeat(3, 1fr);">
+            
+            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5331349'">
+                <i class="fas fa-user-circle"></i>Моя подписка
+            </div>
+            
+            <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить</div>
+            <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить</div>
             <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
-                <i class="fas fa-flask"></i>Тестовый период
+                <i class="fas fa-flask"></i>Тест. период
             </div>
             <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5098822'">
-            <i class="fas fa-undo-alt"></i>Возврат подписки
+                <i class="fas fa-undo-alt"></i>Возврат
             </div>
         </div>
     </div>
@@ -804,7 +836,7 @@ p {
         <button class="back-button" onclick="showPage('subscription')"><i class="fas fa-arrow-left"></i> Назад</button>
         
         <h2>Купить подписку</h2>
-        <p class="tariff-intro-text">Выберите тариф</p>
+        <h4 style="text-align: center; margin-top: 0;">Выберите тариф</h4>
         
     
     <div class="new-tariffs-container" id="buy-tariffs-container">
@@ -812,7 +844,7 @@ p {
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
                     <div class="tariff-toggle-inside" data-target="buy">
-                        <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
+                        <div class="toggle-button active" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
                         <div class="toggle-button" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
                         <div class="toggle-button" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
@@ -956,7 +988,7 @@ p {
         <button class="back-button" onclick="showPage('subscription')"><i class="fas fa-arrow-left"></i> Назад</button>
     
         <h2>Продлить подписку</h2>
-        <p class="tariff-intro-text">Выберите тариф для продления</p>
+        <h4 style="text-align: center; margin-top: 0;">Выберите тариф</h4>
         
         <div class="new-tariffs-container" id="renew-tariffs-container">
             
@@ -964,7 +996,7 @@ p {
                 <div class="compact-tariff-card unified-tariff-card">
                     <div class="tariff-toggle-inside" data-target="renew">
                 
-                        <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
+                        <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
                         <div class="toggle-button" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
                         <div class="toggle-button" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
@@ -1119,18 +1151,18 @@ p {
                 <div class="faq-body">
                     
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
-                    <a href="https://apps.apple.com/ru/app/v2raytun/id6476628951" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
+                    
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение V2RayTun.</li>
                         <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Нажмите "Добавить из буфера".</li>
                         <li>Нажмите "Разрешить вставку".</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <a href="https://apps.apple.com/ru/app/v2raytun/id6476628951" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
@@ -1138,7 +1170,6 @@ p {
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun Google Play</p>
                     
-                    <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1150,14 +1181,13 @@ p {
                     
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun Desktop</p>
-                    <a 
-                    href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1169,6 +1199,8 @@ p {
         
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <a 
+                    href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
@@ -1176,7 +1208,6 @@ p {
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
                     
-                    <a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1188,14 +1219,13 @@ p {
                     
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> Hiddify-Linux (V2Ray)</p>
-                    <a 
-                    href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1207,6 +1237,8 @@ p {
         
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <a 
+                    href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
@@ -1226,8 +1258,8 @@ p {
         
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p>
-                    <a href="#" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol>
+                    <a href="#" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
         
             </div>
@@ -1237,10 +1269,9 @@ p {
                 <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
-                    <a href="#" target="_blank" class="button" style="max-width: 250px;"><i class="fas fa-download"></i> Скачать приложение</a>
                     <ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите 
     **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol>
-    
+                    <a href="#" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
         
             </div>
@@ -1270,7 +1301,7 @@ p {
             <h3>Система</h3>
         
 
-    <div class="status-item"><span>MiniApp</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
+            <div class="status-item"><span>MiniApp</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         
             <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
             <div class="status-item"><span>API Сервер</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
@@ -1286,6 +1317,10 @@ p {
             <div class="status-item"><span>Россия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
             <div class="status-item"><span>Германия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
         </div>
+        
+        <button class="button" id="refresh-status-button" onclick="refreshSystemStatus()">
+            <i class="fas fa-sync-alt"></i> Обновить данные
+        </button>
     </div>
 
     <div id="faq" class="page">
@@ -1457,6 +1492,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000); // Анимация ракеты (2 секунды)
 
     // Инициализация страниц "Купить" и "Продлить" (активируем первый тариф в каждом разделе)
+    // ЭТО ВАЖНО: При загрузке страницы JS скрывает все тарифы, кроме первого, и активирует кнопку.
     if (document.getElementById('buy')) {
         switchBuyTariff('personal');
     }
@@ -1475,15 +1511,17 @@ function switchBuyTariff(tariffName) {
     const activeContent = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
     if (activeContent) {
         activeContent.style.display = 'block';
-        // 3. Обновляем активную кнопку в переключателе
-        const tariffToggleInside = activeContent.querySelector('.tariff-toggle-inside');
-        tariffToggleInside.querySelectorAll('.toggle-button').forEach(btn => {
+        
+        // 3. Обновляем активную кнопку во ВСЕХ переключателях
+        document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(btn => {
             btn.classList.remove('active');
+            if (btn.dataset.tariff === tariffName) {
+                btn.classList.add('active');
+            }
         });
-        tariffToggleInside.querySelector(`.toggle-button[data-tariff="${tariffName}"]`).classList.add('active');
         
         // 4. Снимаем активность со всех опций дней
-        document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
+        document.querySelectorAll(`#buy-days-personal .tariff-days-option, #buy-days-family .tariff-days-option, #buy-days-premium .tariff-days-option`).forEach(option => {
             option.classList.remove('active');
         });
         // 5. Деактивируем кнопку покупки и ставим текст "Выберите срок"
@@ -1523,15 +1561,17 @@ function switchRenewTariff(tariffName) {
     const activeContent = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
     if (activeContent) {
         activeContent.style.display = 'block';
-        // 3. Обновляем активную кнопку в переключателе
-        const tariffToggleInside = activeContent.querySelector('.tariff-toggle-inside');
-        tariffToggleInside.querySelectorAll('.toggle-button').forEach(btn => {
+
+        // 3. Обновляем активную кнопку во ВСЕХ переключателях
+        document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(btn => {
             btn.classList.remove('active');
+            if (btn.dataset.tariff === tariffName) {
+                btn.classList.add('active');
+            }
         });
-        tariffToggleInside.querySelector(`.toggle-button[data-tariff="${tariffName}"]`).classList.add('active');
         
         // 4. Снимаем активность со всех опций дней
-        document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
+        document.querySelectorAll(`#renew-days-personal .tariff-days-option, #renew-days-family .tariff-days-option, #renew-days-premium .tariff-days-option`).forEach(option => {
             option.classList.remove('active');
         });
 
@@ -1562,6 +1602,79 @@ function selectRenewDay(tariffName, selectedOption) {
         renewButton.href = selectedOption.dataset.link;
         renewButton.innerHTML = 'Продлить'; 
     }
+}
+
+
+// === НОВАЯ ФУНКЦИЯ: Обновление статуса систем ===
+
+function refreshSystemStatus() {
+    const statusItems = document.querySelectorAll('.status-item');
+    const refreshButton = document.getElementById('refresh-status-button');
+    
+    // Блокировка кнопки и начало анимации
+    refreshButton.disabled = true; 
+    refreshButton.classList.add('disabled');
+    refreshButton.innerHTML = '<i class="fas fa-sync-alt spin"></i> Обновление...';
+
+    // Временное изменение статусов (имитация загрузки)
+    statusItems.forEach(item => {
+        const statusDot = item.querySelector('.status-dot');
+        
+        statusDot.classList.remove('green', 'red');
+        statusDot.innerHTML = '<i class="fas fa-circle-notch spin"></i> Проверка';
+    });
+
+
+    // Имитация процесса обновления (1.5 секунды)
+    setTimeout(() => {
+        // --- ИЗМЕНЕНИЕ: Восстанавливаем оригинальные статусы без изменения ---
+        
+        // Определяем оригинальные статусы
+        const originalStatuses = [
+            // Система (5 items, all Green/Онлайн)
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // MiniApp
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // БОТ
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // API
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Страница подписки
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Уведомления
+            // Сервера (5 items)
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #1
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #2
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #3
+            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }, // Россия
+            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }  // Германия
+        ];
+        
+        // Применяем оригинальные статусы
+        statusItems.forEach((item, index) => {
+            const statusDot = item.querySelector('.status-dot');
+            const status = originalStatuses[index];
+            
+            statusDot.classList.remove('green', 'red');
+            statusDot.classList.add(status.class);
+            statusDot.innerHTML = status.html;
+        });
+        
+        // --- КОНЕЦ ИЗМЕНЕНИЯ ---
+
+        // 2. Завершение обновления: Восстановление кнопки
+        refreshButton.disabled = false;
+        refreshButton.classList.remove('disabled');
+        refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить данные';
+        
+        // Удаляем анимацию вращения (spin класс)
+        if (refreshButton.querySelector('.spin')) {
+            refreshButton.querySelector('.spin').classList.remove('spin');
+        }
+
+        // Добавляем кратковременное зеленое свечение для подтверждения
+        refreshButton.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.7)'; 
+        setTimeout(() => {
+            // Восстанавливаем оригинальную тень
+            refreshButton.style.boxShadow = '';
+        }, 500);
+
+    }, 1500); // 1.5 секунды
 }
 </script>
 </body>
