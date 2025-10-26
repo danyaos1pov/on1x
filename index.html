@@ -8,11 +8,11 @@
 <style>
 /* === Глобальные стили и переменные === */
 :root {
-    --primary-color: #007bff; /* Ярко-синий (Голубой) */
+    --primary-color: #007bff;
     --secondary-color: #28a745; /* Зеленый для успеха/активности */
-    --bg-dark: #0d1117; /* Основной фон (почти черный) */
+    --bg-dark: #0d1117;
     --card-bg: #161b22; /* Фон карточек */
-    --text-color: #e6edf3; /* Светлый текст (Белый/Серый) */
+    --text-color: #e6edf3;
     --accent-red: #dc3545;
     /* === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТАРИФОВ === */
     --gold-color: #ffd700;
@@ -32,11 +32,11 @@ body {
     color: var(--text-color); 
     text-align: center; 
     min-height: 100vh; 
-    padding-bottom: 50px; 
+    padding-bottom: 50px;
 }
 a { 
     text-decoration: none;
-    color: inherit; 
+    color: inherit;
 }
 
 /* === СТИЛИ ДЛЯ КАСТОМНОГО УВЕДОМЛЕНИЯ === */
@@ -47,10 +47,10 @@ a {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
-    display: none; /* Изначально скрыто */
+    display: none;
     justify-content: center;
     align-items: center;
-    z-index: 10000; /* Выше всего остального */
+    z-index: 10000;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -107,7 +107,7 @@ a {
 }
 
 
-/* === SPLASH SCREEN (Заставка с ракетой) === */
+/* === SPLASH SCREEN (Новая заставка с пульсацией логотипа) === */
 #splash-screen {
     position: fixed;
     top: 0;
@@ -120,91 +120,40 @@ a {
     align-items: center;
     flex-direction: column;
     z-index: 1000;
-    transition: opacity 0.5s ease;
+    opacity: 1; 
+    transition: opacity 0.7s ease-out; 
 }
 
-.rocket-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    animation: launch 2s ease-in forwards;
-}
-
-.rocket-icon {
-    font-size: 80px;
-    color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) rotate(-45deg);
-}
-
-.launch-text {
-    margin-top: 15px;
-    font-size: 1.2em;
-    font-weight: 600;
-    color: var(--text-color);
-    opacity: 0;
-    animation: fadeIn 0.5s ease 0.5s forwards;
-}
-
-@keyframes launch {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    50% { transform: translateY(-50vh) scale(1.2); opacity: 1; }
-    100% { transform: translateY(-120vh) scale(0.5); opacity: 0; }
-}
-@keyframes fadeIn {
-    to { opacity: 1; }
-}
+/* Удалены стили для ракеты */
 
 /* === АНИМАЦИЯ ВРАЩЕНИЯ ДЛЯ КНОПКИ ОБНОВЛЕНИЯ === */
 @keyframes spin {
-    0% { transform: rotate(0deg); }
+    0% { transform: rotate(0deg);
+    }
     100% { transform: rotate(360deg); }
 }
 .spin {
     animation: spin 1s linear infinite;
 }
 
-/* === Плавные переходы страниц === */
-.page {
-    position: absolute; 
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 600px; 
-    
-    padding: 60px 15px 20px 15px;
-    
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px); 
-    
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out; 
-    will-change: opacity, transform;
-    
-    display: none; 
-}
-
-.page.active {
-    display: block; 
-    opacity: 1;
-    transform: translateX(-50%) translateY(0); 
-}
-
-/* === Логотип и анимация === */
+/* === Логотип и анимация (Используется для заставки и на главной странице) === */
 .pulse-container { 
-    position: relative; 
+    position: relative;
     width: 120px; 
     height: 120px; 
-    margin: 30px auto 10px;
+    margin: 30px auto 10px; /* Вернул margin для главной страницы, для заставки он переопределен Flex-контейнером */
 }
+
+/* Переопределение margin для pulse-container внутри splash-screen */
+#splash-screen .pulse-container {
+    margin: 0;
+}
+
 .pulse-container img { 
     position: absolute; 
     top:0; 
     left:0; 
-    width:100%; 
+    width:100%;
     height:100%; 
     border-radius:50%; 
     z-index:10; 
@@ -222,18 +171,46 @@ a {
     transform: translate(-50%,-50%) scale(0);
     animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
 }
-.pulse-circle:nth-child(2) { animation-delay:0.5s; }
+.pulse-circle:nth-child(2) { animation-delay:0.5s;
+}
 .pulse-circle:nth-child(3) { animation-delay:1s; }
 @keyframes pulse {
-    0% { transform: translate(-50%,-50%) scale(1); opacity:1; }
-    100% { transform: translate(-50%,-50%) scale(1.5); opacity:0; }
+    0% { transform: translate(-50%,-50%) scale(0.8); opacity:1;
+    }
+    100% { transform: translate(-50%,-50%) scale(1.5); opacity:0;
+    }
+}
+
+/* === Плавные переходы страниц === */
+.page {
+    position: absolute; 
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px; 
+    
+    padding: 60px 15px 20px 15px;
+    
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out; 
+    will-change: opacity, transform;
+    
+    display: none; 
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); 
 }
 
 /* === Заголовки и текст === */
 h1 { 
     font-size: 2.2em; 
     margin-bottom: 5px; 
-    color: var(--primary-color); 
+    color: var(--primary-color);
 }
 h2 { 
     font-size: 1.8em; 
@@ -375,34 +352,33 @@ p {
 .button { 
     display:block; 
     width:100%; 
-    max-width:300px; /* Немного шире для лучшего вида */
+    max-width:300px;
     margin:20px auto; 
     padding:12px 0;
-    border-radius:15px; /* Больше скругление */
+    border-radius:15px;
     
-    /* Стили как у карточек меню */
-    background: var(--card-bg); /* Темный фон */
-    color: var(--primary-color); /* Основной цвет текста - яркий */
-    border: 1px solid rgba(0,123,255,0.3); /* Синяя рамка */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Темная тень */
+    background: var(--card-bg);
+    color: var(--primary-color); 
+    border: 1px solid rgba(0,123,255,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
 
     font-weight:700;
-    transition: all 0.2s ease, box-shadow 0.3s ease; /* Добавляем transition для box-shadow */
+    transition: all 0.2s ease, box-shadow 0.3s ease; 
     cursor: pointer;
     text-align: center;
 }
 .button:hover,
 .button:active { 
     transform:translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0,123,255,0.4), 0 0 20px rgba(0,123,255,0.3); /* Усиленное свечение */
-    background: #1f262f; /* Чуть светлее на ховере */
-    color: white; /* Белый текст на ховере */
+    box-shadow: 0 8px 15px rgba(0,123,255,0.4), 0 0 20px rgba(0,123,255,0.3);
+    background: #1f262f; 
+    color: white;
 }
 
 /* НОВЫЙ СТИЛЬ: Неактивная кнопка (Выберите срок) */
 .button.disabled {
-    background: #1f262f !important; /* Чуть светлее, но не синий */
-    color: #b0b8c2 !important; /* Серый текст */
+    background: #1f262f !important;
+    color: #b0b8c2 !important;
     border-color: rgba(255,255,255,0.1) !important;
     cursor: not-allowed;
     box-shadow: none !important;
@@ -428,15 +404,12 @@ p {
 .channel-promo .button {
     max-width: 100%; 
     margin: 0;
-    /* Наследует базовый стиль .button */
     
-    /* Добавляем постоянное свечение */
     box-shadow: 0 0 15px rgba(30, 144, 255, 0.7), 0 0 10px rgba(30, 144, 255, 0.5) inset;
-    border-color: #1e90ff; /* Более яркая рамка */
+    border-color: #1e90ff; 
 }
 .channel-promo .button:hover,
 .channel-promo .button:active {
-    /* Усиливаем свечение на ховере */
     box-shadow: 0 0 25px rgba(30, 144, 255, 1), 0 0 15px rgba(30, 144, 255, 0.8) inset;
     transform: translateY(-2px);
     background: #1f262f; 
@@ -447,11 +420,11 @@ p {
     position: fixed;
     top: 15px;
     left: 15px; 
-    background: var(--card-bg); /* Фон карточки */
+    background: var(--card-bg); 
     color: var(--text-color); 
     padding: 8px 15px;
-    border-radius: 12px; /* Более скругленные углы */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Легкая рамка */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -459,15 +432,15 @@ p {
     align-items: center;
     transition: 0.3s;
     z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); /* Небольшая тень */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 .back-button:hover,
 .back-button:active { 
     color: var(--primary-color);
-    background: #1f262f; /* Чуть светлее на ховере */
+    background: #1f262f;
     border-color: var(--primary-color);
     box-shadow: 0 0 15px rgba(0,123,255,0.5);
-    transform: translateY(-1px); /* Легкий подъем */
+    transform: translateY(-1px);
 }
 
 
@@ -475,16 +448,16 @@ p {
 .tariff-toggle-inside {
     display: flex;
     justify-content: center;
-    gap: 5px; /* Уменьшенный отступ */
+    gap: 5px; 
     margin: 0 auto 15px auto;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1); /* Разделитель */
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
 }
 .tariff-toggle-inside .toggle-button {
     flex-grow: 1;
-    padding: 8px 5px; /* Уменьшенный padding */
-    border-radius: 8px; /* Уменьшенное скругление */
-    background: var(--bg-dark); /* Более темный фон для кнопок внутри карточки */
+    padding: 8px 5px;
+    border-radius: 8px; 
+    background: var(--bg-dark);
     color: var(--text-color);
     font-weight: 600;
     cursor: pointer;
@@ -494,7 +467,7 @@ p {
     font-size: 0.9em;
 }
 .tariff-toggle-inside .toggle-button.active {
-    background: var(--primary-color); /* Основной цвет для активного переключателя */
+    background: var(--primary-color); 
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 0 8px rgba(0,123,255,0.5);
@@ -518,13 +491,13 @@ p {
 
 /* Стили для объединенной карточки */
 .unified-tariff-card {
-    text-align: center; /* Центруем название и слоган */
-    padding-bottom: 5px; /* Уменьшенный отступ, так как убрали название тарифа */
+    text-align: center;
+    padding-bottom: 5px;
 }
 
 /* --- ИЗМЕНЕНИЯ ЗДЕСЬ: УДАЛЯЕМ НАЗВАНИЕ ТАРИФА --- */
 .unified-tariff-card .tariff-name-title {
-    display: none !important; /* Полностью скрываем элемент */
+    display: none !important;
 }
 
 /* --- ИЗМЕНЕНИЯ ЗДЕСЬ: СТИЛИ СЛОГАНОВ --- */
@@ -534,12 +507,14 @@ p {
     font-size: 0.95em;
     font-weight: 500;
     min-height: 20px;
-    transition: color 0.3s; /* Добавляем плавность для цвета */
+    transition: color 0.3s;
 }
 
-.slogan-personal { color: var(--text-color) !important; } /* Светло-серый/белый */
-.slogan-family { color: var(--family-color) !important; font-weight: 600; } /* Зеленый */
-.slogan-premium { color: var(--premium-color) !important; font-weight: 600; } /* Золотой */
+.slogan-personal { color: var(--text-color) !important; } 
+.slogan-family { color: var(--family-color) !important; font-weight: 600;
+} 
+.slogan-premium { color: var(--premium-color) !important; font-weight: 600;
+} 
 
 /* Блок возможностей тарифа */
 .tariff-features-list-v2 {
@@ -548,7 +523,6 @@ p {
     border-top: 1px solid rgba(255,255,255,0.1); 
     padding-top: 15px;
     
-    /* === ИЗМЕНЕНИЯ ДЛЯ ГОРИЗОНТАЛЬНОГО РЯДА === */
     display: flex;
     justify-content: space-around; 
     align-items: flex-start;
@@ -556,19 +530,18 @@ p {
     gap: 10px;
 }
 .tariff-features-list-v2 > div {
-    display: block; /* Элемент становится блочным, чтобы иконка и текст были вертикально */
+    display: block;
     flex-basis: 30%; 
     font-size: 0.85em; 
     color: #b0b8c2;
     line-height: 1.3;
 }
-/* ЗАДАНИЕ 1.1: Изменение цвета иконок на голубой (primary-color) */
 .tariff-features-list-v2 i {
-    color: var(--primary-color); /* Иконки стали голубыми */
-    font-size: 1.6em; /* Увеличенный размер иконки */
-    margin: 0 auto 5px auto; /* Центрирование иконки и отступ снизу */
+    color: var(--primary-color);
+    font-size: 1.6em;
+    margin: 0 auto 5px auto;
     min-width: 0; 
-    display: block; /* Иконка как блок для вертикального расположения */
+    display: block;
 }
 
 
@@ -588,8 +561,8 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px; /* Уменьшаем вертикальный отступ */
-    margin-bottom: 8px; /* Уменьшаем отступ между опциями */
+    padding: 10px 15px; 
+    margin-bottom: 8px;
     background: rgba(0,0,0,0.2);
     border-radius: 10px;
     cursor: pointer;
@@ -601,7 +574,6 @@ p {
     background: rgba(0,0,0,0.3);
     border-color: rgba(0,123,255,0.3);
 }
-/* ЕДИНЫЙ ЦВЕТ ДЛЯ АКТИВНОГО ВЫБОРА ДНЕЙ */
 .tariff-days-option.active {
     background: var(--primary-color); 
     box-shadow: 0 0 10px rgba(0,123,255,0.5);
@@ -613,20 +585,18 @@ p {
 .tariff-days-option span {
     font-weight: 600;
 }
-
-/* ЗАДАНИЕ 1.2: Изменение цвета цены на белый */
 .option-price {
     font-weight: 700;
-    color: var(--text-color); /* Цена стала белой */
+    color: var(--text-color);
 }
 
 .tariff-buy-button-container {
     text-align: center;
-    padding-top: 5px; /* Уменьшенный отступ */
+    padding-top: 5px;
 }
 .tariff-buy-button-container .button {
     max-width: 100%;
-    margin: 20px auto 0; /* Вернул стандартный отступ */
+    margin: 20px auto 0;
 }
 
 /* === Стили для FAQ, Install, Status и т.д. === */
@@ -653,9 +623,8 @@ p {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ЗАДАНИЕ 3: Стиль для кнопок в разделе Установка (полная ширина) */
 #install .faq-body .button {
-    max-width: 100% !important; 
+    max-width: 100% !important;
     margin: 15px auto 10px auto; 
 }
 
@@ -670,7 +639,7 @@ p {
     border: 1px solid rgba(255,255,255,0.05); 
 }
 .faq-header { 
-    padding: 15px; 
+    padding: 15px;
     cursor: pointer; 
     font-weight: 600;
     display: flex; 
@@ -702,13 +671,13 @@ p {
 .faq-body ol { 
     margin-left: 20px; 
     padding-left: 0;
-    margin-bottom: 15px; /* Отступ после списка */
+    margin-bottom: 15px;
 }
 .task { 
     background: var(--card-bg); 
     padding: 20px; 
     border-radius: 15px; 
-    margin: 20px auto; 
+    margin: 20px auto;
     max-width: 400px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
@@ -717,7 +686,7 @@ p {
 .status-section { 
     background: var(--card-bg); 
     border-radius: 15px; 
-    padding: 20px; 
+    padding: 20px;
     margin: 20px auto; 
     max-width: 400px; 
     text-align: left;
@@ -725,7 +694,7 @@ p {
 .status-item { 
     display: flex;
     justify-content: space-between; 
-    align-items: center; 
+    align-items: center;
     padding: 10px 0; 
     border-bottom: 1px solid #1f262f; 
     font-weight: 500;
@@ -737,10 +706,8 @@ p {
     color: var(--accent-red); 
 } 
 
-/* ЗАДАНИЕ 2: Кнопка Обновить данные на всю ширину страницы */
 #status #refresh-status-button {
-    max-width: 100%; /* Убираем ограничение в 300px */
-    /* Наследует margin: 20px auto; от .button, что центрирует её */
+    max-width: 100%;
 }
 </style>
 </head>
@@ -748,20 +715,22 @@ p {
 <div id="app-container" style="position: relative; min-height: 100vh;">
 
     <div id="splash-screen">
-        <div class="rocket-container">
-            <i class="fas fa-rocket rocket-icon"></i> 
-        </div>
-        <p class="launch-text">Запускаем ON1X VPN...</p>
-    </div>
-
-
-    <div id="home" class="page" style="padding-top: 20px;">
         <div class="pulse-container">
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
             <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
         </div>
+        <p class="launch-text" style="font-size: 1.2em; font-weight: 600; color: var(--text-color); margin-top: 30px;">Открываем приложение</p>
+    </div>
+
+
+    <div id="home" class="page" style="padding-top: 20px;">
+        
+        <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
+            <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
+        </div>
+        
         <h1><span style="color: var(--text-color);">ON1X</span> VPN</h1>
         
     
@@ -784,7 +753,11 @@ p {
                 <i class="fas fa-star"></i>
                 Отзывы
             </div>
-        
+            <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
+                <span class="development-badge">Разработка</span>
+                <i class="fas fa-store"></i>
+                Магазин
+            </div>
             <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
                 <span class="development-badge">Разработка</span>
                 <i class="fas fa-gifts"></i>
@@ -795,7 +768,6 @@ p {
                 <i class="fas fa-scroll"></i>
                 Правила сервиса
             </div>
-    
         </div>
         
         
@@ -805,6 +777,7 @@ p {
         </div>
     </div>
 
+ 
     <div id="subscription" class="page">
     
         <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
@@ -812,22 +785,23 @@ p {
         <h2>Подписка ON1X VPN</h2>
         <p>Здесь вы можете посмотреть текущий статус вашего ключа 
     доступа и 
-    основную информацию о подписке. (Данные ниже являются примером)</p>
+    основную информацию о подписке.
+ (Данные ниже являются примером)</p>
         
         <div class="menu-grid subscription-actions-grid" style="max-width: 500px; margin: 30px auto; grid-template-columns: repeat(3, 1fr);">
-            
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5331349'">
-                <i class="fas fa-user-circle"></i>Моя подписка
-            </div>
             
             <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить</div>
             <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить</div>
             <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
                 <i class="fas fa-flask"></i>Тест. период
             </div>
+            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5331349'">
+                <i class="fas fa-user-circle"></i>Моя подписка
+            </div>
             <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5098822'">
                 <i class="fas fa-undo-alt"></i>Возврат
             </div>
+            
         </div>
     </div>
 
@@ -835,6 +809,7 @@ p {
     <div id="buy" class="page">
         <button class="back-button" onclick="showPage('subscription')"><i class="fas fa-arrow-left"></i> Назад</button>
         
+     
         <h2>Купить подписку</h2>
         <h4 style="text-align: center; margin-top: 0;">Выберите тариф</h4>
         
@@ -858,6 +833,7 @@ p {
 
                 <div class="pricing-card-block">
         
+  
                     <h4 style="text-align: center; margin-top: 0;">Выберите количество дней</h4>
                     
                     <div id="buy-days-personal" data-tariff-name="personal">
@@ -882,7 +858,6 @@ p {
                     <div class="tariff-buy-button-container">
                         <a href="#" id="buy-button-personal" class="button disabled">Выберите срок</a>
                     </div>
-        
                 </div>
             </div>
             
@@ -895,36 +870,30 @@ p {
                     </div>
                     <p class="tariff-slogan slogan-family current-slogan">Делите VPN с родными и близкими</p>
                     <div class="tariff-features-list-v2">
-        
                         <div><i class="fas fa-users"></i> 6 устройств</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
                         <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
                     </div>
                 </div>
 
-        
                 <div class="pricing-card-block">
                     <h4 style="text-align: center; margin-top: 0;">Выберите количество дней</h4>
                     <div id="buy-days-family" data-tariff-name="family">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2300575" onclick="selectBuyDay('family', this)">
                             <span>30 дней</span>
                             <span class="option-price">300 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2300576" onclick="selectBuyDay('family', this)">
                             <span>60 дней</span>
                             <span class="option-price">600 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300577" onclick="selectBuyDay('family', this)">
                             <span>90 дней</span>
                             <span class="option-price">900 руб</span>
-            
                         </div>
                         <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300578" onclick="selectBuyDay('family', this)">
                             <span>180 дней</span>
                             <span class="option-price">1800 руб</span>
-                
                         </div>
                     </div>
                     <div class="tariff-buy-button-container">
@@ -939,7 +908,6 @@ p {
                     <div class="tariff-toggle-inside" data-target="buy">
                         <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
                         <div class="toggle-button" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
-        
                         <div class="toggle-button" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-premium current-slogan">Максимальная скорость, доступ к эксклюзивным серверам</p>
@@ -951,28 +919,23 @@ p {
                 </div>
 
                 <div class="pricing-card-block">
-            
                     <h4 style="text-align: center; margin-top: 0;">Выберите количество дней</h4>
                     <div id="buy-days-premium" data-tariff-name="premium">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2300581" onclick="selectBuyDay('premium', this)">
                             <span>30 дней</span>
                             <span class="option-price">500 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2300582" onclick="selectBuyDay('premium', this)">
                             <span>60 дней</span>
                             <span class="option-price">1000 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300583" onclick="selectBuyDay('premium', this)">
                             <span>90 дней</span>
                             <span class="option-price">1500 руб</span>
-            
                         </div>
                         <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300584" onclick="selectBuyDay('premium', this)">
                             <span>180 дней</span>
                             <span class="option-price">3000 руб</span>
-                
                         </div>
                     </div>
                     <div class="tariff-buy-button-container">
@@ -995,18 +958,15 @@ p {
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
                     <div class="tariff-toggle-inside" data-target="renew">
-                
                         <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
                         <div class="toggle-button" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
                         <div class="toggle-button" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
-        
                     <div class="tariff-features-list-v2">
                         <div><i class="fas fa-user"></i> 3 устройства</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
                         <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
-                
                     </div>
                 </div>
 
@@ -1035,7 +995,6 @@ p {
                     <div class="tariff-buy-button-container">
                         <a href="#" id="renew-button-personal" class="button disabled">Выберите срок</a>
                     </div>
-        
                 </div>
             </div>
             
@@ -1048,36 +1007,30 @@ p {
                     </div>
                     <p class="tariff-slogan slogan-family current-slogan">Делите VPN с родными и близкими</p>
                     <div class="tariff-features-list-v2">
-        
                         <div><i class="fas fa-users"></i> 6 устройств</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
                         <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
                     </div>
                 </div>
 
-        
                 <div class="pricing-card-block">
                     <h4 style="text-align: center; margin-top: 0;">Выберите количество дней</h4>
                     <div id="renew-days-family" data-tariff-name="family">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2300585" onclick="selectRenewDay('family', this)">
                             <span>30 дней</span>
                             <span class="option-price">300 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2300586" onclick="selectRenewDay('family', this)">
                             <span>60 дней</span>
                             <span class="option-price">600 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300587" onclick="selectRenewDay('family', this)">
                             <span>90 дней</span>
                             <span class="option-price">900 руб</span>
-            
                         </div>
                         <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300588" onclick="selectRenewDay('family', this)">
                             <span>180 дней</span>
                             <span class="option-price">1800 руб</span>
-                
                         </div>
                     </div>
                     <div class="tariff-buy-button-container">
@@ -1092,7 +1045,6 @@ p {
                     <div class="tariff-toggle-inside" data-target="renew">
                         <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
                         <div class="toggle-button" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
-        
                         <div class="toggle-button" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-premium current-slogan">Максимальная скорость, доступ к эксклюзивным серверам</p>
@@ -1104,28 +1056,23 @@ p {
                 </div>
 
                 <div class="pricing-card-block">
-            
                     <h4 style="text-align: center; margin-top: 0;">Выберите количество дней</h4>
                     <div id="renew-days-premium" data-tariff-name="premium">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2300589" onclick="selectRenewDay('premium', this)">
                             <span>30 дней</span>
                             <span class="option-price">500 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2300590" onclick="selectRenewDay('premium', this)">
                             <span>60 дней</span>
                             <span class="option-price">1000 руб</span>
-        
                         </div>
                         <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300591" onclick="selectRenewDay('premium', this)">
                             <span>90 дней</span>
                             <span class="option-price">1500 руб</span>
-            
                         </div>
                         <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300592" onclick="selectRenewDay('premium', this)">
                             <span>180 дней</span>
                             <span class="option-price">3000 руб</span>
-                
                         </div>
                     </div>
                     <div class="tariff-buy-button-container">
@@ -1149,9 +1096,7 @@ p {
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
-                    
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
-                    
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1169,7 +1114,6 @@ p {
                 <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun Google Play</p>
-                    
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1177,8 +1121,7 @@ p {
                         <li>В правом верхнем углу нажмите на "+".</li>
                         <li>Теперь нажмите "Импорт из буфера обмена".</li>
                         <li>Подключитесь к VPN.</li>
-                        </ol>
-                    
+                    </ol>
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
@@ -1196,7 +1139,6 @@ p {
                         <li>Теперь нажмите "Импорт из буфера обмена".</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
-        
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a 
@@ -1207,7 +1149,6 @@ p {
                 <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
-                    
                     <ol>
                         <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
                         <li>Скачайте и установите приложение.</li>
@@ -1215,8 +1156,7 @@ p {
                         <li>В правом верхнем углу нажмите на "+".</li>
                         <li>Теперь нажмите "Импорт из буфера обмена".</li>
                         <li>Подключитесь к VPN.</li>
-                        </ol>
-                    
+                    </ol>
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
@@ -1234,7 +1174,6 @@ p {
                         <li>Теперь нажмите "Импорт из буфера обмена".</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
-        
                     <p>✅ Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">❗️ Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a 
@@ -1253,27 +1192,21 @@ p {
         <div class="install-section">
             <h3><i class="fas fa-smile"></i> Happ</h3>
             <div class="faq-card">
-                <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas 
-    fa-chevron-right arrow"></i></div>
-        
+                <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i 
+    class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ App Store</a></p>
                     <ol><li>Установите приложение **Happ** из App Store.</li><li>В Telegram-боте получите **QR-код** или ссылку конфигурации.</li><li>В приложении Happ нажмите на **+** и выберите "Сканировать QR-код".</li><li>Сохраните и включите профиль.</li></ol>
                     <a href="#" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
-        
             </div>
-    
             <div class="faq-card">
-        
                 <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> <a href="#" target="_blank">Happ Google Play</a></p>
-                    <ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите 
-    **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol>
+                    <ol><li>Установите **Happ** из Google Play.</li><li>В боте получите **ссылку** на конфигурацию.</li><li>Откройте Happ, нажмите **+** и выберите "Import from URL".</li><li>Нажмите кнопку активации.</li></ol>
                     <a href="#" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
-        
             </div>
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
@@ -1294,15 +1227,13 @@ p {
         </div>
     </div>
 
-    <div id="status" class="page">
+    
+ <div id="status" class="page">
         <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Статус систем</h2>
         <div class="status-section">
             <h3>Система</h3>
-        
-
             <div class="status-item"><span>MiniApp</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
-        
             <div class="status-item"><span>БОТ Telegram</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
             <div class="status-item"><span>API Сервер</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
             <div class="status-item"><span>Страница подписки</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
@@ -1327,10 +1258,7 @@ p {
         <button class="back-button" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Часто задаваемые вопросы</h2>
         
-        <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться 
-
-    в нашу дружелюбную службу поддержки</p>
-
+        <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу дружелюбную службу поддержки</p>
         
         <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить. После оплаты вы автоматически получите ключ доступа.</div></div>
         
@@ -1362,18 +1290,13 @@ p {
 </div>
 <script>
 // === ОБЩИЕ ФУНКЦИИ УПРАВЛЕНИЯ СТРАНИЦАМИ ===
-
-/**
- * Показать кастомное уведомление
- */
 function showCustomAlert(message) {
     const alertBox = document.getElementById('custom-alert');
     const alertMessage = document.getElementById('custom-alert-message');
     
     alertMessage.textContent = message;
     alertBox.classList.add('visible');
-    alertBox.style.display = 'flex'; 
-    
+    alertBox.style.display = 'flex';
     alertBox.onclick = function(event) {
         if (event.target === alertBox) {
             closeCustomAlert();
@@ -1381,9 +1304,6 @@ function showCustomAlert(message) {
     };
 }
 
-/**
- * Скрыть кастомное уведомление
- */
 function closeCustomAlert() {
     const alertBox = document.getElementById('custom-alert');
     alertBox.classList.remove('visible');
@@ -1394,38 +1314,27 @@ function closeCustomAlert() {
     }, 300);
 }
 
-// === ОПТИМИЗИРОВАННАЯ ФУНКЦИЯ ДЛЯ ПЛАВНОЙ АНИМАЦИИ (ИСПРАВЛЕНИЕ ПОДВИСАНИЙ) ===
 function showPage(id){
     const pages = document.querySelectorAll('.page');
-    const duration = 400; // Длительность перехода в CSS (0.4s)
+    const duration = 400;
 
-    // 1. Плавное скрытие текущей активной страницы
     pages.forEach(p => {
         if(p.classList.contains('active')){
             p.classList.remove('active');
             p.style.opacity = '0';
-            // Добавляем transform, чтобы анимация скрытия была плавной
             p.style.transform = 'translateX(-50%) translateY(-20px)'; 
-            
-            // Устанавливаем display: 'none' только после завершения анимации
             setTimeout(() => { p.style.display='none'; }, duration); 
         }
     });
 
     const next = document.getElementById(id);
     if (next) {
-        // Прокрутка наверх должна быть ДО того, как страница станет видимой
-        window.scrollTo(0, 0); 
-        
-        // 2. Делаем следующую страницу видимой, но прозрачной и сдвинутой
-        next.style.display = 'block'; 
+        window.scrollTo(0, 0);
+        next.style.display = 'block';
         next.style.opacity = '0';
         next.style.transform = 'translateX(-50%) translateY(20px)';
         
-        // 3. Небольшая задержка (10 мс) для гарантированного применения стилей 
-        //    (Это решает проблему "подвисания" на некоторых браузерах)
         setTimeout(()=>{ 
-            // 4. Запуск анимации появления
             next.classList.add('active'); 
             next.style.opacity = '1'; 
             next.style.transform = 'translateX(-50%) translateY(0)';
@@ -1436,7 +1345,6 @@ function showPage(id){
 }
 
 
-// Скрипт для раскрытия FAQ
 document.querySelectorAll('.faq-header').forEach(header=>{
     header.addEventListener('click',()=>{
         const body = header.nextElementSibling;
@@ -1446,10 +1354,7 @@ document.querySelectorAll('.faq-header').forEach(header=>{
             body.style.display = 'none';
             header.classList.remove('active');
             arrow.style.transform = 'rotate(0deg)';
-        
-
-} else {
-            // Закрыть все остальные (чтобы открывался только один)
+        } else {
             document.querySelectorAll('.faq-header').forEach(otherHeader => {
                 if (otherHeader !== header) {
                     otherHeader.nextElementSibling.style.display = 'none';
@@ -1458,41 +1363,33 @@ document.querySelectorAll('.faq-header').forEach(header=>{
                 }
             });
 
-            // Открыть текущий
             body.style.display = 'block';
             header.classList.add('active');
             arrow.style.transform = 'rotate(90deg)';
         }
     });
 });
-// === ИСПРАВЛЕННЫЙ СКРИПТ ДЛЯ ЗАСТАВКИ ===
+
 document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
     const customAlert = document.getElementById('custom-alert');
     
-    // Скрываем кастомное уведомление по умолчанию
     customAlert.style.display = 'none';
 
-    // Прячем все страницы, кроме splash, при загрузке.
     document.querySelectorAll('.page').forEach(p => {
         if (p.id !== 'splash-screen') p.style.display = 'none';
     });
     
-    // Скрыть заставку и показать главную страницу через 2000 мс (2 секунды)
-    
+    // Новая логика: показываем заставку 1.5 секунды, затем плавно скрываем и показываем home
     setTimeout(() => {
         splashScreen.style.opacity = '0';
         
         setTimeout(() => {
             splashScreen.style.display = 'none';
-            // Вызываем showPage, чтобы корректно инициализировать главную страницу
             showPage('home'); 
-        }, 500); // 500 мс для плавного исчезновения
-       
-    }, 2000); // Анимация ракеты (2 секунды)
+        }, 700); // 700мс совпадает с transition opacity в CSS
+    }, 1500); // Показываем заставку 1.5 секунды
 
-    // Инициализация страниц "Купить" и "Продлить" (активируем первый тариф в каждом разделе)
-    // ЭТО ВАЖНО: При загрузке страницы JS скрывает все тарифы, кроме первого, и активирует кнопку.
     if (document.getElementById('buy')) {
         switchBuyTariff('personal');
     }
@@ -1500,31 +1397,24 @@ document.addEventListener('DOMContentLoaded', () => {
         switchRenewTariff('personal'); 
     }
 });
-// === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
 
+// === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
 function switchBuyTariff(tariffName) {
-    // 1. Скрываем все тарифы
     document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => {
         content.style.display = 'none';
     });
-    // 2. Показываем выбранный тариф
     const activeContent = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
     if (activeContent) {
         activeContent.style.display = 'block';
-        
-        // 3. Обновляем активную кнопку во ВСЕХ переключателях
         document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(btn => {
             btn.classList.remove('active');
             if (btn.dataset.tariff === tariffName) {
                 btn.classList.add('active');
             }
         });
-        
-        // 4. Снимаем активность со всех опций дней
         document.querySelectorAll(`#buy-days-personal .tariff-days-option, #buy-days-family .tariff-days-option, #buy-days-premium .tariff-days-option`).forEach(option => {
             option.classList.remove('active');
         });
-        // 5. Деактивируем кнопку покупки и ставим текст "Выберите срок"
         const buyButton = document.getElementById(`buy-button-${tariffName}`);
         if (buyButton) {
             buyButton.classList.add('disabled');
@@ -1535,69 +1425,51 @@ function switchBuyTariff(tariffName) {
 }
 
 function selectBuyDay(tariffName, selectedOption) {
-    // 1. Снимаем активность со всех опций дней для этого тарифа
     document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
         option.classList.remove('active');
     });
-    // 2. Делаем выбранную опцию активной
     selectedOption.classList.add('active');
-    // 3. Обновляем ссылку на кнопке покупки
     const buyButton = document.getElementById(`buy-button-${tariffName}`);
     if (buyButton) {
         buyButton.classList.remove('disabled');
         buyButton.href = selectedOption.dataset.link;
-        buyButton.innerHTML = 'Купить'; // Возвращаем исходный текст
+        buyButton.innerHTML = 'Купить';
     }
 }
 
 // === ФУНКЦИИ ДЛЯ ПРОДЛЕНИЯ (ПРОДЛИТЬ) ===
-
 function switchRenewTariff(tariffName) {
-    // 1. Скрываем все тарифы
     document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => {
         content.style.display = 'none';
     });
-    // 2. Показываем выбранный тариф
     const activeContent = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
     if (activeContent) {
         activeContent.style.display = 'block';
-
-        // 3. Обновляем активную кнопку во ВСЕХ переключателях
         document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(btn => {
             btn.classList.remove('active');
             if (btn.dataset.tariff === tariffName) {
                 btn.classList.add('active');
             }
         });
-        
-        // 4. Снимаем активность со всех опций дней
         document.querySelectorAll(`#renew-days-personal .tariff-days-option, #renew-days-family .tariff-days-option, #renew-days-premium .tariff-days-option`).forEach(option => {
             option.classList.remove('active');
         });
-
-        // 5. Деактивируем кнопку продления и ставим текст "Выберите срок"
         const renewButton = document.getElementById(`renew-button-${tariffName}`);
         if (renewButton) {
             renewButton.classList.add('disabled');
-            renewButton.href = '#'; 
+            renewButton.href = '#';
             renewButton.innerHTML = 'Выберите срок';
         }
     }
 }
 
 function selectRenewDay(tariffName, selectedOption) {
-    // 1. Снимаем активность со всех опций дней для этого тарифа
     document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
         option.classList.remove('active');
     });
-
-    // 2. Делаем выбранную опцию активной
     selectedOption.classList.add('active');
-
-    // 3. Обновляем ссылку на кнопке продления
     const renewButton = document.getElementById(`renew-button-${tariffName}`);
     if (renewButton) {
-        // --- Активируем кнопку и обновляем ссылку/текст ---
         renewButton.classList.remove('disabled');
         renewButton.href = selectedOption.dataset.link;
         renewButton.innerHTML = 'Продлить'; 
@@ -1606,46 +1478,34 @@ function selectRenewDay(tariffName, selectedOption) {
 
 
 // === НОВАЯ ФУНКЦИЯ: Обновление статуса систем ===
-
 function refreshSystemStatus() {
     const statusItems = document.querySelectorAll('.status-item');
     const refreshButton = document.getElementById('refresh-status-button');
     
-    // Блокировка кнопки и начало анимации
     refreshButton.disabled = true; 
     refreshButton.classList.add('disabled');
     refreshButton.innerHTML = '<i class="fas fa-sync-alt spin"></i> Обновление...';
 
-    // Временное изменение статусов (имитация загрузки)
     statusItems.forEach(item => {
         const statusDot = item.querySelector('.status-dot');
         
         statusDot.classList.remove('green', 'red');
         statusDot.innerHTML = '<i class="fas fa-circle-notch spin"></i> Проверка';
     });
-
-
-    // Имитация процесса обновления (1.5 секунды)
     setTimeout(() => {
-        // --- ИЗМЕНЕНИЕ: Восстанавливаем оригинальные статусы без изменения ---
-        
-        // Определяем оригинальные статусы
         const originalStatuses = [
-            // Система (5 items, all Green/Онлайн)
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // MiniApp
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // БОТ
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // API
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Страница подписки
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Уведомления
-            // Сервера (5 items)
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #1
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #2
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, // Нидерланды #3
-            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }, // Россия
-            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }  // Германия
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
+            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }, 
+            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }
         ];
-        
-        // Применяем оригинальные статусы
+
         statusItems.forEach((item, index) => {
             const statusDot = item.querySelector('.status-dot');
             const status = originalStatuses[index];
@@ -1655,26 +1515,19 @@ function refreshSystemStatus() {
             statusDot.innerHTML = status.html;
         });
         
-        // --- КОНЕЦ ИЗМЕНЕНИЯ ---
-
-        // 2. Завершение обновления: Восстановление кнопки
         refreshButton.disabled = false;
         refreshButton.classList.remove('disabled');
         refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить данные';
         
-        // Удаляем анимацию вращения (spin класс)
         if (refreshButton.querySelector('.spin')) {
             refreshButton.querySelector('.spin').classList.remove('spin');
         }
 
-        // Добавляем кратковременное зеленое свечение для подтверждения
-        refreshButton.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.7)'; 
+        refreshButton.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.7)';
         setTimeout(() => {
-            // Восстанавливаем оригинальную тень
             refreshButton.style.boxShadow = '';
         }, 500);
-
-    }, 1500); // 1.5 секунды
+    }, 1500);
 }
 </script>
 </body>
