@@ -39,74 +39,34 @@ a {
     color: inherit;
 }
 
-/* === СТИЛИ ДЛЯ КАСТОМНОГО УВЕДОМЛЕНИЯ === */
-#custom-alert {
+/* === НОВЫЙ СТИЛЬ ДЛЯ TOP NOTIFICATION (КРАСНАЯ ПЛАШКА СВЕРХУ) === */
+#top-notification {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-#custom-alert.visible {
-    display: flex;
-    opacity: 1;
-}
-
-.alert-content {
-    background: var(--card-bg);
-    color: var(--text-color);
-    padding: 30px 20px 20px;
-    border-radius: 15px;
-    max-width: 80%;
-    min-width: 280px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#custom-alert.visible .alert-content {
-    transform: scale(1);
-}
-
-.alert-icon {
-    font-size: 40px;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.alert-message {
-    font-size: 1.1em;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-/* === СТИЛЬ ДЛЯ КНОПКИ УВЕДОМЛЕНИЯ (обновлен) === */
-.alert-button {
-    background: var(--primary-color);
+    top: -60px; /* Скрыто сверху */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 550px;
+    background: var(--accent-red); /* Красный цвет */
     color: white;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 8px; /* Более строгие углы */
-    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 0 0 10px 10px; /* Скругление только снизу */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    text-align: center;
     font-weight: 600;
-    transition: background 0.2s;
+    /* Анимация: 0.4s с пружинистым эффектом */
+    transition: top 0.4s cubic-bezier(0.3, 0.7, 0.4, 1.2); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    line-height: 1.2;
 }
 
-.alert-button:hover,
-.alert-button:active {
-    background: #0056b3; /* Чуть темнее синий при наведении */
+#top-notification.visible {
+    top: 0; /* Показываем вверху */
 }
-
 
 /* === SPLASH SCREEN (Новая заставка с пульсацией логотипа) === */
 #splash-screen {
@@ -837,12 +797,12 @@ p {
             <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-            <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
+            <div class="menu-card disabled" onclick="showTopNotification('Раздел находится в разработке')">
                 <span class="development-badge">Разработка</span>
                 <i class="fas fa-store"></i>
                 Магазин
             </div>
-            <div class="menu-card disabled" onclick="showCustomAlert('Раздел находится в разработке')">
+            <div class="menu-card disabled" onclick="showTopNotification('Раздел находится в разработке')">
                 <span class="development-badge">Разработка</span>
                 <i class="fas fa-gifts"></i>
                 Барабан подарков
@@ -899,8 +859,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="buy">
                         <div class="toggle-button active" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
+                        <div class="toggle-button developing" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
                     <div class="tariff-features-list-v2">
@@ -945,8 +905,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="buy">
                         <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
-                        <div class="toggle-button developing active" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing active" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
+                        <div class="toggle-button developing" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-family current-slogan">Делите VPN с родными и близкими</p>
                     <div class="tariff-features-list-v2">
@@ -988,8 +948,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="buy">
                         <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing active" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
+                        <div class="toggle-button developing active" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-premium current-slogan">Максимальная скорость, доступ к эксклюзивным серверам</p>
                     <div class="tariff-features-list-v2">
@@ -1040,8 +1000,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="renew">
                         <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
+                        <div class="toggle-button developing" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
                     <div class="tariff-features-list-v2">
@@ -1084,8 +1044,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="renew">
                         <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
-                        <div class="toggle-button developing active" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing active" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
+                        <div class="toggle-button developing" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-family current-slogan">Делите VPN с родными и близкими</p>
                     <div class="tariff-features-list-v2">
@@ -1127,8 +1087,8 @@ p {
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="renew">
                         <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="showCustomAlert('Тариф Семейная находится в разработке')">Семейная</div>
-                        <div class="toggle-button developing active" data-tariff="premium" onclick="showCustomAlert('Тариф Премиум находится в разработке')">Премиум</div>
+                        <div class="toggle-button developing" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
+                        <div class="toggle-button developing active" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
                     <p class="tariff-slogan slogan-premium current-slogan">Максимальная скорость, доступ к эксклюзивным серверам</p>
                     <div class="tariff-features-list-v2">
@@ -1327,38 +1287,37 @@ p {
         <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
     </div>
 
-</div> <div id="custom-alert">
- 
-    <div class="alert-content">
-        <i class="fas fa-tools alert-icon"></i> 
-        <p class="alert-message" id="custom-alert-message">Раздел находится в разработке.</p>
-        <button class="alert-button" onclick="closeCustomAlert()">Понятно</button>
-    </div>
+</div> 
+<div id="top-notification">
+    <i class="fas fa-tools"></i>
+    <span id="top-notification-message"></span>
 </div>
 <script>
-// === ОБЩИЕ ФУНКЦИИ УПРАВЛЕНИЯ СТРАНИЦАМИ ===
-function showCustomAlert(message) {
-    const alertBox = document.getElementById('custom-alert');
-    const alertMessage = document.getElementById('custom-alert-message');
-    
-    alertMessage.textContent = message;
-    alertBox.classList.add('visible');
-    alertBox.style.display = 'flex';
-    alertBox.onclick = function(event) {
-        if (event.target === alertBox) {
-            closeCustomAlert();
-        }
-    };
-}
+// === ОБЩИЕ ФУНКЦИИ УПРАВЛЕНИЯ УВЕДОМЛЕНИЯМИ ===
 
-function closeCustomAlert() {
-    const alertBox = document.getElementById('custom-alert');
-    alertBox.classList.remove('visible');
+/**
+ * Показывает уведомление в виде красной плашки, выезжающей сверху.
+ * Автоматически скрывается через 3 секунды.
+ * @param {string} message - Сообщение, которое нужно показать.
+ */
+function showTopNotification(message) {
+    const notification = document.getElementById('top-notification');
+    const messageSpan = document.getElementById('top-notification-message');
     
-    setTimeout(() => {
-        alertBox.style.display = 'none';
-        alertBox.onclick = null; 
-    }, 300);
+    // Очищаем предыдущий таймер, если функция вызвана быстро (предотвращает наложение)
+    if (notification.timer) {
+        clearTimeout(notification.timer);
+        notification.timer = null;
+    }
+    
+    messageSpan.textContent = message;
+    notification.classList.add('visible');
+    
+    // Скрываем через 3 секунды
+    notification.timer = setTimeout(() => {
+        notification.classList.remove('visible');
+        notification.timer = null;
+    }, 3000); 
 }
 
 // === ОБНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ КРАСИВЫХ ПЕРЕХОДОВ ("ГЛУБОКОЕ ПОГРУЖЕНИЕ") ===
@@ -1452,10 +1411,7 @@ document.querySelectorAll('.faq-header').forEach(header=>{
 
 document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
-    const customAlert = document.getElementById('custom-alert');
     
-    customAlert.style.display = 'none';
-
     document.querySelectorAll('.page').forEach(p => {
         if (p.id !== 'splash-screen') p.style.display = 'none';
         p.classList.remove('active', 'enter-forward', 'enter-backward', 'exit-forward', 'exit-backward');
@@ -1485,8 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
 function switchBuyTariff(tariffName) {
     if (tariffName === 'family' || tariffName === 'premium') {
-        showCustomAlert(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
-        return;
+        showTopNotification(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
     }
 
     document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => {
@@ -1515,6 +1470,8 @@ function switchBuyTariff(tariffName) {
 
 function selectBuyDay(tariffName, selectedOption) {
     if (tariffName !== 'personal') {
+        // Запрещаем выбор дней для тарифов в разработке
+        showTopNotification(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
         return;
     }
     document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
@@ -1532,8 +1489,7 @@ function selectBuyDay(tariffName, selectedOption) {
 // === ФУНКЦИИ ДЛЯ ПРОДЛЕНИЯ (ПРОДЛИТЬ) ===
 function switchRenewTariff(tariffName) {
     if (tariffName === 'family' || tariffName === 'premium') {
-        showCustomAlert(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
-        return;
+        showTopNotification(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
     }
 
     document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => {
@@ -1562,6 +1518,8 @@ function switchRenewTariff(tariffName) {
 
 function selectRenewDay(tariffName, selectedOption) {
     if (tariffName !== 'personal') {
+        // Запрещаем выбор дней для тарифов в разработке
+        showTopNotification(`Тариф ${tariffName === 'family' ? 'Семейная' : 'Премиум'} находится в разработке`);
          return;
     }
     document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
