@@ -208,7 +208,7 @@ a {
     left: 50%;
     width: 100%;
     max-width: 600px; 
-    padding: 60px 15px 20px 15px;
+    padding: 60px 15px 20px 15px; /* Базовый отступ для ПК */
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
                 opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
     will-change: transform, opacity;
@@ -216,6 +216,10 @@ a {
     z-index: 10;
     transform: translate(-50%, 0) scale(1);
     opacity: 1;
+}
+/* Восстанавливаем оригинальный отступ главной страницы (для ПК) */
+#home.page { 
+    padding-top: 20px !important; 
 }
 .page.enter-forward {
     transform: translate(-50%, 0) scale(0.9);
@@ -447,7 +451,7 @@ p {
 /* === Кнопка Назад === */
 .back-button {
     position: fixed;
-    top: 15px;
+    top: 15px; /* Базовое положение для ПК */
     left: 15px; 
     background: var(--card-bg); 
     color: var(--text-color); 
@@ -624,9 +628,6 @@ p {
 .tariff-days-option.active span {
     font-weight: 700;
 }
-.tariff-days-option span {
-    font-weight: 600;
-}
 .option-price {
     font-weight: 700;
     color: var(--text-color);
@@ -778,6 +779,23 @@ p {
 .support-card .button.secondary:hover {
     background: #37475a;
 }
+
+/* === МОБИЛЬНЫЕ НАСТРОЙКИ: Отступ сверху для мобильных устройств === */
+@media (max-width: 768px) {
+    /* Добавляем 45px отступ сверху ко всем страницам, кроме главной (которая и так имеет логотип) */
+    .page:not(#home) {
+        padding-top: 105px !important; /* 60px (базовый) + 45px отступ */
+    }
+    /* Увеличиваем отступ для главной страницы */
+    #home.page {
+        padding-top: 65px !important; /* 20px (базовый) + 45px отступ */
+    }
+    
+    /* Увеличиваем отступ для кнопки "Назад" */
+    .back-button {
+        top: 60px; /* 15px (базовый) + 45px отступ */
+    }
+}
 </style>
 </head>
 <body>
@@ -794,7 +812,7 @@ p {
     </div>
 
 
-    <div id="home" class="page" style="padding-top: 20px;">
+    <div id="home" class="page">
         
         <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
             <div class="pulse-circle"></div>
@@ -1132,18 +1150,11 @@ p {
         <h2>Поддержка</h2>
         
         <div class="support-container">
-            <div class="support-card">
+            <div class="support-card" style="max-width: 400px; margin: 0 auto; margin-top: 40px;">
                 <i class="fas fa-headset card-icon"></i>
-                <h3>Свяжитесь с нами</h3>
+                <h3>Чат с поддержкой</h3>
                 <p>Если у вас возникли трудности или есть вопросы, наша дружная команда поддержки готова помочь вам в Telegram.</p>
-                <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
-            </div>
-
-            <div class="support-card">
-                <i class="fas fa-question-circle card-icon"></i>
-                <h3>Сначала в FAQ</h3>
-                <p>Возможно, ответ на ваш вопрос уже есть в нашем разделе часто задаваемых вопросов. Это самый быстрый способ найти решение!</p>
-                <button class="button secondary" onclick="showPage('faq')"><i class="fas fa-book-open"></i> Перейти в FAQ</button>
+                <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Начать чат</a>
             </div>
         </div>
     </div>
