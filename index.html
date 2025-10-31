@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script> <style>
 /* === Глобальные стили и переменные === */
 :root {
     --primary-color: #007bff;
@@ -646,7 +646,7 @@ p {
     margin-top: 30px;
     padding: 15px; 
     background: #1a202c; 
-    border-radius: 15px;
+    border-radius: 15px; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
 }
 .recommended-badge {
@@ -1163,6 +1163,27 @@ p {
 </div>
 
 <script>
+// === ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP API (FIX: Прокрутка вверх) ===
+if (window.Telegram && Telegram.WebApp) {
+    try {
+        // Установка цвета хедера в 'secondary_bg_color' отключает нативный жест сворачивания
+        // при прокрутке вверх, позволяя странице просто "отскакивать".
+        Telegram.WebApp.setHeaderColor('secondary_bg_color');
+
+        // Установка фонового цвета приложения для бесшовного вида
+        Telegram.WebApp.setBackgroundColor('bg_color');
+
+        // Инициализация визуальных компонентов
+        Telegram.WebApp.ready();
+
+    } catch (e) {
+        console.error("Telegram WebApp API error:", e);
+    }
+} else {
+    console.warn("Telegram WebApp API не найдено.");
+}
+// =================================================================
+
 // === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
 const modalOverlay = document.getElementById('modal-overlay');
 const modalPopup = document.getElementById('modal-popup');
