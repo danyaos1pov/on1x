@@ -624,9 +624,6 @@ p {
 .tariff-days-option.active span {
     font-weight: 700;
 }
-.tariff-days-option span {
-    font-weight: 600;
-}
 .option-price {
     font-weight: 700;
     color: var(--text-color);
@@ -782,6 +779,98 @@ p {
 .support-card .button.secondary:hover {
     background: #37475a;
 }
+
+/* === Стили для рулетки призов (Барабан подарков) === */
+.drum-container {
+    margin: 20px auto;
+    max-width: 500px;
+    position: relative;
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* Обрезаем элементы рулетки за пределами контейнера */
+}
+
+/* Маркер выигрыша */
+.win-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%; /* Центр контейнера */
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 100%;
+    background: var(--accent-red);
+    z-index: 50;
+    box-shadow: 0 0 15px var(--accent-red);
+}
+
+.prize-drum-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+    border-radius: 10px;
+    position: relative;
+    padding: 5px 0;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prize-drum {
+    display: inline-flex;
+    transition: transform 5s cubic-bezier(0.2, 0.8, 0.4, 1); /* Настраиваем анимацию прокрутки */
+}
+
+.prize-item {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 120px; /* Ширина элемента приза */
+    height: 100px;
+    padding: 5px;
+    margin: 0 5px;
+    background: #1f262f;
+    border-radius: 10px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--text-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid transparent;
+    user-select: none;
+    line-height: 1.2;
+}
+.prize-item i {
+    font-size: 28px;
+    margin-bottom: 5px;
+    color: var(--secondary-color);
+}
+
+.drum-info {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+.drum-info p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+#spin-button.disabled {
+    cursor: not-allowed;
+}
+
+.text-success {
+    color: var(--secondary-color);
+    font-weight: 700;
+}
+.text-danger {
+    color: var(--accent-red);
+    font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -828,8 +917,7 @@ p {
                 <i class="fas fa-store"></i>
                 Магазин
             </div>
-            <div class="menu-card disabled" onclick="showModalNotification('Барабан в разработке', 'Этот раздел скоро появится. Следите за новостями в нашем Telegram-канале!')">
-                <span class="development-badge">Разработка</span>
+            <div id="drum-menu-card" class="menu-card" onclick="showPage('drum')">
                 <i class="fas fa-gifts"></i>
                 Барабан подарков
             </div>
@@ -1146,6 +1234,42 @@ p {
         </div>
     </div>
 
+    <div id="drum" class="page">
+        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
+        <h2>Барабан подарков</h2>
+        <p>Крутите барабан один раз в 7 дней и выигрывайте приятные призы и скидки!</p>
+        
+        <div class="drum-container">
+            <div class="win-marker"></div>
+            <div class="prize-drum-wrapper">
+                <div class="prize-drum" id="prize-drum">
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="discount10"><i class="fas fa-percent"></i>Скидка 10%</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="discount5"><i class="fas fa-percent"></i>Скидка 5%</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="free30"><i class="fas fa-calendar-alt"></i>30 дн. подписки</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="discount3"><i class="fas fa-percent"></i>Скидка 3%</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="free60"><i class="fas fa-calendar-alt"></i>60 дн. подписки</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                    <div class="prize-item" data-prize-id="discount2"><i class="fas fa-percent"></i>Скидка 2%</div>
+                    <div class="prize-item" data-prize-id="nothing"><i class="fas fa-times-circle"></i>Ничего</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="button" id="spin-button" onclick="spinDrum()">
+            <i class="fas fa-hand-pointer"></i> Крутить барабан
+        </button>
+
+        <div class="drum-info">
+            <p id="drum-status-message">Нажмите на кнопку, чтобы получить свой приз!</p>
+            <p><small class="text-danger">Обратите внимание: Крутить можно только 1 раз в 7 дней.</small></p>
+        </div>
+    </div>
 </div> 
 
 <div id="top-notification">
@@ -1249,6 +1373,11 @@ function showPage(id, isBack = false){
         nextPage.classList.add('active');
         nextPage.classList.remove('enter-forward', 'enter-backward');
         nextPage.style.zIndex = '15'; 
+        
+        // Добавленная логика для инициализации страницы Drum
+        if (id === 'drum') {
+            checkDrumAvailability();
+        }
     }, 10);
 }
 
@@ -1277,11 +1406,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const homePage = document.getElementById('home');
             homePage.style.display = 'block';
             homePage.classList.add('active'); 
+            
+            // Инициализация при загрузке
+            if (document.getElementById('buy')) switchBuyTariff('personal');
+            if (document.getElementById('renew')) switchRenewTariff('personal'); 
+            generateDrumPrizes(); // Генерируем призы
+            checkDrumAvailability(); // Проверяем статус барабана
         }, 700);
     }, 1500);
 
-    if (document.getElementById('buy')) switchBuyTariff('personal');
-    if (document.getElementById('renew')) switchRenewTariff('personal'); 
 });
 
 // === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
@@ -1426,6 +1559,191 @@ function refreshSystemStatus() {
         }, 500);
     }, 1500);
 }
+
+// === НОВЫЙ КОД ДЛЯ БАРАБАНА ПОДАРКОВ ===
+const PRIZES = [
+    { id: 'discount10', name: 'Скидка 10% на подписку', chance: 5, icon: 'fas fa-percent', color: 'var(--gold-color)' },
+    { id: 'discount5', name: 'Скидка 5% на подписку', chance: 10, icon: 'fas fa-percent', color: 'var(--secondary-color)' },
+    { id: 'free30', name: '30 дней бесплатной подписки', chance: 5, icon: 'fas fa-calendar-alt', color: 'var(--primary-color)' },
+    { id: 'free60', name: '60 дней бесплатной подписки', chance: 5, icon: 'fas fa-calendar-alt', color: 'var(--primary-color)' },
+    { id: 'freeMonth', name: 'Месяц бесплатной подписки', chance: 5, icon: 'fas fa-calendar-check', color: 'var(--primary-color)' },
+    { id: 'discount2', name: 'Скидка 2% на подписку', chance: 15, icon: 'fas fa-percent', color: 'var(--secondary-color)' },
+    { id: 'discount3', name: 'Скидка 3% на подписку', chance: 10, icon: 'fas fa-percent', color: 'var(--secondary-color)' },
+    { id: 'nothing', name: 'Ничего', chance: 50, icon: 'fas fa-times-circle', color: 'var(--accent-red)' }
+];
+const PRIZE_WIDTH = 130; // 120px item + 10px margin
+
+function generateDrumPrizes() {
+    const drum = document.getElementById('prize-drum');
+    if (!drum) return;
+
+    // Сбор всех призов с учетом их шанса (общий шанс 100%)
+    let prizeSequence = [];
+    PRIZES.forEach(prize => {
+        for (let i = 0; i < prize.chance; i++) {
+            prizeSequence.push(prize);
+        }
+    });
+
+    // Перемешивание (Fisher-Yates)
+    for (let i = prizeSequence.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [prizeSequence[i], prizeSequence[j]] = [prizeSequence[j], prizeSequence[i]];
+    }
+
+    // Добавление "фиктивных" призов для начального и конечного прокручивания
+    // Нам нужно, чтобы призы прокручивались, поэтому повторим последовательность 3-4 раза.
+    const finalSequence = [...prizeSequence, ...prizeSequence, ...prizeSequence, ...prizeSequence];
+    
+    // Генерируем HTML-элементы
+    drum.innerHTML = finalSequence.map(prize => `
+        <div class="prize-item" data-prize-id="${prize.id}" style="border-color: ${prize.color};">
+            <i class="${prize.icon}" style="color: ${prize.color};"></i>
+            ${prize.name}
+        </div>
+    `).join('');
+
+    // Сохраняем последовательность для использования в spinDrum
+    drum.dataset.prizeSequence = JSON.stringify(finalSequence.map(p => p.id));
+}
+
+function getResultPrize() {
+    let randomNumber = Math.random() * 100;
+    let cumulativeChance = 0;
+    
+    for (const prize of PRIZES) {
+        cumulativeChance += prize.chance;
+        if (randomNumber <= cumulativeChance) {
+            return prize;
+        }
+    }
+    // Fallback: вернуть "Ничего"
+    return PRIZES.find(p => p.id === 'nothing');
+}
+
+function spinDrum() {
+    const spinButton = document.getElementById('spin-button');
+    const drum = document.getElementById('prize-drum');
+    const statusMessage = document.getElementById('drum-status-message');
+    
+    if (spinButton.disabled) return;
+
+    // 1. Блокируем кнопку
+    spinButton.disabled = true;
+    spinButton.classList.add('disabled');
+    spinButton.innerHTML = '<i class="fas fa-spinner spin"></i> Крутится...';
+    statusMessage.innerHTML = 'Барабан крутится, подождите...';
+    
+    // 2. Определяем результат
+    const resultPrize = getResultPrize();
+    const prizeSequenceIds = JSON.parse(drum.dataset.prizeSequence);
+
+    // 3. Находим позицию выигрышного приза
+    // Ищем выигрышный приз в последнем "круге" последовательности, чтобы анимация была длинной.
+    const firstSliceLength = prizeSequenceIds.length / 4 * 3; 
+    let winIndex = -1;
+    for(let i = firstSliceLength; i < prizeSequenceIds.length; i++) {
+        if (prizeSequenceIds[i] === resultPrize.id) {
+            winIndex = i;
+            break; 
+        }
+    }
+    
+    // Если не нашли (что маловероятно), берем случайный из последних N элементов
+    if (winIndex === -1) {
+        const lastOccurrences = prizeSequenceIds.map((id, index) => (id === resultPrize.id) ? index : -1).filter(index => index !== -1);
+        if (lastOccurrences.length > 0) {
+             winIndex = lastOccurrences[Math.floor(Math.random() * lastOccurrences.length)];
+        } else {
+             winIndex = prizeSequenceIds.length - 1; // Крайний случай
+        }
+    }
+
+    // 4. Расчет смещения
+    // Центр контейнера (ширина контейнера/2) - (ширина элемента приза/2) - (индекс * ширина приза)
+    const containerCenterOffset = document.querySelector('.drum-container').offsetWidth / 2;
+    // Смещение до центра выигрышного элемента
+    const targetOffset = (winIndex * PRIZE_WIDTH) + (PRIZE_WIDTH / 2); 
+    // Целевое смещение, чтобы элемент оказался по центру маркера
+    const finalTransform = containerCenterOffset - targetOffset; 
+
+    // Добавляем дополнительный "прокрут" для драматизма
+    const rotationCount = 8; // Прокрутка на 8 позиций дальше, чтобы было видно вращение
+    const finalPosition = finalTransform + (rotationCount * PRIZE_WIDTH); 
+
+    // 5. Анимация
+    drum.style.transition = 'transform 5s cubic-bezier(0.2, 0.8, 0.4, 1)';
+    drum.style.transform = `translateX(${finalPosition}px)`;
+
+    // 6. Результат после анимации
+    setTimeout(() => {
+        // Установка нового ограничения
+        setDrumCooldown();
+
+        // Сброс анимации для возможности следующего спина (не сразу)
+        drum.style.transition = 'none';
+        drum.style.transform = `translateX(${finalTransform}px)`; // Фиксируем в выигрышной позиции
+
+        // Разблокировка кнопки и обновление статуса
+        spinButton.disabled = false;
+        spinButton.classList.remove('disabled');
+        spinButton.innerHTML = '<i class="fas fa-hand-pointer"></i> Крутить барабан';
+        checkDrumAvailability(); // Проверка и отображение кулдауна
+
+        // Сообщение о выигрыше
+        if (resultPrize.id === 'nothing') {
+            showModalNotification('В следующий раз повезет!', `К сожалению, вы ничего не выиграли. Попробуйте снова через 7 дней.`);
+            statusMessage.innerHTML = `<span class="text-danger">Выпало: ${resultPrize.name}! Повезет в следующий раз.</span>`;
+        } else {
+            showModalNotification('🎉 Поздравляем! Вы выиграли!', `Ваш приз: ${resultPrize.name}. Для получения приза обратитесь в службу поддержки.`);
+            statusMessage.innerHTML = `<span class="text-success">Поздравляем! Вы выиграли: ${resultPrize.name}</span>. Для получения обратитесь в поддержку.`;
+        }
+
+    }, 5000); // Длительность анимации
+}
+
+function setDrumCooldown() {
+    const nextSpinTime = new Date().getTime() + (7 * 24 * 60 * 60 * 1000); // 7 дней в миллисекундах
+    localStorage.setItem('on1x_vpn_next_spin', nextSpinTime);
+}
+
+function checkDrumAvailability() {
+    const nextSpinTime = localStorage.getItem('on1x_vpn_next_spin');
+    const spinButton = document.getElementById('spin-button');
+    const statusMessage = document.getElementById('drum-status-message');
+
+    if (!spinButton || !statusMessage) return;
+
+    if (!nextSpinTime) {
+        spinButton.disabled = false;
+        spinButton.classList.remove('disabled');
+        statusMessage.innerHTML = 'Нажмите на кнопку, чтобы получить свой приз!';
+        return;
+    }
+
+    const remainingTime = nextSpinTime - new Date().getTime();
+    
+    if (remainingTime > 0) {
+        spinButton.disabled = true;
+        spinButton.classList.add('disabled');
+
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        statusMessage.innerHTML = `<span class="text-danger">Следующая прокрутка доступна через: ${days}д ${hours}ч ${minutes}м ${seconds}с.</span>`;
+        
+        // Обновление каждую секунду
+        setTimeout(checkDrumAvailability, 1000);
+    } else {
+        localStorage.removeItem('on1x_vpn_next_spin');
+        spinButton.disabled = false;
+        spinButton.classList.remove('disabled');
+        statusMessage.innerHTML = '<span class="text-success">Барабан доступен! Нажмите кнопку, чтобы получить приз.</span>';
+    }
+}
+
 
 // === НОВЫЙ КОД: Запрет контекстного меню (правой кнопки) ===
 document.addEventListener('contextmenu', function(e) {
