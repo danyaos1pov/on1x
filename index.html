@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script> <style>
+<style>
 /* === Глобальные стили и переменные === */
 :root {
     --primary-color: #007bff;
@@ -624,9 +624,6 @@ p {
 .tariff-days-option.active span {
     font-weight: 700;
 }
-.tariff-days-option span {
-    font-weight: 600;
-}
 .option-price {
     font-weight: 700;
     color: var(--text-color);
@@ -646,7 +643,7 @@ p {
     margin-top: 30px;
     padding: 15px; 
     background: #1a202c; 
-    border-radius: 15px; 
+    border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
 }
 .recommended-badge {
@@ -1163,27 +1160,6 @@ p {
 </div>
 
 <script>
-// === ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP API (FIX: Прокрутка вверх) ===
-if (window.Telegram && Telegram.WebApp) {
-    try {
-        // Установка цвета хедера в 'secondary_bg_color' отключает нативный жест сворачивания
-        // при прокрутке вверх, позволяя странице просто "отскакивать".
-        Telegram.WebApp.setHeaderColor('secondary_bg_color');
-
-        // Установка фонового цвета приложения для бесшовного вида
-        Telegram.WebApp.setBackgroundColor('bg_color');
-
-        // Инициализация визуальных компонентов
-        Telegram.WebApp.ready();
-
-    } catch (e) {
-        console.error("Telegram WebApp API error:", e);
-    }
-} else {
-    console.warn("Telegram WebApp API не найдено.");
-}
-// =================================================================
-
 // === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
 const modalOverlay = document.getElementById('modal-overlay');
 const modalPopup = document.getElementById('modal-popup');
@@ -1447,6 +1423,44 @@ function refreshSystemStatus() {
         }, 500);
     }, 1500);
 }
+
+// === НОВЫЙ КОД: Запрет сворачивания при прокрутке вверх (Anti-Overscroll / Pull-to-Close fix) ===
+let touchstartY = 0;
+
+// 1. Запоминаем начальную позицию касания
+document.addEventListener('touchstart', function(e) {
+    // Используем { passive: false }, чтобы позволить e.preventDefault()
+    touchstartY = e.changedTouches[0].clientY;
+}, { passive: false });
+
+// 2. Отслеживаем движение
+document.addEventListener('touchmove', function(e) {
+    const touchY = e.changedTouches[0].clientY;
+    const scrollY = window.scrollY;
+
+    // Проверяем, если:
+    // a) Страница находится в самом верху (scrollY === 0)
+    // b) И пользователь свайпает ВНИЗ (touchY > touchstartY), что вызывает сворачивание.
+    if (scrollY === 0 && touchY > touchstartY) {
+        // Блокируем стандартное действие браузера/Telegram, чтобы предотвратить закрытие MiniApp
+        e.preventDefault();
+        return; 
+    }
+    
+    // В некоторых браузерах (особенно iOS) при "резиновом" скролле scrollY может стать < 0. 
+    // На всякий случай возвращаем его на 0 и блокируем.
+    if (scrollY < 0) {
+        window.scrollTo(0, 0);
+        e.preventDefault();
+    }
+}, { passive: false });
+
+
+// === НОВЫЙ КОД: Запрет контекстного меню (правой кнопки) ===
+document.addEventListener('contextmenu', function(e) {
+    // Предотвращает показ стандартного контекстного меню браузера
+    e.preventDefault();
+});
 </script>
 </body>
 </html>
