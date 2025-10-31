@@ -624,6 +624,9 @@ p {
 .tariff-days-option.active span {
     font-weight: 700;
 }
+.tariff-days-option span {
+    font-weight: 600;
+}
 .option-price {
     font-weight: 700;
     color: var(--text-color);
@@ -1423,38 +1426,6 @@ function refreshSystemStatus() {
         }, 500);
     }, 1500);
 }
-
-// === НОВЫЙ КОД: Запрет сворачивания при прокрутке вверх (Anti-Overscroll / Pull-to-Close fix) ===
-let touchstartY = 0;
-
-// 1. Запоминаем начальную позицию касания
-document.addEventListener('touchstart', function(e) {
-    // Используем { passive: false }, чтобы позволить e.preventDefault()
-    touchstartY = e.changedTouches[0].clientY;
-}, { passive: false });
-
-// 2. Отслеживаем движение
-document.addEventListener('touchmove', function(e) {
-    const touchY = e.changedTouches[0].clientY;
-    const scrollY = window.scrollY;
-
-    // Проверяем, если:
-    // a) Страница находится в самом верху (scrollY === 0)
-    // b) И пользователь свайпает ВНИЗ (touchY > touchstartY), что вызывает сворачивание.
-    if (scrollY === 0 && touchY > touchstartY) {
-        // Блокируем стандартное действие браузера/Telegram, чтобы предотвратить закрытие MiniApp
-        e.preventDefault();
-        return; 
-    }
-    
-    // В некоторых браузерах (особенно iOS) при "резиновом" скролле scrollY может стать < 0. 
-    // На всякий случай возвращаем его на 0 и блокируем.
-    if (scrollY < 0) {
-        window.scrollTo(0, 0);
-        e.preventDefault();
-    }
-}, { passive: false });
-
 
 // === НОВЫЙ КОД: Запрет контекстного меню (правой кнопки) ===
 document.addEventListener('contextmenu', function(e) {
