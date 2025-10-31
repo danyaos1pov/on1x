@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 /* === Глобальные стили и переменные === */
 :root {
@@ -620,7 +619,7 @@ p {
     margin-top: 30px;
     padding: 15px; 
     background: #1a202c; 
-    border-radius: 15px; 
+    border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
 }
 .recommended-badge {
@@ -877,7 +876,7 @@ p {
                     </div>
 
                     <div class="tariff-buy-button-container">
-                        <a href="#" id="buy-button-personal" class="button disabled" onclick="purchaseAction('personal'); return false;">Выберите срок</a>
+                        <a href="#" id="buy-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
@@ -937,7 +936,7 @@ p {
                     </div>
 
                     <div class="tariff-buy-button-container">
-                        <a href="#" id="renew-button-personal" class="button disabled" onclick="purchaseAction('personal', true); return false;">Выберите срок</a>
+                        <a href="#" id="renew-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
@@ -1106,14 +1105,7 @@ p {
                 <i class="fas fa-headset card-icon"></i>
                 <h3>Свяжитесь с нами</h3>
                 <p>Если у вас возникли трудности или есть вопросы, наша дружная команда поддержки готова помочь вам в Telegram.</p>
-                <a href="#" class="button" onclick="openLinkAndClose('https://t.me/on1xVPN_admin');"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
-            </div>
-            
-            <div class="support-card">
-                <i class="fas fa-lightbulb card-icon"></i>
-                <h3>Предложить идею</h3>
-                <p>У вас есть предложения по улучшению? Поделитесь ими с нами, чтобы сделать сервис лучше!</p>
-                <a href="#" class="button secondary" onclick="openLinkAndClose('https://t.me/on1xVPN_admin?start=idea');"><i class="fas fa-pencil-alt"></i> Предложить идею</a>
+                <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
             </div>
 
         </div>
@@ -1154,32 +1146,6 @@ modalOverlay.addEventListener('click', (event) => {
         hideModalNotification();
     }
 });
-
-// [NEW] Функция для открытия ссылки и закрытия MiniApp
-function openLinkAndClose(link) {
-    if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-        // openTelegramLink() используется для ссылок t.me/
-        Telegram.WebApp.openTelegramLink(link);
-        // Закрываем MiniApp
-        Telegram.WebApp.close(); 
-    } else {
-        window.location.href = link; 
-    }
-}
-
-// [NEW] Общая функция для Купить/Продлить
-function purchaseAction(tariffName, isRenew = false) {
-    const buttonId = isRenew ? `renew-button-${tariffName}` : `buy-button-${tariffName}`;
-    const button = document.getElementById(buttonId);
-    
-    // Проверяем, что кнопка не disabled и у нее есть ссылка
-    if (button && !button.classList.contains('disabled')) {
-        const link = button.dataset.purchaseLink;
-        if (link) {
-            openLinkAndClose(link);
-        }
-    }
-}
 
 
 // === ОБЩИЕ ФУНКЦИИ ===
@@ -1289,15 +1255,12 @@ function switchBuyTariff(tariffName) {
         const buyButton = document.getElementById(`buy-button-${tariffName}`);
         if (buyButton) {
             buyButton.classList.add('disabled');
-            // [MODIFIED] Убираем href, оставляем data-attribute для покупки
             buyButton.href = '#';
-            buyButton.removeAttribute('data-purchase-link');
             buyButton.innerHTML = 'Выберите срок';
         }
     }
 }
 
-// [MODIFIED] Обновлена функция: сохраняет ссылку в data-purchase-link
 function selectBuyDay(tariffName, selectedOption) {
     document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
         option.classList.remove('active');
@@ -1306,8 +1269,7 @@ function selectBuyDay(tariffName, selectedOption) {
     const buyButton = document.getElementById(`buy-button-${tariffName}`);
     if (buyButton) {
         buyButton.classList.remove('disabled');
-        // [MODIFIED] Сохраняем ссылку в data-атрибут
-        buyButton.dataset.purchaseLink = selectedOption.dataset.link;
+        buyButton.href = selectedOption.dataset.link;
         buyButton.innerHTML = 'Купить';
     }
 }
@@ -1338,15 +1300,12 @@ function switchRenewTariff(tariffName) {
         const renewButton = document.getElementById(`renew-button-${tariffName}`);
         if (renewButton) {
             renewButton.classList.add('disabled');
-            // [MODIFIED] Убираем href, оставляем data-attribute для покупки
             renewButton.href = '#';
-            renewButton.removeAttribute('data-purchase-link');
             renewButton.innerHTML = 'Выберите срок';
         }
     }
 }
 
-// [MODIFIED] Обновлена функция: сохраняет ссылку в data-purchase-link
 function selectRenewDay(tariffName, selectedOption) {
     document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
         option.classList.remove('active');
@@ -1355,8 +1314,7 @@ function selectRenewDay(tariffName, selectedOption) {
     const renewButton = document.getElementById(`renew-button-${tariffName}`);
     if (renewButton) {
         renewButton.classList.remove('disabled');
-        // [MODIFIED] Сохраняем ссылку в data-атрибут
-        renewButton.dataset.purchaseLink = selectedOption.dataset.link;
+        renewButton.href = selectedOption.dataset.link;
         renewButton.innerHTML = 'Продлить'; 
     }
 }
