@@ -6,840 +6,188 @@
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-/* === Глобальные стили и переменные === */
+/* ────────────────────────  ВСЕ СТИЛИ ИЗ ВАШЕГО ФАЙЛА  ──────────────────────── */
 :root {
     --primary-color: #007bff;
-    --secondary-color: #28a745; /* Зеленый для успеха/активности */
+    --secondary-color: #28a745;
     --bg-dark: #0d1117;
-    --card-bg: #161b22; /* Фон карточек */
+    --card-bg: #161b22;
     --text-color: #e6edf3;
     --accent-red: #dc3545;
-    /* === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТАРИФОВ === */
     --gold-color: #ffd700;
     --personal-color: var(--text-color);
     --family-color: var(--secondary-color);
     --premium-color: var(--gold-color);
     --toggle-active-bg: #37475a;
 }
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-}
-body { 
-    background: var(--bg-dark); 
-    color: var(--text-color); 
-    text-align: center; 
-    min-height: 100vh; 
-    padding-bottom: 50px;
-}
-a { 
-    text-decoration: none;
-    color: inherit;
-}
+* { box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
+body { background:var(--bg-dark); color:var(--text-color); text-align:center; min-height:100vh; padding-bottom:50px; }
+a { text-decoration:none; color:inherit; }
 
-/* === НОВОЕ МОДАЛЬНОЕ ОКНО (ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ) === */
-#modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    display: none; /* Скрыто по умолчанию */
-    justify-content: center;
-    align-items: center;
-    z-index: 10002;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-#modal-overlay.visible {
-    display: flex;
-    opacity: 1;
-}
-#modal-popup {
-    background: var(--card-bg);
-    padding: 25px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1.2);
-}
-#modal-overlay.visible #modal-popup {
-    transform: scale(1);
-}
-#modal-popup i {
-    font-size: 48px;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-#modal-title {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text-color);
-}
-#modal-message {
-    font-size: 1em;
-    color: #b0b8c2;
-    line-height: 1.6;
-    margin-bottom: 25px;
-}
-#modal-close-button {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 0;
-    width: 100%;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-#modal-close-button:hover,
-#modal-close-button:active {
-    background: #0056b3;
-}
+/* МОДАЛЬНОЕ ОКНО */
+#modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);display:none;justify-content:center;align-items:center;z-index:10002;opacity:0;transition:opacity .3s;}
+#modal-overlay.visible{display:flex;opacity:1;}
+#modal-popup{background:var(--card-bg);padding:25px;border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(0,0,0,.5);width:90%;max-width:380px;text-align:center;transform:scale(.9);transition:transform .3s cubic-bezier(.3,.7,.4,1.2);}
+#modal-overlay.visible #modal-popup{transform:scale(1);}
+#modal-popup i{font-size:48px;color:var(--primary-color);margin-bottom:15px;}
+#modal-title{font-size:1.5em;font-weight:700;margin-bottom:10px;}
+#modal-message{font-size:1em;color:#b0b8c2;line-height:1.6;margin-bottom:25px;}
+#modal-close-button{background:var(--primary-color);color:#fff;border:none;border-radius:10px;padding:12px 0;width:100%;font-size:1em;font-weight:600;cursor:pointer;transition:background .2s;}
+#modal-close-button:hover{background:#0056b3;}
 
+/* SPLASH */
+#splash-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-dark);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:1000;opacity:1;transition:opacity .7s;}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;}
+.pulse-container{position:relative;width:120px;height:120px;margin:30px auto 10px;}
+.pulse-container img{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;z-index:10;border:4px solid var(--primary-color);object-fit:cover;}
+.pulse-circle{position:absolute;top:50%;left:50%;width:120px;height:120px;border-radius:50%;border:2px solid rgba(0,123,255,.5);transform:translate(-50%,-50%) scale(0);animation:pulse 2.5s infinite cubic-bezier(.25,.46,.45,.94);}
+.pulse-circle:nth-child(2){animation-delay:.5s;}
+.pulse-circle:nth-child(3){animation-delay:1s;}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
 
-/* === SPLASH SCREEN === */
-#splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1000;
-    opacity: 1; 
-    transition: opacity 0.7s ease-out; 
-}
+/* СТРАНИЦЫ */
+.page{position:absolute;top:0;left:50%;width:100%;max-width:600px;padding:60px 15px 20px 15px;transition:transform .4s cubic-bezier(.2,.8,.4,1),opacity .4s;will-change:transform,opacity;display:none;z-index:10;transform:translate(-50%,0) scale(1);opacity:1;}
+.page.enter-forward{transform:translate(-50%,0) scale(.9);opacity:0;display:block;z-index:20;}
+.page.exit-forward{transform:translate(-50%,0) scale(.95);opacity:0;display:block;z-index:10;}
+.page.enter-backward{transform:translate(-50%,0) scale(.95);opacity:0;display:block;z-index:10;}
+.page.exit-backward{transform:translate(-50%,0) scale(1.1);opacity:0;display:block;z-index:20;}
+.page.active{transform:translate(-50%,0) scale(1);opacity:1;display:block;z-index:15;}
 
-/* === АНИМАЦИЯ ВРАЩЕНИЯ === */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.spin {
-    animation: spin 1s linear infinite;
-}
+/* КАРТОЧКИ */
+.subscription-status-card{display:flex;justify-content:space-between;align-items:center;padding:15px;margin:20px auto 10px;max-width:500px;background:var(--card-bg);border-radius:15px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);}
+.subscription-status-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
+.subscription-status-card .status-icon{font-size:28px;color:var(--primary-color);min-width:40px;}
+.subscription-status-card .status-info{flex-grow:1;text-align:center;margin:0 10px;}
+.subscription-status-card .status-title{margin:0;font-weight:700;font-size:1.1em;}
+.subscription-status-card .status-subtitle{margin:0;font-size:.75em;color:#b0b8c2;}
+.subscription-status-card .status-arrow{font-size:1.2em;color:#b0b8c2;}
 
-/* === Логотип и анимация === */
-.pulse-container { 
-    position: relative;
-    width: 120px; 
-    height: 120px; 
-    margin: 30px auto 10px; 
-}
-#splash-screen .pulse-container {
-    margin: 0;
-}
-.pulse-container img { 
-    position: absolute; 
-    top:0; 
-    left:0; 
-    width:100%;
-    height:100%; 
-    border-radius:50%; 
-    z-index:10; 
-    border:4px solid var(--primary-color); 
-    object-fit: cover;
-}
-.pulse-circle {
-    position: absolute; 
-    top:50%; 
-    left:50%; 
-    width:120px; 
-    height:120px;
-    border-radius:50%;
-    border: 2px solid rgba(0,123,255,0.5); 
-    transform: translate(-50%,-50%) scale(0);
-    animation: pulse 2.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-}
-.pulse-circle:nth-child(2) { animation-delay:0.5s; }
-.pulse-circle:nth-child(3) { animation-delay:1s; }
-@keyframes pulse {
-    0% { transform: translate(-50%,-50%) scale(0.8); opacity:1; }
-    100% { transform: translate(-50%,-50%) scale(1.5); opacity:0; }
-}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:500px;margin:10px auto 20px auto;}
+.menu-card{background:var(--card-bg);padding:15px 10px;border-radius:15px;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;font-weight:600;color:var(--text-color);box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);min-height:80px;font-size:.85em;position:relative;}
+.menu-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
+.menu-card i{font-size:24px;margin-bottom:5px;color:var(--primary-color);}
+.development-badge{position:absolute;top:-5px;right:-5px;background:#6c757d;color:#fff;font-size:.7em;font-weight:700;padding:3px 6px;border-radius:5px;box-shadow:0 2px 4px rgba(0,0,0,.4);transform:rotate(5deg);z-index:10;}
 
-/* === АНИМАЦИЯ СТРАНИЦ "ГЛУБОКОЕ ПОГРУЖЕНИЕ" === */
-.page {
-    position: absolute; 
-    top: 0;
-    left: 50%;
-    width: 100%;
-    max-width: 600px; 
-    padding: 60px 15px 20px 15px;
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
-                opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
-    will-change: transform, opacity;
-    display: none; 
-    z-index: 10;
-    transform: translate(-50%, 0) scale(1);
-    opacity: 1;
-}
-.page.enter-forward {
-    transform: translate(-50%, 0) scale(0.9);
-    opacity: 0;
-    display: block; 
-    z-index: 20;
-}
-.page.exit-forward {
-    transform: translate(-50%, 0) scale(0.95);
-    opacity: 0;
-    display: block;
-    z-index: 10;
-}
-.page.enter-backward {
-    transform: translate(-50%, 0) scale(0.95);
-    opacity: 0;
-    display: block;
-    z-index: 10;
-}
-.page.exit-backward {
-    transform: translate(-50%, 0) scale(1.1);
-    opacity: 0;
-    display: block;
-    z-index: 20;
-}
-.page.active {
-    transform: translate(-50%, 0) scale(1);
-    opacity: 1;
-    display: block;
-    z-index: 15;
-}
+/* КНОПКИ */
+.button{display:block;width:100%;max-width:300px;margin:20px auto;padding:12px 0;border-radius:8px;background:var(--primary-color);color:#fff;border:none;box-shadow:0 2px 5px rgba(0,0,0,.4);font-weight:700;transition:all .2s;cursor:pointer;text-align:center;}
+.button:hover{background:#0056b3;}
+.button.disabled{background:#343a40!important;color:#b0b8c2!important;cursor:not-allowed;opacity:.7;}
+.channel-promo{margin:30px auto 10px;padding:15px;background:var(--card-bg);border-radius:15px;max-width:500px;box-shadow:0 5px 15px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);}
+.channel-promo p{margin:5px 0 15px;color:#b0b8c2;font-size:.95em;}
+.channel-promo .button{max-width:100%;margin:0;}
+.back-button{position:fixed;top:15px;left:15px;background:var(--card-bg);color:var(--text-color);padding:8px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.1);font-size:1em;font-weight:600;cursor:pointer;display:flex;align-items:center;transition:.3s;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.4);}
+.back-button:hover{background:#1f262f;border-color:var(--primary-color);}
 
-/* === Заголовки и текст === */
-h1 { 
-    font-size: 2.2em; 
-    margin-bottom: 5px; 
-    color: var(--primary-color);
-}
-h2 { 
-    font-size: 1.8em; 
-    margin: 0 0 20px 0; 
-    border-bottom: 2px solid rgba(255,255,255,0.1); 
-    padding-bottom: 10px;
-}
-h3,h4 { 
-    margin:15px 0; 
-}
-p { 
-    margin:10px 0; 
-    line-height:1.6; 
-    color: #b0b8c2;
-}
+/* ТАРИФЫ */
+.tariff-toggle-inside{display:flex;justify-content:center;gap:5px;margin:0 auto 15px auto;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.1);}
+.tariff-toggle-inside .toggle-button{flex-grow:1;padding:8px 5px;border-radius:8px;background:var(--bg-dark);color:var(--text-color);font-weight:600;cursor:pointer;transition:all .2s;text-align:center;border:1px solid rgba(255,255,255,.05);font-size:.9em;}
+.tariff-toggle-inside .toggle-button.active{background:var(--primary-color);color:#fff;border-color:var(--primary-color);box-shadow:0 0 8px rgba(0,123,255,.5);}
+.tariff-toggle-inside .toggle-button.developing{pointer-events:auto;}
+.compact-tariff-card{background:var(--card-bg);border-radius:15px;padding:20px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);}
+.unified-tariff-card{text-align:center;padding-bottom:5px;}
+.unified-tariff-card .tariff-name-title{display:none!important;}
+.unified-tariff-card .tariff-slogan{margin:0 0 15px 0;font-size:.95em;font-weight:500;min-height:20px;}
+.slogan-personal{color:var(--text-color)!important;}
+.slogan-family{color:var(--family-color)!important;font-weight:600;}
+.slogan-premium{color:var(--premium-color)!important;font-weight:600;}
+.tariff-features-list-v2{display:flex;justify-content:space-around;gap:10px;padding:15px 0;border-top:1px solid rgba(255,255,255,.1);}
+.tariff-features-list-v2>div{flex-basis:30%;font-size:.85em;color:#b0b8c2;}
+.tariff-features-list-v2 i{color:var(--primary-color);font-size:1.6em;display:block;margin:0 auto 5px auto;}
+.pricing-card-block{background:var(--card-bg);border-radius:15px;padding:20px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);}
+.tariff-days-option{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:10px;cursor:pointer;transition:all .2s;border:1px solid transparent;}
+.tariff-days-option:hover{background:rgba(0,0,0,.3);border-color:rgba(0,123,255,.3);}
+.tariff-days-option.active{background:var(--primary-color);box-shadow:0 0 10px rgba(0,123,255,.5);border-color:var(--primary-color);}
+.tariff-days-option.active span{font-weight:700;}
+.option-price{font-weight:700;color:var(--text-color);}
+.tariff-buy-button-container{text-align:center;padding-top:5px;}
+.tariff-buy-button-container .button{max-width:100%;margin:20px auto 0;}
 
-/* === КРУПНАЯ КАРТОЧКА ПОДПИСКИ === */
-.subscription-status-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    margin: 20px auto 10px auto; 
-    max-width: 500px;
-    background: var(--card-bg);
-    border-radius: 15px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-}
-.subscription-status-card:hover,
-.subscription-status-card:active { 
-    transform: none; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: var(--primary-color);
-}
-.subscription-status-card .status-icon {
-    font-size: 28px;
-    color: var(--primary-color);
-    min-width: 40px;
-    text-align: left;
-}
-.subscription-status-card .status-info {
-    flex-grow: 1;
-    text-align: center; 
-    margin: 0 10px;
-}
-.subscription-status-card .status-title {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.1em;
-    color: var(--text-color);
-}
-.subscription-status-card .status-subtitle {
-    margin: 0;
-    font-size: 0.75em; 
-    color: #b0b8c2;
-}
-.subscription-status-card .status-arrow {
-    font-size: 1.2em;
-    color: #b0b8c2;
-}
-
-/* === Главное меню (СЕТКА) === */
-.menu-grid { 
-    display:grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 10px;
-    max-width:500px;
-    margin:10px auto 20px auto; 
-}
-.menu-card { 
-    background: var(--card-bg);
-    padding: 15px 10px; 
-    border-radius:15px; 
-    display:flex; 
-    flex-direction:column; 
-    justify-content:center;
-    align-items:center; 
-    cursor:pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; 
-    font-weight:600; 
-    color: var(--text-color);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    min-height: 80px;
-    font-size: 0.85em;
-    position: relative;
-}
-.menu-card:hover,
-.menu-card:active { 
-    transform: none; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: var(--primary-color);
-}
-
-.menu-card.disabled {
-    opacity: 0.6;
-    cursor: pointer;
-}
-.menu-card.disabled:hover,
-.menu-card.disabled:active {
-    transform: none !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important; 
-    border-color: var(--primary-color) !important;
-}
-
-/* === СТИЛЬ ДЛЯ ПЛАШКИ "РАЗРАБОТКА" === */
-.development-badge {
-    position: absolute;
-    top: -5px; 
-    right: -5px; 
-    background: #6c757d;
-    color: white;
-    font-size: 0.7em;
-    font-weight: 700;
-    padding: 3px 6px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    transform: rotate(5deg);
-    line-height: 1; 
-    z-index: 10;
-}
-.menu-card i { 
-    font-size: 24px; 
-    margin-bottom: 5px;
-    color: var(--primary-color);
-}
-
-/* === Кнопки (стандартные) === */
-.button { 
-    display:block; 
-    width:100%; 
-    max-width:300px;
-    margin:20px auto; 
-    padding:12px 0;
-    border-radius: 8px;
-    background: var(--primary-color);
-    color: white; 
-    border: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    font-weight:700;
-    transition: all 0.2s ease; 
-    cursor: pointer;
-    text-align: center;
-}
-.button:hover,
-.button:active { 
-    transform: none; 
-    background: #0056b3;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
-}
-.button.disabled {
-    background: #343a40 !important;
-    color: #b0b8c2 !important;
-    border-color: transparent !important;
-    cursor: not-allowed;
-    box-shadow: none !important;
-    transform: none !important;
-    opacity: 0.7;
-}
-
-/* === Специальная кнопка канала === */
-.channel-promo {
-    margin: 30px auto 10px;
-    padding: 15px;
-    background: var(--card-bg);
-    border-radius: 15px;
-    max-width: 500px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.channel-promo p {
-    margin: 5px 0 15px;
-    color: #b0b8c2;
-    font-size: 0.95em;
-}
-.channel-promo .button {
-    max-width: 100%; 
-    margin: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    border-color: transparent; 
-}
-.channel-promo .button:hover,
-.channel-promo .button:active {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
-    transform: none; 
-    background: #0056b3; 
-}
-
-/* === Кнопка Назад === */
-.back-button {
-    position: fixed;
-    top: 15px;
-    left: 15px; 
-    background: var(--card-bg); 
-    color: var(--text-color); 
-    padding: 8px 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: 0.3s;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-.back-button:hover,
-.back-button:active { 
-    color: var(--text-color); 
-    background: #1f262f;
-    border-color: var(--primary-color);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); 
-    transform: none; 
-}
-
-
-/* === Стили для переключателя тарифов === */
-.tariff-toggle-inside {
-    display: flex;
-    justify-content: center;
-    gap: 5px; 
-    margin: 0 auto 15px auto;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1); 
-}
-.tariff-toggle-inside .toggle-button {
-    flex-grow: 1;
-    padding: 8px 5px;
-    border-radius: 8px; 
-    background: var(--bg-dark);
-    color: var(--text-color);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9em;
-}
-.tariff-toggle-inside .toggle-button.active {
-    background: var(--primary-color); 
-    color: white;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(0,123,255,0.5);
-}
-.tariff-toggle-inside .toggle-button:hover:not(.active),
-.tariff-toggle-inside .toggle-button:active:not(.active) {
-    background: rgba(255,255,255,0.05);
-}
-
-/* === Стили для НЕАКТИВНЫХ тарифов === */
-.tariff-content.disabled {
-    position: relative;
-    pointer-events: none;
-    opacity: 0.6;
-}
-.tariff-content.disabled::before {
-    content: "В РАЗРАБОТКЕ";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-5deg);
-    background: rgba(220, 53, 69, 0.9);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 1.5em;
-    font-weight: 800;
-    z-index: 50;
-    letter-spacing: 1px;
-    border: 3px solid white;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-}
-.tariff-toggle-inside .toggle-button.developing {
-    pointer-events: auto;
-    cursor: pointer;
-}
-
-
-/* === ОБЪЕДИНЕННЫЙ БЛОК ТАРИФОВ === */
-.compact-tariff-card {
-    background: var(--card-bg); 
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: left;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.unified-tariff-card {
-    text-align: center;
-    padding-bottom: 5px;
-}
-.unified-tariff-card .tariff-name-title {
-    display: none !important;
-}
-.unified-tariff-card .tariff-slogan {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 0.95em;
-    font-weight: 500;
-    min-height: 20px;
-    transition: color 0.3s;
-}
-.slogan-personal { color: var(--text-color) !important; } 
-.slogan-family { color: var(--family-color) !important; font-weight: 600; } 
-.slogan-premium { color: var(--premium-color) !important; font-weight: 600; } 
-.tariff-features-list-v2 {
-    padding: 10px 0;
-    margin-bottom: 0;
-    border-top: 1px solid rgba(255,255,255,0.1); 
-    padding-top: 15px;
-    display: flex;
-    justify-content: space-around; 
-    align-items: flex-start;
-    text-align: center; 
-    gap: 10px;
-}
-.tariff-features-list-v2 > div {
-    display: block;
-    flex-basis: 30%; 
-    font-size: 0.85em; 
-    color: #b0b8c2;
-    line-height: 1.3;
-}
-.tariff-features-list-v2 i {
-    color: var(--primary-color);
-    font-size: 1.6em;
-    margin: 0 auto 5px auto;
-    min-width: 0; 
-    display: block;
-}
-
-/* === БЛОК ВЫБОРА ДНЕЙ === */
-.pricing-card-block {
-    background: var(--card-bg);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: left;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.tariff-days-option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px; 
-    margin-bottom: 8px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-    border: 1px solid transparent;
-}
-.tariff-days-option:hover,
-.tariff-days-option:active {
-    background: rgba(0,0,0,0.3);
-    border-color: rgba(0,123,255,0.3);
-}
-.tariff-days-option.active {
-    background: var(--primary-color); 
-    box-shadow: 0 0 10px rgba(0,123,255,0.5);
-    border-color: var(--primary-color);
-}
-.tariff-days-option.active span {
-    font-weight: 700;
-}
-.tariff-days-option span {
-    font-weight: 600;
-}
-.option-price {
-    font-weight: 700;
-    color: var(--text-color);
-}
-.tariff-buy-button-container {
-    text-align: center;
-    padding-top: 5px;
-}
-.tariff-buy-button-container .button {
-    max-width: 100%;
-    margin: 20px auto 0;
-}
-
-/* === Стили для FAQ, Install, Status === */
-.install-section { 
-    position: relative;
-    margin-top: 30px;
-    padding: 15px; 
-    background: #1a202c; 
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-}
-.recommended-badge {
-    position: absolute;
-    top: -10px;
-    right: 15px;
-    background: var(--primary-color); 
-    color: white;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 0.85em;
-    font-weight: 700;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    z-index: 15;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-#install .faq-body .button {
-    max-width: 100% !important;
-    margin: 15px auto 10px auto; 
-}
-.faq-card { 
-    background: var(--card-bg); 
-    border-radius: 10px; 
-    margin: 10px 0; 
-    max-width: none;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4); 
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05); 
-}
-.faq-header { 
-    padding: 15px;
-    cursor: pointer; 
-    font-weight: 600;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    background: #1f262f;
-    transition: background 0.2s; 
-    color: var(--text-color);
-}
-.faq-header:hover,
-.faq-header:active { 
-    background: #2a3443;
-}
-.faq-header.active .arrow { 
-    transform: rotate(90deg);
-}
-.faq-body { 
-    display: none; 
-    padding: 15px; 
-    text-align: left; 
-    background: var(--card-bg);
-    border-top: 1px solid #1f262f; 
-    color: #b0b8c2;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-.faq-body p { 
-    margin-top: 0;
-}
-.faq-body ol { 
-    margin-left: 20px; 
-    padding-left: 0;
-    margin-bottom: 15px;
-}
-.status-section { 
-    background: var(--card-bg); 
-    border-radius: 15px; 
-    padding: 20px;
-    margin: 20px auto; 
-    max-width: 400px; 
-    text-align: left;
-}
-/* НОВОЕ ПРАВИЛО: Центрирование заголовков h3 в блоках статуса */
-.status-section h3 { 
-    text-align: center;
-}
-.status-item { 
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    padding: 10px 0; 
-    border-bottom: 1px solid #1f262f; 
-    font-weight: 500;
-}
-.status-dot.green { 
-    color: var(--secondary-color);
-}
-.status-dot.red { 
-    color: var(--accent-red); 
-} 
-#status #refresh-status-button {
-    max-width: 100%;
-}
-
-/* === НОВЫЙ ДИЗАЙН РАЗДЕЛА ПОДДЕРЖКИ === */
-.support-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-}
-.support-card {
-    background: var(--card-bg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    text-align: center;
-}
-.support-card i.card-icon {
-    font-size: 40px;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-.support-card h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.4em;
-}
-.support-card p {
-    color: #b0b8c2;
-    max-width: 350px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.support-card .button {
-    max-width: 100%;
-    margin-top: 15px;
-}
-.support-card .button.secondary {
-    background: #2a3443;
-}
-.support-card .button.secondary:hover {
-    background: #37475a;
-}
+/* УСТАНОВКА / FAQ / STATUS / SUPPORT */
+.install-section{margin-top:30px;padding:15px;background:#1a202c;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.5);position:relative;}
+.recommended-badge{position:absolute;top:-10px;right:15px;background:var(--primary-color);color:#fff;padding:5px 10px;border-radius:8px;font-size:.85em;font-weight:700;box-shadow:0 2px 5px rgba(0,0,0,.5);z-index:15;}
+.faq-card{background:var(--card-bg);border-radius:10px;margin:10px 0;box-shadow:0 3px 8px rgba(0,0,0,.4);overflow:hidden;border:1px solid rgba(255,255,255,.05);}
+.faq-header{padding:15px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;background:#1f262f;transition:background .2s;}
+.faq-header:hover{background:#2a3443;}
+.faq-header.active .arrow{transform:rotate(90deg);}
+.faq-body{display:none;padding:15px;text-align:left;background:var(--card-bg);border-top:1px solid #1f262f;color:#b0b8c2;}
+.status-section{background:var(--card-bg);border-radius:15px;padding:20px;margin:20px auto;max-width:400px;text-align:left;}
+.status-section h3{text-align:center;}
+.status-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1f262f;font-weight:500;}
+.status-dot.green{color:var(--secondary-color);}
+.status-dot.red{color:var(--accent-red);}
+.support-container{display:flex;flex-direction:column;gap:20px;margin-top:20px;}
+.support-card{background:var(--card-bg);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,.4);text-align:center;}
+.support-card i.card-icon{font-size:40px;color:var(--primary-color);margin-bottom:15px;}
+.support-card h3{margin:0 0 10px 0;font-size:1.4em;}
+.support-card p{color:#b0b8c2;max-width:350px;margin:0 auto 15px auto;}
+.support-card .button{max-width:100%;margin-top:15px;}
 </style>
 </head>
 <body>
-<div id="app-container" style="position: relative; min-height: 100vh;">
+<div id="app-container" style="position:relative;min-height:100vh;">
 
+    <!-- SPLASH -->
     <div id="splash-screen">
         <div class="pulse-container">
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
+            <div class="pulse-circle"></div><div class="pulse-circle"></div><div class="pulse-circle"></div>
             <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
         </div>
-        <p class="launch-text" style="font-size: 1.2em; font-weight: 600; color: var(--text-color); margin-top: 30px;">Открываем приложение</p>
+        <p style="font-size:1.2em;font-weight:600;color:var(--text-color);margin-top:30px;">Открываем приложение</p>
     </div>
 
-
-    <div id="home" class="page" style="padding-top: 20px;">
-        
-        <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
+    <!-- HOME -->
+    <div id="home" class="page" style="padding-top:20px;">
+        <div class="pulse-container" style="margin:30px auto 10px;width:120px;height:120px;">
+            <div class="pulse-circle"></div><div class="pulse-circle"></div><div class="pulse-circle"></div>
             <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
         </div>
-        
-        <h1><span style="color: var(--text-color);">ON1X</span> VPN</h1>
-        
+        <h1><span style="color:var(--text-color);">ON1X</span> VPN</h1>
+
         <div class="subscription-status-card" onclick="showPage('subscription')">
             <div class="status-icon"><i class="fas fa-credit-card"></i></div>
-            <div class="status-info">
-                <p class="status-title">Подписка ON1X VPN</p>
-                <p class="status-subtitle">Покупка, продление и управление подпиской</p>
-            </div>
+            <div class="status-info"><p class="status-title">Подписка ON1X VPN</p><p class="status-subtitle">Покупка, продление и управление подпиской</p></div>
             <div class="status-arrow"><i class="fas fa-chevron-right"></i></div>
         </div>
-        
+
         <div class="menu-grid">
             <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
             <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-            <div class="menu-card close-on-click" data-action="window.location.href='https://t.me/on1xVPN_bot?start=f_5371698'"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
+            <div class="menu-card" data-bot-link="https://t.me/on1xVPN_bot?start=f_5371698"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
         </div>
-        
+
         <div class="channel-promo">
             <p>Следите за новостями, обновлениями и акциями</p>
             <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
-            <a href="https://vk.com/on1xvpn" target="_blank" class="button" style="background: #4C75A3; margin-top: 10px;"><i class="fab fa-vk"></i> Подписаться ВКонтакте</a>
+            <a href="https://vk.com/on1xvpn" target="_blank" class="button" style="background:#4C75A3;margin-top:10px;"><i class="fab fa-vk"></i> Подписаться ВКонтакте</a>
         </div>
     </div>
 
- 
+    <!-- SUBSCRIPTION -->
     <div id="subscription" class="page">
-    
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
-        
+        <button class="back-button" onclick="showPage('home',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Подписка ON1X VPN</h2>
         <p>Покупайте, продлевайте, а также управляйте своей подпиской</p>
-        
-        <div class="menu-grid subscription-actions-grid" style="max-width: 500px; margin: 30px auto; grid-template-columns: repeat(3, 1fr);">
+        <div class="menu-grid" style="max-width:500px;margin:30px auto;grid-template-columns:repeat(3,1fr);">
             <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить</div>
             <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить</div>
-            <div class="menu-card close-on-click" data-action="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
-                <i class="fas fa-flask"></i>Тест. период
-            </div>
-            <div class="menu-card close-on-click" data-action="window.location.href='https://t.me/on1xVPN_bot?start=f_5331349'">
-                <i class="fas fa-user-circle"></i>Моя подписка
-            </div>
-            <div class="menu-card close-on-click" data-action="window.location.href='https://t.me/on1xVPN_bot?start=f_5098822'">
-                <i class="fas fa-undo-alt"></i>Возврат
-            </div>
+            <div class="menu-card" data-bot-link="https://t.me/on1xVPN_bot?start=c_2293355"><i class="fas fa-flask"></i>Тест. период</div>
+            <div class="menu-card" data-bot-link="https://t.me/on1xVPN_bot?start=f_5331349"><i class="fas fa-user-circle"></i>Моя подписка</div>
+            <div class="menu-card" data-bot-link="https://t.me/on1xVPN_bot?start=f_5098822"><i class="fas fa-undo-alt"></i>Возврат</div>
         </div>
     </div>
 
-
+    <!-- BUY -->
     <div id="buy" class="page">
-        <button class="back-button" onclick="showPage('subscription', true)"><i class="fas fa-arrow-left"></i> Назад</button>
-        
+        <button class="back-button" onclick="showPage('subscription',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Купить подписку</h2>
-        
-        <div class="new-tariffs-container" id="buy-tariffs-container">
-            
+
+        <div id="buy-tariffs-container">
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
-                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <h4 style="margin:0 0 10px 0;font-size:1.1em;font-weight:700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="buy">
                         <div class="toggle-button active" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
                         <div class="toggle-button developing" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
@@ -854,52 +202,34 @@ p {
                 </div>
 
                 <div class="pricing-card-block">
-                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите количество дней</h4>
-                    
-                    <div id="buy-days-personal" data-tariff-name="personal">
-                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2089758" onclick="selectBuyDay('personal', this)">
-                            <span>30 дней</span>
-                            <span class="option-price">100 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2089793" onclick="selectBuyDay('personal', this)">
-                            <span>60 дней</span>
-                            <span class="option-price">200 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300579" onclick="selectBuyDay('personal', this)">
-                            <span>90 дней</span>
-                            <span class="option-price">300 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300580" onclick="selectBuyDay('personal', this)">
-                            <span>180 дней</span>
-                            <span class="option-price">600 руб</span>
-                        </div>
+                    <h4 style="text-align:center;margin-top:0;font-size:1.1em;font-weight:700;">Выберите количество дней</h4>
+                    <div id="buy-days-personal">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2089758" onclick="selectBuyDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2089793" onclick="selectBuyDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300579" onclick="selectBuyDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300580" onclick="selectBuyDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
                     </div>
-
                     <div class="tariff-buy-button-container">
                         <a href="#" id="buy-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
-            
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
-                </div>
-            
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
-                </div>
-    
+
+            <!-- FAMILY / PREMIUM (пока скрыты) -->
+            <div class="tariff-content disabled" data-tariff="family" style="display:none;"></div>
+            <div class="tariff-content disabled" data-tariff="premium" style="display:none;"></div>
         </div>
     </div>
 
+    <!-- RENEW -->
     <div id="renew" class="page">
-        <button class="back-button" onclick="showPage('subscription', true)"><i class="fas fa-arrow-left"></i> Назад</button>
-    
+        <button class="back-button" onclick="showPage('subscription',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Продлить подписку</h2>
-        
-        <div class="new-tariffs-container" id="renew-tariffs-container">
-            
+
+        <div id="renew-tariffs-container">
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
-                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <h4 style="margin:0 0 10px 0;font-size:1.1em;font-weight:700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="renew">
                         <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
                         <div class="toggle-button developing" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
@@ -914,149 +244,145 @@ p {
                 </div>
 
                 <div class="pricing-card-block">
-                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите количество дней</h4>
-                    
-                    <div id="renew-days-personal" data-tariff-name="personal">
-                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2173534" onclick="selectRenewDay('personal', this)">
-                            <span>30 дней</span>
-                            <span class="option-price">100 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2173536" onclick="selectRenewDay('personal', this)">
-                            <span>60 дней</span>
-                            <span class="option-price">200 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2231867" onclick="selectRenewDay('personal', this)">
-                            <span>90 дней</span>
-                            <span class="option-price">300 руб</span>
-                        </div>
-                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2231869" onclick="selectRenewDay('personal', this)">
-                            <span>180 дней</span>
-                            <span class="option-price">600 руб</span>
-                        </div>
+                    <h4 style="text-align:center;margin-top:0;font-size:1.1em;font-weight:700;">Выберите количество дней</h4>
+                    <div id="renew-days-personal">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2173534" onclick="selectRenewDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2173536" onclick="selectRenewDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2231867" onclick="selectRenewDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2231869" onclick="selectRenewDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
                     </div>
-
                     <div class="tariff-buy-button-container">
                         <a href="#" id="renew-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
-            
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
-                 </div>
-    
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
-                </div>
-    
+
+            <div class="tariff-content disabled" data-tariff="family" style="display:none;"></div>
+            <div class="tariff-content disabled" data-tariff="premium" style="display:none;"></div>
         </div>
     </div>
 
+    <!-- INSTALL -->
     <div id="install" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
+        <button class="back-button" onclick="showPage('home',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Установка приложения</h2>
         <p>Выберите удобный для вас клиент V2RayTun или Happ, а затем необходимое устройство. Вы можете выбрать любой другой клиент, который удобен для вас</p>
-        
+
         <div class="install-section">
             <div class="recommended-badge">Рекомендуется</div>
             <h3><i class="fas fa-satellite-dish"></i> V2RayTun</h3>
-        
+
+            <!-- iOS -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
                     <ol>
-                        <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
+                        <li>Скопируйте ключ (ссылка) доступа в Telegram‑боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение V2RayTun.</li>
-                        <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Нажмите "Разрешить вставку".</li>
+                        <li>В правом верхнем углу нажмите на «+».</li>
+                        <li>Нажмите «Разрешить вставку».</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
-                    <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <p style="font-size:.9em;color:var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://apps.apple.com/ru/app/v2raytun/id6476628951" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
+
+            <!-- Android -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-android"></i> Android <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun Google Play</p>
                     <ol>
-                        <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
+                        <li>Скопируйте ключ (ссылка) доступа в Telegram‑боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение V2RayTun.</li>
-                        <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Теперь нажмите "Импорт из буфера обмена".</li>
+                        <li>В правом верхнем углу нажмите на «+».</li>
+                        <li>Теперь нажмите «Импорт из буфера обмена».</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
-                    <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <p style="font-size:.9em;color:var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
+
+            <!-- Windows -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-windows"></i> Windows <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun Desktop</p>
                     <ol>
-                        <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
+                        <li>Скопируйте ключ (ссылка) доступа в Telegram‑боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение.</li>
-                        <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Теперь нажмите "Импорт из буфера обмена".</li>
+                        <li>В правом верхнем углу нажмите на «+».</li>
+                        <li>Теперь нажмите «Импорт из буфера обмена».</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
-                    <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <p style="font-size:.9em;color:var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
+
+            <!-- macOS -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-apple"></i> Mac OS <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
                     <p><strong>Клиент:</strong> V2RayTun App Store</p>
                     <ol>
-                        <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
+                        <li>Скопируйте ключ (ссылка) доступа в Telegram‑боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение.</li>
-                        <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Теперь нажмите "Импорт из буфера обмена".</li>
+                        <li>В правом верхнем углу нажмите на «+».</li>
+                        <li>Теперь нажмите «Импорт из буфера обмена».</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
-                    <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <p style="font-size:.9em;color:var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
+
+            <!-- Linux -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-linux"></i> Linux <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
-                    <p><strong>Клиент:</strong> Hiddify-Linux (V2Ray)</p>
+                    <p><strong>Клиент:</strong> Hiddify‑Linux (V2Ray)</p>
                     <ol>
-                        <li>Скопируйте ключ (ссылка) доступа в Telegram-боте.</li>
+                        <li>Скопируйте ключ (ссылка) доступа в Telegram‑боте.</li>
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение.</li>
-                        <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Теперь нажмите "Импорт из буфера обмена".</li>
+                        <li>В правом верхнем углу нажмите на «+».</li>
+                        <li>Теперь нажмите «Импорт из буфера обмена».</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
-                    <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
+                    <p style="font-size:.9em;color:var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
                     <a href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
+
+            <!-- Android TV -->
             <div class="faq-card">
                 <div class="faq-header"><i class="fas fa-tv"></i> Android TV <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
-                    <p style="color: var(--accent-red); font-weight: bold; text-align: center;">К сожалению, в данный момент инструкция недоступна.</p>
-                    <p style="text-align: center;">Мы ее меняем, чтобы вам удобнее было подключить VPN на телевизоре.</p>
+                    <p style="color:var(--accent-red);font-weight:bold;text-align:center;">К сожалению, в данный момент инструкция недоступна.</p>
+                    <p style="text-align:center;">Мы её меняем, чтобы вам удобнее было подключить VPN на телевизоре.</p>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <!-- STATUS -->
     <div id="status" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
+        <button class="back-button" onclick="showPage('home',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Статус систем</h2>
+
         <div class="status-section">
             <h3>Система</h3>
             <div class="status-item"><span>MiniApp</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
@@ -1074,30 +400,31 @@ p {
             <div class="status-item"><span>Россия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
             <div class="status-item"><span>Германия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
         </div>
-        
+
         <button class="button" id="refresh-status-button" onclick="refreshSystemStatus()">
             <i class="fas fa-sync-alt"></i> Обновить данные
         </button>
     </div>
 
+    <!-- FAQ -->
     <div id="faq" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
+        <button class="back-button" onclick="showPage('home',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Часто задаваемые вопросы</h2>
-        
         <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу дружелюбную службу поддержки</p>
-        
+
         <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить. После оплаты вы автоматически получите ключ доступа.</div></div>
         <div class="faq-card"><div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы обновить подписку, вам необходимо зайти в клиент приложения V2RayTun или Happ и рядом с названием нашего сервиса, необходимо нажать на кнопку 🔄.</div></div>
         <div class="faq-card"><div class="faq-header">Сколько устройств можно подключить? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Подключить к одному ключу доступа можно 3 устройства.</div></div>
         <div class="faq-card"><div class="faq-header">Превышен лимит устройств <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">При превышении лимита устройств, ключ доступа блокируется на 30 минут. Во время блокировки ключ отключается и не работает. Блокировка снимается автоматически по истечению времени.</div></div>
         <div class="faq-card"><div class="faq-header">Как вернуть подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вернуть подписку, вам необходимо обратиться в нашу службу поддержки.</div></div>
         <div class="faq-card"><div class="faq-header">Бонус за приглашения друзей <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">После того, как ваш друг перешел по вашей реферальной ссылке, а затем приобрел или продлил свою подписку, вы будете получать 15% от суммы оплаты друга.</div></div>
-    </div> 
+    </div>
 
+    <!-- SUPPORT -->
     <div id="support" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
+        <button class="back-button" onclick="showPage('home',true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Поддержка</h2>
-        
+
         <div class="support-container">
             <div class="support-card">
                 <i class="fas fa-headset card-icon"></i>
@@ -1105,12 +432,12 @@ p {
                 <p>Если у вас возникли трудности или есть вопросы, наша дружная команда поддержки готова помочь вам в Telegram.</p>
                 <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
             </div>
-
         </div>
     </div>
 
-</div> 
+</div>
 
+<!-- МОДАЛЬНОЕ ОКНО -->
 <div id="modal-overlay">
     <div id="modal-popup">
         <i class="fas fa-tools"></i>
@@ -1121,292 +448,172 @@ p {
 </div>
 
 <script>
-// === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
-const modalOverlay = document.getElementById('modal-overlay');
-const modalPopup = document.getElementById('modal-popup');
-const modalTitle = document.getElementById('modal-title');
-const modalMessage = document.getElementById('modal-message');
-const modalCloseButton = document.getElementById('modal-close-button');
-
-function showModalNotification(title, message) {
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
-    modalOverlay.classList.add('visible');
+/* ────────────────────────  СВОРАЧИВАНИЕ MINI APP  ──────────────────────── */
+function openBotAndClose(link) {
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.close();               // <-- сворачиваем приложение
+        Telegram.WebApp.openLink(link);        // <-- открываем ссылку в Telegram
+    } else {
+        window.location.href = link;           // fallback
+    }
 }
 
+/* ────────────────────────  МОДАЛЬНОЕ ОКНО  ──────────────────────── */
+function showModalNotification(title, msg) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = msg;
+    document.getElementById('modal-overlay').classList.add('visible');
+}
 function hideModalNotification() {
-    modalOverlay.classList.remove('visible');
+    document.getElementById('modal-overlay').classList.remove('visible');
 }
+document.getElementById('modal-close-button').onclick = hideModalNotification;
+document.getElementById('modal-overlay').onclick = e => { if (e.target===e.currentTarget) hideModalNotification(); };
 
-modalCloseButton.addEventListener('click', hideModalNotification);
-modalOverlay.addEventListener('click', (event) => {
-    if (event.target === modalOverlay) {
-        hideModalNotification();
-    }
-});
-
-// === ФУНКЦИЯ СВОРАЧИВАНИЯ МИНИ-ПРИЛОЖЕНИЯ ===
-function closeMiniApp() {
-    if (window.Telegram && Telegram.WebApp && typeof Telegram.WebApp.close === 'function') {
-        Telegram.WebApp.close();
-    }
-}
-
-// === ОБЩИЕ ФУНКЦИИ ===
-function showPage(id, isBack = false){
+/* ────────────────────────  ПЕРЕХОДЫ ПО СТРАНИЦАМ  ──────────────────────── */
+function showPage(id, isBack = false) {
     const pages = document.querySelectorAll('.page');
     const nextPage = document.getElementById(id);
-    let currentPage = document.querySelector('.page.active');
-    const duration = 400;
+    let cur = document.querySelector('.page.active');
+    const dur = 400;
 
-    if (!nextPage || nextPage.classList.contains('active')) return; 
-    
-    window.scrollTo(0, 0);
+    if (!nextPage || nextPage.classList.contains('active')) return;
+    window.scrollTo(0,0);
 
     pages.forEach(p => {
-        p.classList.remove('active', 'enter-forward', 'enter-backward', 'exit-forward', 'exit-backward');
-        if (p !== currentPage && p !== nextPage) {
-             p.style.display = 'none';
-        }
+        p.classList.remove('active','enter-forward','enter-backward','exit-forward','exit-backward');
+        if (p!==cur && p!==nextPage) p.style.display='none';
     });
 
-    nextPage.style.display = 'block'; 
-    nextPage.classList.add(isBack ? 'enter-backward' : 'enter-forward');
-    
-    if (currentPage) {
-        currentPage.style.display = 'block';
-        currentPage.classList.add(isBack ? 'exit-backward' : 'exit-forward');
-        
-        if (isBack) {
-            currentPage.style.zIndex = '20';
-            nextPage.style.zIndex = '10';
-        } else {
-            currentPage.style.zIndex = '10';
-            nextPage.style.zIndex = '20';
-        }
-        
-        setTimeout(() => {
-            if(currentPage) {
-                currentPage.style.display = 'none';
-                currentPage.classList.remove('exit-forward', 'exit-backward', 'active');
-                currentPage.style.zIndex = '10'; 
-            }
-        }, duration); 
+    nextPage.style.display='block';
+    nextPage.classList.add(isBack?'enter-backward':'enter-forward');
+
+    if (cur) {
+        cur.style.display='block';
+        cur.classList.add(isBack?'exit-backward':'exit-forward');
+        cur.style.zIndex = isBack?'20':'10';
+        nextPage.style.zIndex = isBack?'10':'20';
+
+        setTimeout(()=>{ if(cur){ cur.style.display='none'; cur.classList.remove('exit-forward','exit-backward','active'); cur.style.zIndex='10'; } },dur);
     }
-    
-    setTimeout(() => { 
-        nextPage.classList.add('active');
-        nextPage.classList.remove('enter-forward', 'enter-backward');
-        nextPage.style.zIndex = '15'; 
-    }, 10);
+
+    setTimeout(()=>{ nextPage.classList.add('active'); nextPage.classList.remove('enter-forward','enter-backward'); nextPage.style.zIndex='15'; },10);
 }
 
-document.querySelectorAll('.faq-header').forEach(header=>{
-    header.addEventListener('click',()=>{
-        const body = header.nextElementSibling;
-        const wasActive = header.classList.contains('active');
-        
-        document.querySelectorAll('.faq-body').forEach(b => b.style.display = 'none');
-        document.querySelectorAll('.faq-header').forEach(h => h.classList.remove('active'));
-        
-        if(!wasActive) {
-            body.style.display = 'block';
-            header.classList.add('active');
-        }
-    });
-});
+/* ────────────────────────  SPLASH  ──────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+    const splash = document.getElementById('splash-screen');
+    setTimeout(()=>{ splash.style.opacity='0'; setTimeout(()=>{ splash.style.display='none'; document.getElementById('home').style.display='block'; document.getElementById('home').classList.add('active'); },700); },1500);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const splashScreen = document.getElementById('splash-screen');
-    
-    setTimeout(() => {
-        splashScreen.style.opacity = '0';
-        setTimeout(() => {
-            splashScreen.style.display = 'none';
-            const homePage = document.getElementById('home');
-            homePage.style.display = 'block';
-            homePage.classList.add('active'); 
-        }, 700);
-    }, 1500);
-
+    /* Инициализация тарифов */
     if (document.getElementById('buy')) switchBuyTariff('personal');
-    if (document.getElementById('renew')) switchRenewTariff('personal'); 
+    if (document.getElementById('renew')) switchRenewTariff('personal');
 
-    // === ОБРАБОТКА КНОПОК СВОРАЧИВАНИЯ ===
-    document.querySelectorAll('.close-on-click').forEach(btn => {
-        const action = btn.dataset.action;
-        btn.addEventListener('click', function(e) {
+    /* КНОПКИ С ПЕРЕХОДОМ В БОТ (data-bot-link) */
+    document.querySelectorAll('[data-bot-link]').forEach(el=>{
+        const link = el.getAttribute('data-bot-link');
+        el.style.cursor='pointer';
+        el.onclick = e=>{ e.preventDefault(); openBotAndClose(link); };
+    });
+
+    /* КНОПКИ КУПИТЬ / ПРОДЛИТЬ */
+    function bindBuyBtn(id){
+        const btn = document.getElementById(id);
+        if(!btn) return;
+        btn.addEventListener('click', e=>{
             e.preventDefault();
-            if (action) {
-                eval(action); // Выполняем оригинальное действие
-            }
-            setTimeout(closeMiniApp, 300);
+            if (btn.classList.contains('disabled')) return;
+            const link = btn.getAttribute('href');
+            if (link && link!=='#') openBotAndClose(link);
         });
-    });
+    }
+    bindBuyBtn('buy-button-personal');
+    bindBuyBtn('renew-button-personal');
 });
 
-// === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
-function switchBuyTariff(tariffName) {
-    if (tariffName === 'family' || tariffName === 'premium') {
-        const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
-        showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
+/* ────────────────────────  ТАРИФЫ  ──────────────────────── */
+function switchBuyTariff(t){
+    if (t==='family' || t==='premium'){
+        showModalNotification('Тариф в разработке',`Тариф «${t==='family'?'Семейный':'Премиум'}» скоро будет доступен.`);
         return;
     }
-
-    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => {
-        content.style.display = 'none';
-    });
-    const activeContent = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
-    if (activeContent) {
-        activeContent.style.display = 'block';
-        document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.tariff === tariffName) {
-                btn.classList.add('active');
-            }
-        });
-        document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
-            option.classList.remove('active');
-        });
-        const buyButton = document.getElementById(`buy-button-${tariffName}`);
-        if (buyButton) {
-            buyButton.classList.add('disabled');
-            buyButton.href = '#';
-            buyButton.innerHTML = 'Выберите срок';
-            buyButton.onclick = null; // Сбрасываем старый обработчик
-        }
-    }
+    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(c=>c.style.display='none');
+    const cnt = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${t}"]`);
+    if(cnt) cnt.style.display='block';
+    document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(b=>b.classList.toggle('active',b.dataset.tariff===t));
+    document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+    const btn=document.getElementById(`buy-button-${t}`);
+    if(btn){ btn.classList.add('disabled'); btn.href='#'; btn.innerHTML='Выберите срок'; }
+}
+function selectBuyDay(t,el){
+    document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+    el.classList.add('active');
+    const btn=document.getElementById(`buy-button-${t}`);
+    if(btn){ btn.classList.remove('disabled'); btn.href=el.dataset.link; btn.innerHTML='Купить'; }
 }
 
-function selectBuyDay(tariffName, selectedOption) {
-    document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
-        option.classList.remove('active');
-    });
-    selectedOption.classList.add('active');
-    const buyButton = document.getElementById(`buy-button-${tariffName}`);
-    if (buyButton) {
-        buyButton.classList.remove('disabled');
-        buyButton.href = selectedOption.dataset.link;
-        buyButton.innerHTML = 'Купить';
-        
-        // Добавляем сворачивание
-        buyButton.onclick = function(e) {
-            if (!buyButton.classList.contains('disabled')) {
-                setTimeout(closeMiniApp, 300);
-            }
-        };
-    }
-}
-
-// === ФУНКЦИИ ДЛЯ ПРОДЛЕНИЯ (ПРОДЛИТЬ) ===
-function switchRenewTariff(tariffName) {
-    if (tariffName === 'family' || tariffName === 'premium') {
-        const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
-        showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
+/* RENEW */
+function switchRenewTariff(t){
+    if (t==='family' || t==='premium'){
+        showModalNotification('Тариф в разработке',`Тариф «${t==='family'?'Семейный':'Премиум'}» скоро будет доступен.`);
         return;
     }
-
-    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => {
-        content.style.display = 'none';
-    });
-    const activeContent = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
-    if (activeContent) {
-        activeContent.style.display = 'block';
-        document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.tariff === tariffName) {
-                btn.classList.add('active');
-            }
-        });
-        document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
-            option.classList.remove('active');
-        });
-        const renewButton = document.getElementById(`renew-button-${tariffName}`);
-        if (renewButton) {
-            renewButton.classList.add('disabled');
-            renewButton.href = '#';
-            renewButton.innerHTML = 'Выберите срок';
-            renewButton.onclick = null;
-        }
-    }
+    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(c=>c.style.display='none');
+    const cnt = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${t}"]`);
+    if(cnt) cnt.style.display='block';
+    document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(b=>b.classList.toggle('active',b.dataset.tariff===t));
+    document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+    const btn=document.getElementById(`renew-button-${t}`);
+    if(btn){ btn.classList.add('disabled'); btn.href='#'; btn.innerHTML='Выберите срок'; }
+}
+function selectRenewDay(t,el){
+    document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+    el.classList.add('active');
+    const btn=document.getElementById(`renew-button-${t}`);
+    if(btn){ btn.classList.remove('disabled'); btn.href=el.dataset.link; btn.innerHTML='Продлить'; }
 }
 
-function selectRenewDay(tariffName, selectedOption) {
-    document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
-        option.classList.remove('active');
-    });
-    selectedOption.classList.add('active');
-    const renewButton = document.getElementById(`renew-button-${tariffName}`);
-    if (renewButton) {
-        renewButton.classList.remove('disabled');
-        renewButton.href = selectedOption.dataset.link;
-        renewButton.innerHTML = 'Продлить'; 
-        
-        renewButton.onclick = function(e) {
-            if (!renewButton.classList.contains('disabled')) {
-                setTimeout(closeMiniApp, 300);
-            }
-        };
-    }
-}
-
-// === ВОЗВРАЩЕННАЯ ФУНКЦИЯ: Обновление статуса систем ===
-function refreshSystemStatus() {
-    const statusItems = document.querySelectorAll('.status-item');
-    const refreshButton = document.getElementById('refresh-status-button');
-    
-    refreshButton.disabled = true; 
-    refreshButton.classList.add('disabled');
-    refreshButton.innerHTML = '<i class="fas fa-sync-alt spin"></i> Обновление...';
-
-    statusItems.forEach(item => {
-        const statusDot = item.querySelector('.status-dot');
-        
-        statusDot.classList.remove('green', 'red');
-        statusDot.innerHTML = '<i class="fas fa-circle-notch spin"></i> Проверка';
-    });
-    setTimeout(() => {
-        const originalStatuses = [
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'green', html: '<i class="fas fa-check-circle"></i> Онлайн' }, 
-            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }, 
-            { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }
+/* ────────────────────────  ОБНОВЛЕНИЕ СТАТУСА  ──────────────────────── */
+function refreshSystemStatus(){
+    const items=document.querySelectorAll('.status-item');
+    const btn=document.getElementById('refresh-status-button');
+    btn.disabled=true; btn.classList.add('disabled'); btn.innerHTML='<i class="fas fa-sync-alt spin"></i> Обновление...';
+    items.forEach(i=>i.querySelector('.status-dot').innerHTML='<i class="fas fa-circle-notch spin"></i> Проверка');
+    setTimeout(()=>{
+        const data=[
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'green',h:'<i class="fas fa-check-circle"></i> Онлайн'},
+            {c:'red',h:'<i class="fas fa-times-circle"></i> Оффлайн'},
+            {c:'red',h:'<i class="fas fa-times-circle"></i> Оффлайн'}
         ];
-
-        statusItems.forEach((item, index) => {
-            const statusDot = item.querySelector('.status-dot');
-            const status = originalStatuses[index];
-            
-            statusDot.classList.remove('green', 'red');
-            statusDot.classList.add(status.class);
-            statusDot.innerHTML = status.html;
+        items.forEach((it,i)=>{
+            const dot=it.querySelector('.status-dot');
+            dot.className='status-dot '+data[i].c;
+            dot.innerHTML=data[i].h;
         });
-        
-        refreshButton.disabled = false;
-        refreshButton.classList.remove('disabled');
-        refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить данные';
-        
-        if (refreshButton.querySelector('.spin')) {
-            refreshButton.querySelector('.spin').classList.remove('spin');
-        }
-
-        refreshButton.style.boxShadow = '0 0 8px rgba(40, 167, 69, 0.7)';
-        setTimeout(() => {
-            refreshButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.5)';
-        }, 500);
-    }, 1500);
+        btn.disabled=false; btn.classList.remove('disabled'); btn.innerHTML='<i class="fas fa-sync-alt"></i> Обновить данные';
+    },1500);
 }
 
-// === НОВЫЙ КОД: Запрет контекстного меню (правой кнопки) ===
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
+/* ────────────────────────  FAQ раскрытие  ──────────────────────── */
+document.querySelectorAll('.faq-header').forEach(h=>{
+    h.addEventListener('click',()=>{
+        const body=h.nextElementSibling;
+        const active=h.classList.contains('active');
+        document.querySelectorAll('.faq-body').forEach(b=>b.style.display='none');
+        document.querySelectorAll('.faq-header').forEach(hh=>hh.classList.remove('active'));
+        if(!active){ body.style.display='block'; h.classList.add('active'); }
+    });
 });
+
+/* ────────────────────────  Запрет контекстного меню  ──────────────────────── */
+document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
 </body>
 </html>
