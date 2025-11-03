@@ -794,6 +794,10 @@ p {
             <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
             <a href="https://vk.com/on1xvpn" target="_blank" class="button" style="background: #4C75A3; margin-top: 10px;"><i class="fab fa-vk"></i> Подписаться ВКонтакте</a>
         </div>
+        
+        <p onclick="showAppInfo()" style="margin-top: 25px; cursor: pointer; color: #b0b8c2; font-size: 0.9em; text-decoration: none;">
+            Информация о приложении
+        </p>
     </div>
 
  
@@ -1105,16 +1109,47 @@ p {
 </div>
 
 <script>
-// === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
+// === ФУНКЦИЯ ДЛЯ МОДАЛЬНОГО ОКНА С ИНФОРМАЦИЕЙ О ПРИЛОЖЕНИИ ===
+function showAppInfo() {
+    const title = "Информация о приложении";
+    const message = `
+        <p style="text-align: center; margin-top: 5px; font-weight: 700; color: var(--text-color);">
+            Beta-тестирование
+        </p>
+        <p style="text-align: center; margin-bottom: 5px;">
+            Версия: 4.6<br>
+            Обновлено: 04.11.2025
+        </p>
+        <p style="text-align: center; margin-bottom: 0;">
+            Создано: 
+            <a href="https://t.me/danyaos1pov" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Данил</a>
+        </p>
+    `;
+    
+    // Используем существующее модальное окно, передавая 'false' для скрытия иконки
+    showModalNotification(title, message, false); 
+}
+
+// === ФУНКЦИИ МОДАЛЬНОГО ОКНА (ОБНОВЛЕННАЯ ВЕРСИЯ) ===
 const modalOverlay = document.getElementById('modal-overlay');
 const modalPopup = document.getElementById('modal-popup');
 const modalTitle = document.getElementById('modal-title');
 const modalMessage = document.getElementById('modal-message');
 const modalCloseButton = document.getElementById('modal-close-button');
+const iconElement = document.querySelector('#modal-popup i'); // Добавлено получение элемента иконки
 
-function showModalNotification(title, message) {
+function showModalNotification(title, message, showIcon = true) {
     modalTitle.textContent = title;
-    modalMessage.textContent = message;
+    // Используем innerHTML для поддержки HTML-форматирования в сообщении
+    modalMessage.innerHTML = message; 
+
+    // Добавляем или удаляем иконку
+    if (iconElement) {
+        iconElement.style.display = showIcon ? 'block' : 'none';
+        // Дополнительно, убираем/добавляем нижний отступ для центрирования
+        modalTitle.style.marginTop = showIcon ? '0' : '15px'; 
+    }
+    
     modalOverlay.classList.add('visible');
 }
 
@@ -1487,4 +1522,3 @@ function goToLinkAndClose(url) {
 </script>
 </body>
 </html>
-
