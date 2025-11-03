@@ -467,7 +467,7 @@ p {
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
     text-align: center;
     border: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9em;
+    font-size: Steps: 0.9em;
 }
 .tariff-toggle-inside .toggle-button.active {
     background: var(--primary-color); 
@@ -1273,21 +1273,21 @@ function selectBuyDay(tariffName, selectedOption) {
         buyButton.href = selectedOption.dataset.link;
         buyButton.innerHTML = 'Купить';
 
-        // Удаляем старый обработчик, если был
         buyButton.onclick = null;
 
-        // Добавляем новый обработчик: закрываем MiniApp → переходим
         buyButton.addEventListener('click', function(e) {
             e.preventDefault();
             const url = this.href;
 
-            if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
-                Telegram.WebApp.close();
-            }
+            // СНАЧАЛА ПЕРЕХОД В БОТ
+            window.location.href = url;
 
+            // ПОТОМ ЗАКРЫТИЕ MiniApp (через 300 мс)
             setTimeout(() => {
-                window.location.href = url;
-            }, 100);
+                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                    Telegram.WebApp.close();
+                }
+            }, 300);
         });
     }
 }
@@ -1335,21 +1335,21 @@ function selectRenewDay(tariffName, selectedOption) {
         renewButton.href = selectedOption.dataset.link;
         renewButton.innerHTML = 'Продлить';
 
-        // Удаляем старый обработчик
         renewButton.onclick = null;
 
-        // Добавляем: закрываем → переходим
         renewButton.addEventListener('click', function(e) {
             e.preventDefault();
             const url = this.href;
 
-            if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
-                Telegram.WebApp.close();
-            }
+            // СНАЧАЛА ПЕРЕХОД
+            window.location.href = url;
 
+            // ПОТОМ ЗАКРЫТИЕ
             setTimeout(() => {
-                window.location.href = url;
-            }, 100);
+                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                    Telegram.WebApp.close();
+                }
+            }, 300);
         });
     }
 }
