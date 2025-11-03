@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js">
+function goToLinkAndClose(url) {
+    window.location.href = url;
+    setTimeout(() => {
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+            Telegram.WebApp.close();
+        }
+    }, 300);
+}
+
+</script>
 <style>
 /* === Глобальные стили и переменные === */
 :root {
@@ -797,7 +807,7 @@ p {
             <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5371698'"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
+            <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5371698')"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
         </div>
         
         <div class="channel-promo">
@@ -818,13 +828,13 @@ p {
         <div class="menu-grid subscription-actions-grid" style="max-width: 500px; margin: 30px auto; grid-template-columns: repeat(3, 1fr);">
             <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить</div>
             <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить</div>
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=c_2293355'">
+            <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=c_2293355')">
                 <i class="fas fa-flask"></i>Тест. период
             </div>
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5331349'">
+            <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5331349')">
                 <i class="fas fa-user-circle"></i>Моя подписка
             </div>
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5098822'">
+            <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5098822')">
                 <i class="fas fa-undo-alt"></i>Возврат
             </div>
         </div>
@@ -1411,6 +1421,16 @@ function refreshSystemStatus() {
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 });
+
+function goToLinkAndClose(url) {
+    window.location.href = url;
+    setTimeout(() => {
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+            Telegram.WebApp.close();
+        }
+    }, 300);
+}
+
 </script>
 </body>
 </html>
