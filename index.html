@@ -27,9 +27,7 @@
     margin: 0; 
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    /* НОВОЕ ПРАВИЛО: убираем стандартный синий/другой outline при фокусе */
-    outline: none !important; 
-    -webkit-tap-highlight-color: transparent; /* Убираем полупрозрачный фон при нажатии на мобильных устройствах */
+    -webkit-tap-highlight-color: transparent; /* FIX: Устранение синей обводки при касании на iOS/Android WebViews */
 }
 body { 
     background: var(--bg-dark); 
@@ -41,6 +39,19 @@ body {
 a { 
     text-decoration: none;
     color: inherit;
+}
+
+/* === FIX: Сброс синей обводки фокуса на интерактивных элементах (для всех, у кого может оставаться фокус) === */
+a:focus, 
+button:focus,
+[onclick]:focus,
+.subscription-status-card:focus,
+.menu-card:focus,
+.tariff-days-option:focus,
+.toggle-button:focus,
+.faq-header:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* === НОВОЕ МОДАЛЬНОЕ ОКНО (ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ) === */
@@ -185,8 +196,7 @@ a {
     left: 50%;
     width: 100%;
     max-width: 600px; 
-    /* БАЗОВЫЙ ОТСТУП ДЛЯ ПК (МИНИМАЛЬНЫЙ) */
-    padding: 20px 15px 20px 15px; 
+    padding: 50px 15px 20px 15px; /* <--- Базовый отступ 50px (для Главной страницы) */
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
                 opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
     will-change: transform, opacity;
@@ -196,27 +206,9 @@ a {
     opacity: 1;
 }
 
-/* ПРАВИЛО: Медиа-запрос для мобильных экранов (max-width: 600px) */
-@media (max-width: 600px) {
-    /* Отступ для Главной страницы (50px) */
-    #home {
-        padding-top: 50px;
-    }
-    
-    /* Увеличенный отступ для всех подстраниц (100px) */
-    #subscription, #buy, #renew, #install, #status, #faq, #support {
-        padding-top: 100px;
-    }
-}
-
-/* Дополнительно убираем outline, если он не был убран глобально */
-.subscription-status-card:focus,
-.menu-card:focus,
-.button:focus,
-.toggle-button:focus,
-.tariff-days-option:focus,
-.faq-header:focus {
-    outline: none !important;
+/* === НОВОЕ ПРАВИЛО: Увеличенный отступ 70px для всех страниц, кроме Главной (#home) === */
+#subscription, #buy, #renew, #install, #status, #faq, #support {
+    padding-top: 100px;
 }
 
 .page.enter-forward {
@@ -597,6 +589,9 @@ p {
 }
 .tariff-days-option.active span {
     font-weight: 700;
+}
+.tariff-days-option span {
+    font-weight: 600;
 }
 .option-price {
     font-weight: 700;
@@ -1172,12 +1167,6 @@ function showPage(id){
 
     if (!nextPage || nextPage.classList.contains('active')) return; 
 
-    // === НОВОЕ ИСПРАВЛЕНИЕ: Сброс фокуса с последнего нажатого элемента ===
-    if (document.activeElement && document.activeElement !== document.body) {
-        document.activeElement.blur();
-    }
-    // ====================================================================
-
     window.scrollTo(0, 0);
 
     const currentPageId = currentPage ? currentPage.id : null;
@@ -1281,20 +1270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             homePage.classList.add('active'); 
         }, 700);
     }, 1500);
-
-    // --- ДОБАВЛЕННЫЙ КОД: Отключение сворачивания по свайпу вниз ---
-    if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-        const WebApp = Telegram.WebApp;
-        WebApp.ready(); // Явно вызываем ready
-
-        // Отключаем вертикальные свайпы, чтобы предотвратить сворачивание
-        // при прокрутке контента. Сворачивание будет возможно только
-        // при свайпе вниз с верхнего края (заголовочной панели).
-        if (WebApp.disableVerticalSwipes) {
-            WebApp.disableVerticalSwipes();
-        } 
-    }
-    // -------------------------------------------------------------
 
     // Инициализация кнопки "Назад" Telegram
     if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
