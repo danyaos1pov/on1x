@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 /* === Глобальные стили и переменные === */
 :root {
@@ -1271,9 +1272,23 @@ function selectBuyDay(tariffName, selectedOption) {
         buyButton.classList.remove('disabled');
         buyButton.href = selectedOption.dataset.link;
         buyButton.innerHTML = 'Купить';
-        
-        // ЗАКРЫТИЕ MiniApp ПОСЛЕ КЛИКА
-        buyButton.setAttribute('onclick', 'Telegram.WebApp.close();');
+
+        // Удаляем старый обработчик, если был
+        buyButton.onclick = null;
+
+        // Добавляем новый обработчик: закрываем MiniApp → переходим
+        buyButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.href;
+
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                Telegram.WebApp.close();
+            }
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 100);
+        });
     }
 }
 
@@ -1318,10 +1333,24 @@ function selectRenewDay(tariffName, selectedOption) {
     if (renewButton) {
         renewButton.classList.remove('disabled');
         renewButton.href = selectedOption.dataset.link;
-        renewButton.innerHTML = 'Продлить'; 
-        
-        // ЗАКРЫТИЕ MiniApp ПОСЛЕ КЛИКА
-        renewButton.setAttribute('onclick', 'Telegram.WebApp.close();');
+        renewButton.innerHTML = 'Продлить';
+
+        // Удаляем старый обработчик
+        renewButton.onclick = null;
+
+        // Добавляем: закрываем → переходим
+        renewButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.href;
+
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                Telegram.WebApp.close();
+            }
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 100);
+        });
     }
 }
 
