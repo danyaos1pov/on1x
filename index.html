@@ -182,7 +182,8 @@ a {
     left: 50%;
     width: 100%;
     max-width: 600px; 
-    padding: 50px 15px 20px 15px; /* <--- Базовый отступ 50px (для Главной страницы) */
+    /* НОВЫЙ БАЗОВЫЙ ОТСТУП ДЛЯ ПК (МИНИМАЛЬНЫЙ) */
+    padding: 20px 15px 20px 15px; 
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
                 opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
     will-change: transform, opacity;
@@ -192,10 +193,20 @@ a {
     opacity: 1;
 }
 
-/* === НОВОЕ ПРАВИЛО: Увеличенный отступ 70px для всех страниц, кроме Главной (#home) === */
-#subscription, #buy, #renew, #install, #status, #faq, #support {
-    padding-top: 100px;
+/* НОВОЕ ПРАВИЛО: Медиа-запрос для мобильных экранов (max-width: 600px) */
+@media (max-width: 600px) {
+    /* Отступ для Главной страницы (50px) */
+    #home {
+        padding-top: 50px;
+    }
+    
+    /* Увеличенный отступ для всех подстраниц (100px) */
+    #subscription, #buy, #renew, #install, #status, #faq, #support {
+        padding-top: 100px;
+    }
 }
+/* Старое правило убрано, т.к. его логика теперь в медиа-запросе */
+
 
 .page.enter-forward {
     transform: translate(-50%, 0) scale(0.9);
