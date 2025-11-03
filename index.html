@@ -6,16 +6,6 @@
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<script>
-if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-    Telegram.WebApp.ready();
-    // ⭐ КОД ДЛЯ ИСПРАВЛЕНИЯ ПРОБЛЕМЫ С СВОРАЧИВАНИЕМ ⭐
-    // Отключает сворачивание при пролистывании (вертикальных свайпах) 
-    // внутри Mini App. Приложение будет сворачиваться только при свайпе в области заголовка.
-    Telegram.WebApp.disableVerticalSwipes();
-}
-</script>
 <style>
 /* === Глобальные стили и переменные === */
 :root {
@@ -192,7 +182,7 @@ a {
     left: 50%;
     width: 100%;
     max-width: 600px; 
-    padding: 140px 15px 20px 15px; /* ⭐ ИЗМЕНЕНИЕ: Увеличен верхний отступ на 80px (60px -> 140px) ⭐ */
+    padding: 60px 15px 20px 15px;
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
                 opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
     will-change: transform, opacity;
@@ -426,34 +416,6 @@ p {
     box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
     transform: none; 
     background: #0056b3; 
-}
-
-/* === Кнопка Назад === */
-.back-button {
-    position: fixed;
-    top: 95px; /* ⭐ ИЗМЕНЕНИЕ: Смещена на 80px вниз (15px -> 95px) ⭐ */
-    left: 15px; 
-    background: var(--card-bg); 
-    color: var(--text-color); 
-    padding: 8px 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: 0.3s;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-.back-button:hover,
-.back-button:active { 
-    color: var(--text-color); 
-    background: #1f262f;
-    border-color: var(--primary-color);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); 
-    transform: none; 
 }
 
 
@@ -782,7 +744,9 @@ p {
     </div>
 
 
-    <div id="home" class="page"> <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
+    <div id="home" class="page" style="padding-top: 20px;">
+        
+        <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
@@ -817,8 +781,6 @@ p {
 
  
     <div id="subscription" class="page">
-    
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         
         <h2>Подписка ON1X VPN</h2>
         <p>Покупайте, продлевайте, а также управляйте своей подпиской</p>
@@ -840,7 +802,6 @@ p {
 
 
     <div id="buy" class="page">
-        <button class="back-button" onclick="showPage('subscription', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         
         <h2>Купить подписку</h2>
         
@@ -900,7 +861,6 @@ p {
     </div>
 
     <div id="renew" class="page">
-        <button class="back-button" onclick="showPage('subscription', true)"><i class="fas fa-arrow-left"></i> Назад</button>
     
         <h2>Продлить подписку</h2>
         
@@ -960,7 +920,6 @@ p {
     </div>
 
     <div id="install" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Установка приложения</h2>
         <p>Выберите свое устройство</p>
         
@@ -1066,7 +1025,6 @@ p {
     </div>
     
     <div id="status" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Статус систем</h2>
         <div class="status-section">
             <h3>Система</h3>
@@ -1092,7 +1050,6 @@ p {
     </div>
 
     <div id="faq" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Часто задаваемые вопросы</h2>
         
         <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу службу поддержки</p>
@@ -1106,7 +1063,6 @@ p {
     </div> 
 
     <div id="support" class="page">
-        <button class="back-button" onclick="showPage('home', true)"><i class="fas fa-arrow-left"></i> Назад</button>
         <h2>Поддержка</h2>
         
         <div class="support-container">
@@ -1157,17 +1113,58 @@ modalOverlay.addEventListener('click', (event) => {
 });
 
 
-// === ОБЩИЕ ФУНКЦИИ ===
-function showPage(id, isBack = false){
+// === ЛОГИКА НАВИГАЦИИ С ИСПОЛЬЗОВАНИЕМ КНОПКИ "НАЗАД" TELEGRAM ===
+// Карта для определения родительской страницы
+const parentMap = {
+    'subscription': 'home',
+    'buy': 'subscription',
+    'renew': 'subscription',
+    'install': 'home',
+    'status': 'home',
+    'faq': 'home',
+    'support': 'home'
+};
+
+function getParentId(id) {
+    return parentMap[id] || null;
+}
+
+function updateBackButton(targetId) {
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
+        if (targetId === 'home') {
+            Telegram.WebApp.BackButton.hide();
+        } else {
+            Telegram.WebApp.BackButton.show();
+        }
+    }
+}
+
+function showPage(id){
     const pages = document.querySelectorAll('.page');
     const nextPage = document.getElementById(id);
     let currentPage = document.querySelector('.page.active');
     const duration = 400;
 
     if (!nextPage || nextPage.classList.contains('active')) return; 
-    
+
     window.scrollTo(0, 0);
 
+    const currentPageId = currentPage ? currentPage.id : null;
+    let isBack = false;
+
+    // Определяем направление анимации (вперед или назад)
+    if (currentPageId) {
+        // Если новая страница является родителем текущей, значит, идем "назад"
+        if (getParentId(currentPageId) === id) {
+            isBack = true;
+        } 
+        // Если новая страница - 'home', а текущая - нет, значит, тоже идем "назад"
+        else if (id === 'home' && currentPageId !== 'home') {
+             isBack = true;
+        }
+        // Во всех остальных случаях (переход на дочернюю/соседнюю) - "вперед"
+    }
+    
     pages.forEach(p => {
         p.classList.remove('active', 'enter-forward', 'enter-backward', 'exit-forward', 'exit-backward');
         if (p !== currentPage && p !== nextPage) {
@@ -1204,8 +1201,28 @@ function showPage(id, isBack = false){
         nextPage.classList.remove('enter-forward', 'enter-backward');
         nextPage.style.zIndex = '15'; 
     }, 10);
+    
+    updateBackButton(id); // Управляем кнопкой "Назад" Telegram
 }
 
+function telegramBackButtonHandler() {
+    const currentPage = document.querySelector('.page.active');
+    if (!currentPage) return;
+    
+    const currentPageId = currentPage.id;
+    const parentId = getParentId(currentPageId);
+    
+    if (parentId) {
+        showPage(parentId); 
+    } else {
+        // Если на главной странице (нет родителя), закрываем MiniApp
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+            Telegram.WebApp.close();
+        }
+    }
+}
+
+// === ОБЩИЕ ФУНКЦИИ ===
 document.querySelectorAll('.faq-header').forEach(header=>{
     header.addEventListener('click',()=>{
         const body = header.nextElementSibling;
@@ -1233,6 +1250,12 @@ document.addEventListener('DOMContentLoaded', () => {
             homePage.classList.add('active'); 
         }, 700);
     }, 1500);
+
+    // Инициализация кнопки "Назад" Telegram
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
+        Telegram.WebApp.BackButton.onClick(telegramBackButtonHandler);
+        Telegram.WebApp.BackButton.hide(); // Скрыть на стартовой странице
+    }
 
     if (document.getElementById('buy')) switchBuyTariff('personal');
     if (document.getElementById('renew')) switchRenewTariff('personal'); 
@@ -1393,7 +1416,8 @@ function refreshSystemStatus() {
 
         statusItems.forEach((item, index) => {
             const statusDot = item.querySelector('.status-dot');
-            const status = originalStatuses[index];
+            // Используем остаток от деления, чтобы цикл статусов работал для всех элементов
+            const status = originalStatuses[index % originalStatuses.length]; 
             
             statusDot.classList.remove('green', 'red');
             statusDot.classList.add(status.class);
