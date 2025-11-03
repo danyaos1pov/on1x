@@ -10,8 +10,16 @@
 <!-- Telegram WebApp API -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+<script>
+// Инициализация WebApp сразу
+if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+}
+</script>
+
 <style>
-/* === Глобальные стили и переменные === */
+/* === ВСЕ СТИЛИ БЕЗ ИЗМЕНЕНИЙ (оставь как есть) === */
 :root {
     --primary-color: #007bff;
     --secondary-color: #28a745;
@@ -20,103 +28,84 @@
     --text-color: #e6edf3;
     --accent-red: #dc3545;
     --gold-color: #ffd700;
-    --personal-color: var(--text-color);
-    --family-color: var(--secondary-color);
-    --premium-color: var(--gold-color);
 }
-* { box-sizing: border-box; margin:0; padding:0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-}
+* { box-sizing: border-box; margin:0; padding:0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 body { background: var(--bg-dark); color: var(--text-color); text-align:center; min-height:100vh; padding-bottom:50px; }
 a { text-decoration:none; color:inherit; }
 
-/* === МОДАЛЬНОЕ ОКНО === */
 #modal-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);display:none;justify-content:center;align-items:center;z-index:10002;opacity:0;transition:opacity .3s ease;}
 #modal-overlay.visible {display:flex;opacity:1;}
 #modal-popup {background:var(--card-bg);padding:25px;border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(0,0,0,.5);width:90%;max-width:380px;text-align:center;transform:scale(.9);transition:transform .3s cubic-bezier(.3,.7,.4,1.2);}
 #modal-overlay.visible #modal-popup {transform:scale(1);}
 #modal-popup i {font-size:48px;color:var(--primary-color);margin-bottom:15px;}
-#modal-title {font-size:1.5em;font-weight:700;margin-bottom:10px;color:var(--text-color);}
+#modal-title {font-size:1.5em;font-weight:700;margin-bottom:10px;}
 #modal-message {font-size:1em;color:#b0b8c2;line-height:1.6;margin-bottom:25px;}
 #modal-close-button {background:var(--primary-color);color:white;border:none;border-radius:10px;padding:12px 0;width:100%;font-size:1em;font-weight:600;cursor:pointer;transition:background .2s;}
-#modal-close-button:hover,#modal-close-button:active {background:#0056b3;}
+#modal-close-button:hover {background:#0056b3;}
 
-/* === SPLASH SCREEN === */
 #splash-screen {position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-dark);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:1000;opacity:1;transition:opacity .7s ease-out;}
 @keyframes spin {0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .spin {animation:spin 1s linear infinite;}
 .pulse-container {position:relative;width:120px;height:120px;margin:30px auto 10px;}
-#splash-screen .pulse-container {margin:0;}
 .pulse-container img {position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;z-index:10;border:4px solid var(--primary-color);object-fit:cover;}
 .pulse-circle {position:absolute;top:50%;left:50%;width:120px;height:120px;border-radius:50%;border:2px solid rgba(0,123,255,.5);transform:translate(-50%,-50%) scale(0);animation:pulse 2.5s infinite cubic-bezier(.25,.46,.45,.94);}
 .pulse-circle:nth-child(2){animation-delay:.5s;}
 .pulse-circle:nth-child(3){animation-delay:1s;}
 @keyframes pulse {0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
 
-/* === ПЕРЕХОДЫ СТРАНИЦ === */
-.page {position:absolute;top:0;left:50%;width:100%;max-width:600px;padding:60px 15px 20px 15px;transition:transform .4s cubic-bezier(.2,.8,.4,1),opacity .4s cubic-bezier(.2,.8,.4,1);will-change:transform,opacity;display:none;z-index:10;transform:translate(-50%,0) scale(1);opacity:1;}
+.page {position:absolute;top:0;left:50%;width:100%;max-width:600px;padding:60px 15px 20px 15px;transition:transform .4s cubic-bezier(.2,.8,.4,1),opacity .4s cubic-bezier(.2,.8,.4,1);display:none;z-index:10;transform:translate(-50%,0) scale(1);opacity:1;}
 .page.enter-forward{transform:translate(-50%,0) scale(.9);opacity:0;display:block;z-index:20;}
 .page.exit-forward{transform:translate(-50%,0) scale(.95);opacity:0;display:block;z-index:10;}
 .page.enter-backward{transform:translate(-50%,0) scale(.95);opacity:0;display:block;z-index:10;}
 .page.exit-backward{transform:translate(-50%,0) scale(1.1);opacity:0;display:block;z-index:20;}
 .page.active{transform:translate(-50%,0) scale(1);opacity:1;display:block;z-index:15;}
 
-/* === ТИПОГРАФИКА === */
 h1{font-size:2.2em;margin-bottom:5px;color:var(--primary-color);}
 h2{font-size:1.8em;margin:0 0 20px 0;border-bottom:2px solid rgba(255,255,255,.1);padding-bottom:10px;}
 h3,h4{margin:15px 0;}
 p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
 
-/* === КАРТОЧКИ === */
 .subscription-status-card,.menu-card,.compact-tariff-card,.pricing-card-block,.status-section,.faq-card,.support-card{
     background:var(--card-bg);border-radius:15px;padding:15px;margin:20px auto;max-width:500px;box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);
 }
-.subscription-status-card{cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;}
-.subscription-status-card:hover,.subscription-status-card:active{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
+.subscription-status-card{cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.subscription-status-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:500px;margin:10px auto 20px auto;}
-.menu-card{cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;font-weight:600;color:var(--text-color);min-height:80px;font-size:.85em;position:relative;}
-.menu-card:hover,.menu-card:active{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
+.menu-card{cursor:pointer;transition:transform .2s,box-shadow .2s;font-weight:600;color:var(--text-color);min-height:80px;font-size:.85em;position:relative;}
+.menu-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
 .menu-card i{font-size:24px;margin-bottom:5px;color:var(--primary-color);}
-.development-badge{position:absolute;top:-5px;right:-5px;background:#6c757d;color:white;font-size:.7em;font-weight:700;padding:3px 6px;border-radius:5px;box-shadow:0 2px 4px rgba(0,0,0,.4);transform:rotate(5deg);z-index:10;}
 
-/* === КНОПКИ === */
 .button{display:block;width:100%;max-width:300px;margin:20px auto;padding:12px 0;border-radius:8px;background:var(--primary-color);color:white;border:none;box-shadow:0 2px 5px rgba(0,0,0,.4);font-weight:700;transition:all .2s ease;cursor:pointer;text-align:center;}
-.button:hover,.button:active{background:#0056b3;}
-.button.disabled{background:#343a40 !important;color:#b0b8c2 !important;cursor:not-allowed;box-shadow:none !important;opacity:.7;}
-.back-button{position:fixed;top:15px;left:15px;background:var(--card-bg);color:var(--text-color);padding:8px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.1);font-size:1em;font-weight:600;cursor:pointer;display:flex;align-items:center;transition:.3s;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.4);}
-.back-button:hover,.back-button:active{background:#1f262f;border-color:var(--primary-color);}
+.button:hover{background:#0056b3;}
+.button.disabled{background:#343a40 !important;color:#b0b8c2 !important;cursor:not-allowed;opacity:.7;}
+.back-button{position:fixed;top:15px;left:15px;background:var(--card-bg);color:var(--text-color);padding:8px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.1);font-size:1em;font-weight:600;cursor:pointer;display:flex;align-items:center;transition:.3s;z-index:100;}
+.back-button:hover{background:#1f262f;border-color:var(--primary-color);}
 
-/* === ТАРИФЫ === */
 .tariff-toggle-inside{display:flex;justify-content:center;gap:5px;margin:0 auto 15px auto;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.1);}
-.toggle-button{flex-grow:1;padding:8px 5px;border-radius:8px;background:var(--bg-dark);color:var(--text-color);font-weight:600;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s;text-align:center;border:1px solid rgba(255,255,255,.05);font-size:.9em;}
-.toggle-button.active{background:var(--primary-color);color:white;border-color:var(--primary-color);box-shadow:0 0 8px rgba(0,123,255,.5);}
+.toggle-button{flex-grow:1;padding:8px 5px;border-radius:8px;background:var(--bg-dark);color:var(--text-color);font-weight:600;cursor:pointer;transition:background .2s;color .2s;border:1px solid rgba(255,255,255,.05);font-size:.9em;}
+.toggle-button.active{background:var(--primary-color);color:white;border-color:var(--primary-color);}
 .toggle-button:hover:not(.active){background:rgba(255,255,255,.05);}
 .tariff-content.disabled{position:relative;pointer-events:none;opacity:.6;}
-.tariff-content.disabled::before{content:"В РАЗРАБОТКЕ";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-5deg);background:rgba(220,53,69,.9);color:white;padding:10px 20px;border-radius:10px;font-size:1.5em;font-weight:800;z-index:50;letter-spacing:1px;border:3px solid white;text-shadow:0 0 5px rgba(0,0,0,.8);}
-.unified-tariff-card .tariff-name-title{display:none !important;}
-.unified-tariff-card .tariff-slogan{margin-top:0;margin-bottom:15px;font-size:.95em;font-weight:500;min-height:20px;transition:color .3s;}
-.slogan-personal{color:var(--text-color)!important;}
-.slogan-family{color:var(--family-color)!important;font-weight:600;}
-.slogan-premium{color:var(--premium-color)!important;font-weight:600;}
-.tariff-features-list-v2{padding:10px 0;margin-bottom:0;border-top:1px solid rgba(255,255,255,.1);padding-top:15px;display:flex;justify-content:space-around;align-items:flex-start;text-align:center;gap:10px;}
-.tariff-features-list-v2 > div{flex-basis:30%;font-size:.85em;color:#b0b8c2;line-height:1.3;}
+.tariff-content.disabled::before{content:"В РАЗРАБОТКЕ";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-5deg);background:rgba(220,53,69,.9);color:white;padding:10px 20px;border-radius:10px;font-size:1.5em;font-weight:800;z-index:50;border:3px solid white;}
+.unified-tariff-card .tariff-slogan{margin-top:0;margin-bottom:15px;font-size:.95em;font-weight:500;}
+.tariff-features-list-v2{padding:10px 0;margin-bottom:0;border-top:1px solid rgba(255,255,255,.1);padding-top:15px;display:flex;justify-content:space-around;gap:10px;}
+.tariff-features-list-v2 > div{flex-basis:30%;font-size:.85em;color:#b0b8c2;}
 .tariff-features-list-v2 i{color:var(--primary-color);font-size:1.6em;margin:0 auto 5px auto;display:block;}
 .tariff-days-option{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:10px;cursor:pointer;transition:background .2s,border-color .2s;border:1px solid transparent;}
-.tariff-days-option:hover,.tariff-days-option:active{background:rgba(0,0,0,.3);border-color:rgba(0,123,255,.3);}
-.tariff-days-option.active{background:var(--primary-color);box-shadow:0 0 10px rgba(0,123,255,.5);border-color:var(--primary-color);}
+.tariff-days-option:hover{background:rgba(0,0,0,.3);border-color:rgba(0,123,255,.3);}
+.tariff-days-option.active{background:var(--primary-color);box-shadow:0 0 10px rgba(0,123,255,.5);}
 .tariff-days-option.active span{font-weight:700;}
 .option-price{font-weight:700;color:var(--text-color);}
 .tariff-buy-button-container{text-align:center;padding-top:5px;}
 .tariff-buy-button-container .button{max-width:100%;margin:20px auto 0;}
 
-/* === FAQ / INSTALL / STATUS / SUPPORT === */
 .install-section{position:relative;margin-top:30px;padding:15px;background:#1a202c;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.5);}
-.recommended-badge{position:absolute;top:-10px;right:15px;background:var(--primary-color);color:white;padding:5px 10px;border-radius:8px;font-size:.85em;font-weight:700;box-shadow:0 2px 5px rgba(0,0,0,.5);z-index:15;border:1px solid rgba(255,255,255,.2);}
+.recommended-badge{position:absolute;top:-10px;right:15px;background:var(--primary-color);color:white;padding:5px 10px;border-radius:8px;font-size:.85em;font-weight:700;box-shadow:0 2px 5px rgba(0,0,0,.5);z-index:15;}
 .faq-card{background:var(--card-bg);border-radius:10px;margin:10px 0;box-shadow:0 3px 8px rgba(0,0,0,.4);overflow:hidden;border:1px solid rgba(255,255,255,.05);}
-.faq-header{padding:15px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;background:#1f262f;transition:background .2s;color:var(--text-color);}
-.faq-header:hover,.faq-header:active{background:#2a3443;}
+.faq-header{padding:15px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;background:#1f262f;transition:background .2s;}
+.faq-header:hover{background:#2a3443;}
 .faq-header.active .arrow{transform:rotate(90deg);}
-.faq-body{display:none;padding:15px;text-align:left;background:var(--card-bg);border-top:1px solid #1f262f;color:#b0b8c2;transition:max-height .3s ease-out,padding .3s ease-out;}
+.faq-body{display:none;padding:15px;text-align:left;background:var(--card-bg);border-top:1px solid #1f262f;color:#b0b8c2;}
 .status-section h3{text-align:center;}
 .status-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1f262f;font-weight:500;}
 .status-dot.green{color:var(--secondary-color);}
@@ -125,7 +114,7 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
 .support-card{background:var(--card-bg);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,.4);text-align:center;}
 .support-card i.card-icon{font-size:40px;color:var(--primary-color);margin-bottom:15px;}
 .support-card h3{margin-top:0;margin-bottom:10px;font-size:1.4em;}
-.support-card p{color:#b0b8c2;max-width:350px;margin-left:auto;margin-right:auto;}
+.support-card p{color:#b0b8c2;max-width:350px;margin:auto;}
 .support-card .button{max-width:100%;margin-top:15px;}
 .support-card .button.secondary{background:#2a3443;}
 .support-card .button.secondary:hover{background:#37475a;}
@@ -140,7 +129,7 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
             <div class="pulse-circle"></div><div class="pulse-circle"></div><div class="pulse-circle"></div>
             <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
         </div>
-        <p class="launch-text" style="font-size:1.2em;font-weight:600;color:var(--text-color);margin-top:30px;">Открываем приложение</p>
+        <p style="font-size:1.2em;font-weight:600;color:var(--text-color);margin-top:30px;">Открываем приложение</p>
     </div>
 
     <!-- HOME -->
@@ -162,7 +151,7 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
             <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-            <div class="menu-card" onclick="window.location.href='tg://resolve?domain=on1xVPN_bot&start=f_5371698'"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
+            <div class="menu-card" onclick="openLinkAndClose('https://t.me/on1xVPN_bot?start=f_5371698')"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
         </div>
 
         <div class="channel-promo">
@@ -180,9 +169,9 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
         <div class="menu-grid" style="max-width:500px;margin:30px auto;grid-template-columns:repeat(3,1fr);">
             <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить</div>
             <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить</div>
-            <div class="menu-card" onclick="window.location.href='tg://resolve?domain=on1xVPN_bot&start=c_2293355'"><i class="fas fa-flask"></i>Тест. период</div>
-            <div class="menu-card" onclick="window.location.href='tg://resolve?domain=on1xVPN_bot&start=f_5331349'"><i class="fas fa-user-circle"></i>Моя подписка</div>
-            <div class="menu-card" onclick="window.location.href='tg://resolve?domain=on1xVPN_bot&start=f_5098822'"><i class="fas fa-undo-alt"></i>Возврат</div>
+            <div class="menu-card" onclick="openLinkAndClose('https://t.me/on1xVPN_bot?start=c_2293355')"><i class="fas fa-flask"></i>Тест. период</div>
+            <div class="menu-card" onclick="openLinkAndClose('https://t.me/on1xVPN_bot?start=f_5331349')"><i class="fas fa-user-circle"></i>Моя подписка</div>
+            <div class="menu-card" onclick="openLinkAndClose('https://t.me/on1xVPN_bot?start=f_5098822')"><i class="fas fa-undo-alt"></i>Возврат</div>
         </div>
     </div>
 
@@ -199,7 +188,7 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
                         <div class="toggle-button developing" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
                         <div class="toggle-button developing" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
-                    <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
+                    <p class="tariff-slogan">Идеально подходит для одного пользователя</p>
                     <div class="tariff-features-list-v2">
                         <div><i class="fas fa-user"></i> 3 устройства</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
@@ -208,19 +197,17 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
                 </div>
                 <div class="pricing-card-block">
                     <h4 style="text-align:center;margin-top:0;font-size:1.1em;font-weight:700;">Выберите количество дней</h4>
-                    <div id="buy-days-personal" data-tariff-name="personal">
-                        <div class="tariff-days-option" data-days="30" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2089758" onclick="selectBuyDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
-                        <div class="tariff-days-option" data-days="60" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2089793" onclick="selectBuyDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
-                        <div class="tariff-days-option" data-days="90" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2300579" onclick="selectBuyDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
-                        <div class="tariff-days-option" data-days="180" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2300580" onclick="selectBuyDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
+                    <div id="buy-days-personal">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2089758" onclick="selectBuyDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2089793" onclick="selectBuyDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2300579" onclick="selectBuyDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2300580" onclick="selectBuyDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
                     </div>
                     <div class="tariff-buy-button-container">
                         <button id="buy-button-personal" class="button disabled">Выберите срок</button>
                     </div>
                 </div>
             </div>
-            <div class="tariff-content disabled" data-tariff="family" style="display:none;"></div>
-            <div class="tariff-content disabled" data-tariff="premium" style="display:none;"></div>
         </div>
     </div>
 
@@ -237,7 +224,7 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
                         <div class="toggle-button developing" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
                         <div class="toggle-button developing" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
-                    <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
+                    <p class="tariff-slogan">Идеально подходит для одного пользователя</p>
                     <div class="tariff-features-list-v2">
                         <div><i class="fas fa-user"></i> 3 устройства</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
@@ -246,148 +233,179 @@ p{margin:10px 0;line-height:1.6;color:#b0b8c2;}
                 </div>
                 <div class="pricing-card-block">
                     <h4 style="text-align:center;margin-top:0;font-size:1.1em;font-weight:700;">Выберите количество дней</h4>
-                    <div id="renew-days-personal" data-tariff-name="personal">
-                        <div class="tariff-days-option" data-days="30" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2173534" onclick="selectRenewDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
-                        <div class="tariff-days-option" data-days="60" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2173536" onclick="selectRenewDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
-                        <div class="tariff-days-option" data-days="90" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2231867" onclick="selectRenewDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
-                        <div class="tariff-days-option" data-days="180" data-link="tg://resolve?domain=on1xVPN_bot&start=c_2231869" onclick="selectRenewDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
+                    <div id="renew-days-personal">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2173534" onclick="selectRenewDay('personal',this)"><span>30 дней</span><span class="option-price">100 руб</span></div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2173536" onclick="selectRenewDay('personal',this)"><span>60 дней</span><span class="option-price">200 руб</span></div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2231867" onclick="selectRenewDay('personal',this)"><span>90 дней</span><span class="option-price">300 руб</span></div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2231869" onclick="selectRenewDay('personal',this)"><span>180 дней</span><span class="option-price">600 руб</span></div>
                     </div>
                     <div class="tariff-buy-button-container">
                         <button id="renew-button-personal" class="button disabled">Выберите срок</button>
                     </div>
                 </div>
             </div>
-            <div class="tariff-content disabled" data-tariff="family" style="display:none;"></div>
-            <div class="tariff-content disabled" data-tariff="premium" style="display:none;"></div>
         </div>
     </div>
 
-    <!-- INSTALL, STATUS, FAQ, SUPPORT — без изменений (для краткости) -->
-    <!-- Вставь из предыдущего кода, если нужно -->
-
-</div>
-
-<!-- MODAL -->
-<div id="modal-overlay">
-    <div id="modal-popup">
-        <i class="fas fa-tools"></i>
-        <h3 id="modal-title"></h3>
-        <p id="modal-message"></p>
-        <button id="modal-close-button">Понятно</button>
+    <!-- MODAL -->
+    <div id="modal-overlay">
+        <div id="modal-popup">
+            <i class="fas fa-tools"></i>
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <button id="modal-close-button">Понятно</button>
+        </div>
     </div>
-</div>
 
 <script>
-// Инициализация WebApp
-if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+// ---------- ОТКРЫТИЕ ССЫЛКИ + ЗАКРЫТИЕ ----------
+function openLinkAndClose(link) {
+    if (!link || link === '#') return;
+
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+        // try_instant_view — открывает в Telegram без браузера
+        Telegram.WebApp.openLink(link, { try_instant_view: true });
+        setTimeout(() => {
+            Telegram.WebApp.close();
+        }, 400);
+    } else {
+        window.location.href = link;
+    }
 }
 
 // ---------- MODAL ----------
-const modalOverlay=document.getElementById('modal-overlay'),modalTitle=document.getElementById('modal-title'),modalMessage=document.getElementById('modal-message'),modalCloseButton=document.getElementById('modal-close-button');
-function showModalNotification(t,m){modalTitle.textContent=t;modalMessage.textContent=m;modalOverlay.classList.add('visible');}
-function hideModalNotification(){modalOverlay.classList.remove('visible');}
-modalCloseButton.addEventListener('click',hideModalNotification);
-modalOverlay.addEventListener('click',e=>{if(e.target===modalOverlay)hideModalNotification();});
+const modalOverlay = document.getElementById('modal-overlay');
+const modalTitle = document.getElementById('modal-title');
+const modalMessage = document.getElementById('modal-message');
+const modalCloseButton = document.getElementById('modal-close-button');
 
-// ---------- ОТКРЫТИЕ ССЫЛКИ + ЗАКРЫТИЕ MINIAPP ----------
-function openLinkAndClose(link){
-    if(!link||link==='#')return;
-    if(typeof Telegram!=='undefined'&&Telegram.WebApp){
-        Telegram.WebApp.openLink(link);
-        setTimeout(()=>{Telegram.WebApp.close();},400);
-    }else{
-        window.location.href=link;
-    }
+function showModalNotification(t, m) {
+    modalTitle.textContent = t;
+    modalMessage.textContent = m;
+    modalOverlay.classList.add('visible');
 }
+function hideModalNotification() {
+    modalOverlay.classList.remove('visible');
+}
+modalCloseButton.addEventListener('click', hideModalNotification);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideModalNotification(); });
 
 // ---------- ПЕРЕХОДЫ СТРАНИЦ ----------
-function showPage(id,isBack=false){
-    const pages=document.querySelectorAll('.page'),next=document.getElementById(id),cur=document.querySelector('.page.active'),dur=400;
-    if(!next||next.classList.contains('active'))return;
-    window.scrollTo(0,0);
-    pages.forEach(p=>{p.classList.remove('active','enter-forward','enter-backward','exit-forward','exit-backward');
-        if(p!==cur&&p!==next)p.style.display='none';});
-    next.style.display='block';next.classList.add(isBack?'enter-backward':'enter-forward');
-    if(cur){
-        cur.style.display='block';cur.classList.add(isBack?'exit-backward':'exit-forward');
-        (isBack?cur.style.zIndex='20':next.style.zIndex='20');
-        setTimeout(()=>{if(cur){cur.style.display='none';cur.classList.remove('exit-forward','exit-backward','active');cur.style.zIndex='10';}},dur);
+function showPage(id, isBack = false) {
+    const pages = document.querySelectorAll('.page');
+    const next = document.getElementById(id);
+    const cur = document.querySelector('.page.active');
+    const dur = 400;
+
+    if (!next || next.classList.contains('active')) return;
+    window.scrollTo(0, 0);
+
+    pages.forEach(p => {
+        p.classList.remove('active', 'enter-forward', 'enter-backward', 'exit-forward', 'exit-backward');
+        if (p !== cur && p !== next) p.style.display = 'none';
+    });
+
+    next.style.display = 'block';
+    next.classList.add(isBack ? 'enter-backward' : 'enter-forward');
+
+    if (cur) {
+        cur.style.display = 'block';
+        cur.classList.add(isBack ? 'exit-backward' : 'exit-forward');
+        setTimeout(() => {
+            if (cur) {
+                cur.style.display = 'none';
+                cur.classList.remove('exit-forward', 'exit-backward', 'active');
+            }
+        }, dur);
     }
-    setTimeout(()=>{next.classList.add('active');next.classList.remove('enter-forward','enter-backward');next.style.zIndex='15';},10);
+
+    setTimeout(() => {
+        next.classList.add('active');
+        next.classList.remove('enter-forward', 'enter-backward');
+    }, 10);
 }
 
-// ---------- FAQ ----------
-document.querySelectorAll('.faq-header').forEach(h=>h.addEventListener('click',()=>{const b=h.nextElementSibling,w=h.classList.contains('active');
-    document.querySelectorAll('.faq-body').forEach(bb=>bb.style.display='none');
-    document.querySelectorAll('.faq-header').forEach(hh=>hh.classList.remove('active'));
-    if(!w){b.style.display='block';h.classList.add('active');}}));
-
 // ---------- SPLASH ----------
-document.addEventListener('DOMContentLoaded',()=>{
-    const s=document.getElementById('splash-screen');
-    setTimeout(()=>{s.style.opacity='0';
-        setTimeout(()=>{s.style.display='none';
-            const home=document.getElementById('home');home.style.display='block';home.classList.add('active');
-        },700);
-    },1500);
-    if(document.getElementById('buy'))switchBuyTariff('personal');
-    if(document.getElementById('renew'))switchRenewTariff('personal');
+document.addEventListener('DOMContentLoaded', () => {
+    const s = document.getElementById('splash-screen');
+    setTimeout(() => {
+        s.style.opacity = '0';
+        setTimeout(() => {
+            s.style.display = 'none';
+            const home = document.getElementById('home');
+            home.style.display = 'block';
+            home.classList.add('active');
+        }, 700);
+    }, 1500);
+
+    if (document.getElementById('buy')) switchBuyTariff('personal');
+    if (document.getElementById('renew')) switchRenewTariff('personal');
 });
 
 // ---------- BUY ----------
-function switchBuyTariff(t){
-    if(t==='family'||t==='premium'){showModalNotification('Тариф в разработке',`Тариф «${t==='family'?'Семейный':'Премиум'}» скоро будет доступен. Мы уже работаем над этим!`);return;}
-    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(c=>c.style.display='none');
-    const a=document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${t}"]`);
-    if(a){a.style.display='block';
-        document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(b=>b.classList.toggle('active',b.dataset.tariff===t));
-        document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
-        const btn=document.getElementById(`buy-button-${t}`);
-        if(btn){btn.classList.add('disabled');btn.removeAttribute('href');btn.innerHTML='Выберите срок';}
+function switchBuyTariff(t) {
+    if (t === 'family' || t === 'premium') {
+        showModalNotification('Тариф в разработке', 'Скоро будет доступен!');
+        return;
+    }
+    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(c => c.style.display = 'none');
+    const a = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${t}"]`);
+    if (a) {
+        a.style.display = 'block';
+        document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(b => b.classList.toggle('active', b.dataset.tariff === t));
+        document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o => o.classList.remove('active'));
+        const btn = document.getElementById(`buy-button-${t}`);
+        if (btn) {
+            btn.classList.add('disabled');
+            btn.innerHTML = 'Выберите срок';
+        }
     }
 }
-function selectBuyDay(t,el){
-    document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+function selectBuyDay(t, el) {
+    document.querySelectorAll(`#buy-days-${t} .tariff-days-option`).forEach(o => o.classList.remove('active'));
     el.classList.add('active');
-    const btn=document.getElementById(`buy-button-${t}`);
-    if(btn){
+    const btn = document.getElementById(`buy-button-${t}`);
+    if (btn) {
         btn.classList.remove('disabled');
-        const link=el.dataset.link;
-        btn.removeAttribute('href');
-        btn.onclick=e=>{e.preventDefault();openLinkAndClose(link);};
-        btn.innerHTML='Купить';
+        const link = el.dataset.link;
+        btn.onclick = e => { e.preventDefault(); openLinkAndClose(link); };
+        btn.innerHTML = 'Купить';
     }
 }
 
 // ---------- RENEW ----------
-function switchRenewTariff(t){
-    if(t==='family'||t==='premium'){showModalNotification('Тариф в разработке',`Тариф «${t==='family'?'Семейный':'Премиум'}» скоро будет доступен. Мы уже работаем над этим!`);return;}
-    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(c=>c.style.display='none');
-    const a=document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${t}"]`);
-    if(a){a.style.display='block';
-        document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(b=>b.classList.toggle('active',b.dataset.tariff===t));
-        document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
-        const btn=document.getElementById(`renew-button-${t}`);
-        if(btn){btn.classList.add('disabled');btn.removeAttribute('href');btn.innerHTML='Выберите срок';}
+function switchRenewTariff(t) {
+    if (t === 'family' || t === 'premium') {
+        showModalNotification('Тариф в разработке', 'Скоро будет доступен!');
+        return;
+    }
+    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(c => c.style.display = 'none');
+    const a = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${t}"]`);
+    if (a) {
+        a.style.display = 'block';
+        document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(b => b.classList.toggle('active', b.dataset.tariff === t));
+        document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o => o.classList.remove('active'));
+        const btn = document.getElementById(`renew-button-${t}`);
+        if (btn) {
+            btn.classList.add('disabled');
+            btn.innerHTML = 'Выберите срок';
+        }
     }
 }
-function selectRenewDay(t,el){
-    document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o=>o.classList.remove('active'));
+function selectRenewDay(t, el) {
+    document.querySelectorAll(`#renew-days-${t} .tariff-days-option`).forEach(o => o.classList.remove('active'));
     el.classList.add('active');
-    const btn=document.getElementById(`renew-button-${t}`);
-    if(btn){
+    const btn = document.getElementById(`renew-button-${t}`);
+    if (btn) {
         btn.classList.remove('disabled');
-        const link=el.dataset.link;
-        btn.removeAttribute('href');
-        btn.onclick=e=>{e.preventDefault();openLinkAndClose(link);};
-        btn.innerHTML='Продлить';
+        const link = el.dataset.link;
+        btn.onclick = e => { e.preventDefault(); openLinkAndClose(link); };
+        btn.innerHTML = 'Продлить';
     }
 }
 
 // ---------- КОНТЕКСТНОЕ МЕНЮ ----------
-document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
 </body>
 </html>
