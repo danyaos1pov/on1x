@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<script src="https://telegram.org/js/telegram-web-app.js">
-function goToLinkAndClose(url) {
-    window.location.href = url;
-    setTimeout(() => {
-        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
-            Telegram.WebApp.close();
-        }
-    }, 300);
-}
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+<script>
+if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+    Telegram.WebApp.ready();
+    // ⭐ КОД ДЛЯ ИСПРАВЛЕНИЯ ПРОБЛЕМЫ С СВОРАЧИВАНИЕМ ⭐
+    // Отключает сворачивание при пролистывании (вертикальных свайпах) 
+    // внутри Mini App. Приложение будет сворачиваться только при свайпе в области заголовка.
+    Telegram.WebApp.disableVerticalSwipes();
+}
 </script>
 <style>
 /* === Глобальные стили и переменные === */
