@@ -1257,6 +1257,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 700);
     }, 1500);
 
+    // --- ДОБАВЛЕННЫЙ КОД: Отключение сворачивания по свайпу вниз ---
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+        const WebApp = Telegram.WebApp;
+        WebApp.ready(); // Явно вызываем ready
+
+        // Отключаем вертикальные свайпы, чтобы предотвратить сворачивание
+        // при прокрутке контента. Сворачивание будет возможно только
+        // при свайпе вниз с верхнего края (заголовочной панели).
+        if (WebApp.disableVerticalSwipes) {
+            WebApp.disableVerticalSwipes();
+        } 
+    }
+    // -------------------------------------------------------------
+
     // Инициализация кнопки "Назад" Telegram
     if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
         Telegram.WebApp.BackButton.onClick(telegramBackButtonHandler);
