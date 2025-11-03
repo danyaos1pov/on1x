@@ -6,18 +6,15 @@
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-/* === ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ (вставьте из вашего оригинального файла) === */
+/* === ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ === */
 :root {
     --primary-color: #007bff;
-    --secondary-color: #28a745;
     --bg-dark: #0d1117;
     --card-bg: #161b22;
     --text-color: #e6edf3;
-    --accent-red: #dc3545;
 }
 * { box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
 body { background:var(--bg-dark); color:var(--text-color); text-align:center; min-height:100vh; padding-bottom:50px; }
-a { text-decoration:none; color:inherit; }
 
 /* МОДАЛЬНОЕ ОКНО */
 #modal-overlay{
@@ -42,41 +39,44 @@ a { text-decoration:none; color:inherit; }
     padding:12px 0;width:100%;font-size:1em;font-weight:600;cursor:pointer;
     transition:background .2s;
 }
-#modal-close-button:hover,#modal-close-button:active{background:#0056b3;}
+#modal-close-button:hover{background:#0056b3;}
 
-/* === ОСНОВНЫЕ СТИЛИ (вставьте все стили из оригинала сюда) === */
-/* menu-grid, menu-card, button, back-button, page, splash и т.д. */
+/* СЕТКА МЕНЮ */
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:500px;margin:10px auto 20px auto;}
-.menu-card{background:var(--card-bg);padding:15px 10px;border-radius:15px;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;font-weight:600;color:var(--text-color);box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);min-height:80px;font-size:.85em;}
-.menu-card:hover,.menu-card:active{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
+.menu-card{
+    background:var(--card-bg);padding:15px 10px;border-radius:15px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    cursor:pointer;font-weight:600;color:var(--text-color);
+    box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);
+    min-height:80px;font-size:.85em;
+}
+.menu-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.6);border-color:var(--primary-color);}
 .menu-card i{font-size:24px;margin-bottom:5px;color:var(--primary-color);}
 </style>
 </head>
 <body>
 
-<!-- ВАШИ СТРАНИЦЫ (home, subscription, buy и т.д.) -->
-<div id="app-container" style="position:relative;min-height:100vh;">
+<div id="app-container">
 
-    <!-- HOME С НОВОЙ КНОПКОЙ -->
+    <!-- HOME -->
     <div id="home" class="page">
         <h1>ON1X VPN</h1>
-        
+
         <div class="menu-grid">
-            <!-- ВАШИ КНОПКИ -->
             <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установка</div>
-            <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
+            <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
-            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5371698'"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
-            
-            <!-- ✅ КНОПКА ТЕСТИРОВАНИЕ -->
+            <div class="menu-card" onclick="window.location.href='https://t.me/on1xVPN_bot?start=f_5371698'"><i class="fas fa-user-plus"></i>Друзья</div>
+
+            <!-- КНОПКА ТЕСТИРОВАНИЕ -->
             <div class="menu-card" onclick="openTestingLink()">
                 <i class="fas fa-vial"></i>Тестирование
             </div>
         </div>
     </div>
 
-    <!-- ВСТАВЬТЕ ОСТАЛЬНЫЕ СТРАНИЦЫ ИЗ ОРИГИНАЛА -->
+    <!-- ВСТАВЬТЕ ОСТАЛЬНЫЕ СТРАНИЦЫ -->
 
 </div>
 
@@ -91,37 +91,30 @@ a { text-decoration:none; color:inherit; }
 </div>
 
 <script>
-/* === ✅ ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP === */
-let TelegramWebApp = null;
+// === ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP ===
+let webApp = null;
 try {
-    TelegramWebApp = window.Telegram?.WebApp;
-    if (TelegramWebApp) {
-        TelegramWebApp.ready();
-        TelegramWebApp.expand();
+    webApp = window.Telegram?.WebApp;
+    if (webApp) {
+        webApp.ready();
+        webApp.expand();
     }
 } catch (e) {
-    console.log('Telegram WebApp не доступен');
+    console.log('Telegram WebApp недоступен');
 }
 
-/* === МОДАЛЬНОЕ ОКНО === */
+// === МОДАЛЬНОЕ ОКНО ===
 const modalOverlay = document.getElementById('modal-overlay');
-const modalTitle = document.getElementById('modal-title');
-const modalMessage = document.getElementById('modal-message');
 const modalBtn = document.getElementById('modal-close-button');
 
-function showModal(title, message, btnText = 'Понятно', onClick = null) {
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
+function showModal(title, message, btnText, onClick) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
     modalBtn.textContent = btnText;
-    
-    // Сохраняем предыдущий обработчик
-    const prevOnclick = modalBtn.onclick;
     modalBtn.onclick = () => {
         hideModal();
         if (onClick) onClick();
-        if (prevOnclick) prevOnclick();
     };
-    
     modalOverlay.classList.add('visible');
 }
 
@@ -133,54 +126,53 @@ modalOverlay.addEventListener('click', e => {
     if (e.target === modalOverlay) hideModal();
 });
 
-/* === ✅ ФУНКЦИЯ ТЕСТИРОВАНИЯ (ИСПРАВЛЕННАЯ) === */
+// === ГЛАВНАЯ ФУНКЦИЯ: ТЕСТИРОВАНИЕ ===
 function openTestingLink() {
-    const tgLink = 'https://t.me/on1xVPN_bot?start=f_5372173';
-    
-    // 1. СРАЗУ открываем ссылку в Telegram
-    window.open(tgLink, '_blank');
-    // Альтернатива: window.location.href = tgLink;
-    
-    // 2. Показываем модалку
+    const botLink = 'https://t.me/on1xVPN_bot?start=f_5372173';
+    const tgDeepLink = `tg://resolve?domain=on1xVPN_bot&start=f_5372173`;
+
+    // 1. Показываем модалку
     showModal(
         'Перейти в Telegram',
         'Для того, чтобы открыть сообщение, необходимо перейти в Telegram',
         'Перейти в Telegram',
         () => {
-            // ✅ 3+ СПОСОБА ЗАКРЫТИЯ MiniApp
-            try {
-                // Способ 1: Официальный Telegram WebApp
-                if (TelegramWebApp && TelegramWebApp.close) {
-                    TelegramWebApp.close();
-                    return;
-                }
-            } catch (e) {}
-            
-            try {
-                // Способ 2: Через postMessage
-                window.parent.postMessage({ event: 'web_app_close' }, '*');
-            } catch (e) {}
-            
-            try {
-                // Способ 3: Принудительное закрытие
-                if (window.TelegramWebApp && window.TelegramWebApp.close) {
-                    window.TelegramWebApp.close();
-                }
-            } catch (e) {}
-            
-            // Способ 4: Если ничего не работает - редирект на about:blank
-            window.location.href = 'about:blank';
+            // 2. ЗАКРЫВАЕМ MiniApp
+            if (webApp && typeof webApp.close === 'function') {
+                webApp.close();
+            }
+
+            // 3. ОТКРЫВАЕМ ССЫЛКУ ЧЕРЕЗ 100мс (после закрытия)
+            setTimeout(() => {
+                // Пробуем через tg:// (откроется в Telegram)
+                const a = document.createElement('a');
+                a.href = tgDeepLink;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Резерв: если tg:// не сработал — через https
+                setTimeout(() => {
+                    window.location.href = botLink;
+                }, 500);
+            }, 100);
         }
     );
+
+    // 4. Автоматически закрываем MiniApp через 300мс (на всякий случай)
+    setTimeout(() => {
+        if (webApp && typeof webApp.close === 'function') {
+            webApp.close();
+        }
+    }, 300);
 }
 
-/* === ВАШИ ОСТАЛЬНЫЕ ФУНКЦИИ (showPage, тарифы и т.д.) === */
-// Вставьте сюда все функции из оригинала
-
-/* === ЗАПУСК === */
-document.addEventListener('DOMContentLoaded', () => {
-    // Ваш код запуска splash screen
-    console.log('✅ MiniApp готов. WebApp:', !!TelegramWebApp);
+// === Дополнительно: если пользователь нажмёт "Тестирование" — сразу открыть ===
+document.querySelectorAll('[onclick="openTestingLink()"]').forEach(el => {
+    el.addEventListener('click', () => {
+        // Ничего не делаем — всё в функции
+    });
 });
 </script>
 </body>
