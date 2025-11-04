@@ -1129,7 +1129,6 @@ modalOverlay.addEventListener('click', (event) => {
 
 
 // === ЛОГИКА НАВИГАЦИИ С ИСПОЛЬЗОВАНИЕМ КНОПКИ "НАЗАД" TELEGRAM ===
-// Карта для определения родительской страницы
 const parentMap = {
     'subscription': 'home',
     'buy': 'subscription',
@@ -1154,6 +1153,39 @@ function updateBackButton(targetId) {
     }
 }
 
+// === ГЛОБАЛЬНЫЙ СБРОС АКТИВНЫХ СОСТОЯНИЙ ===
+function resetAllActiveStates() {
+    // Убираем все .active
+    document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+
+    // Сброс кнопок покупки/продления
+    document.querySelectorAll('#buy-button-personal, #renew-button-personal').forEach(btn => {
+        btn.classList.add('disabled');
+        btn.href = '#';
+        btn.innerHTML = 'Выберите срок';
+        btn.onclick = null;
+    });
+
+    // Сброс FAQ
+    document.querySelectorAll('.faq-body').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('.faq-header').forEach(h => h.classList.remove('active'));
+
+    // Сброс тарифов (по умолчанию — Личная)
+    ['buy', 'renew'].forEach(section => {
+        const container = document.getElementById(`${section}-tariffs-container`);
+        if (!container) return;
+        container.querySelectorAll('.toggle-button').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.tariff-content').forEach(c => c.style.display = 'none');
+        const personalBtn = container.querySelector('.toggle-button[data-tariff="personal"]');
+        const personalContent = container.querySelector('.tariff-content[data-tariff="personal"]');
+        if (personalBtn) personalBtn.classList.add('active');
+        if (personalContent) personalContent.style.display = 'block';
+    });
+
+    // Сброс выбора дней
+    document.querySelectorAll('.tariff-days-option').forEach(o => o.classList.remove('active'));
+}
+
 function showPage(id){
     const pages = document.querySelectorAll('.page');
     const nextPage = document.getElementById(id);
@@ -1162,22 +1194,21 @@ function showPage(id){
 
     if (!nextPage || nextPage.classList.contains('active')) return; 
 
+    // === СБРАСЫВАЕМ ВСЕ АКТИВНЫЕ СОСТОЯНИЯ ПЕРЕД ПЕРЕХОДОМ ===
+    resetAllActiveStates();
+
     window.scrollTo(0, 0);
 
     const currentPageId = currentPage ? currentPage.id : null;
     let isBack = false;
 
-    // Определяем направление анимации (вперед или назад)
     if (currentPageId) {
-        // Если новая страница является родителем текущей, значит, идем "назад"
         if (getParentId(currentPageId) === id) {
             isBack = true;
         } 
-        // Если новая страница - 'home', а текущая - нет, значит, тоже идем "назад"
         else if (id === 'home' && currentPageId !== 'home') {
              isBack = true;
         }
-        // Во всех остальных случаях (переход на дочернюю/соседнюю) - "вперед"
     }
     
     pages.forEach(p => {
@@ -1217,7 +1248,7 @@ function showPage(id){
         nextPage.style.zIndex = '15'; 
     }, 10);
     
-    updateBackButton(id); // Управляем кнопкой "Назад" Telegram
+    updateBackButton(id);
 }
 
 function telegramBackButtonHandler() {
@@ -1230,7 +1261,6 @@ function telegramBackButtonHandler() {
     if (parentId) {
         showPage(parentId); 
     } else {
-        // Если на главной странице (нет родителя), закрываем MiniApp
         if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
             Telegram.WebApp.close();
         }
@@ -1266,24 +1296,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 700);
     }, 1500);
 
-    // --- ДОБАВЛЕННЫЙ КОД: Отключение сворачивания по свайпу вниз ---
     if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
         const WebApp = Telegram.WebApp;
-        WebApp.ready(); // Явно вызываем ready
+        WebApp.ready();
 
-        // Отключаем вертикальные свайпы, чтобы предотвратить сворачивание
-        // при прокрутке контента. Сворачивание будет возможно только
-        // при свайпе вниз с верхнего края (заголовочной панели).
         if (WebApp.disableVerticalSwipes) {
             WebApp.disableVerticalSwipes();
         } 
     }
-    // -------------------------------------------------------------
 
-    // Инициализация кнопки "Назад" Telegram
     if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
         Telegram.WebApp.BackButton.onClick(telegramBackButtonHandler);
-        Telegram.WebApp.BackButton.hide(); // Скрыть на стартовой странице
+        Telegram.WebApp.BackButton.hide();
     }
 
     if (document.getElementById('buy')) switchBuyTariff('personal');
@@ -1339,10 +1363,8 @@ function selectBuyDay(tariffName, selectedOption) {
             e.preventDefault();
             const url = this.href;
 
-            // СНАЧАЛА ПЕРЕХОД В БОТ
             window.location.href = url;
 
-            // ПОТОМ ЗАКРЫТИЕ MiniApp (через 300 мс)
             setTimeout(() => {
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
                     Telegram.WebApp.close();
@@ -1401,10 +1423,8 @@ function selectRenewDay(tariffName, selectedOption) {
             e.preventDefault();
             const url = this.href;
 
-            // СНАЧАЛА ПЕРЕХОД
             window.location.href = url;
 
-            // ПОТОМ ЗАКРЫТИЕ
             setTimeout(() => {
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
                     Telegram.WebApp.close();
@@ -1445,7 +1465,6 @@ function refreshSystemStatus() {
 
         statusItems.forEach((item, index) => {
             const statusDot = item.querySelector('.status-dot');
-            // Используем остаток от деления, чтобы цикл статусов работал для всех элементов
             const status = originalStatuses[index % originalStatuses.length]; 
             
             statusDot.classList.remove('green', 'red');
