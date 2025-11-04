@@ -27,6 +27,11 @@
     margin: 0; 
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+a, button, .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header {
+    -webkit-tap-highlight-color: transparent;
 }
 body { 
     background: var(--bg-dark); 
@@ -1184,6 +1189,11 @@ function resetAllActiveStates() {
 
     // Сброс выбора дней
     document.querySelectorAll('.tariff-days-option').forEach(o => o.classList.remove('active'));
+
+    // СБРАСЫВАЕМ :active И ФОКУС
+    document.querySelectorAll('a, button, .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header').forEach(el => {
+        el.blur();
+    });
 }
 
 function showPage(id){
