@@ -7,33 +7,26 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-/* === ГЛОБАЛЬНЫЙ СБРОС ДЛЯ iOS & ANDROID (ФИКС ОБВОДКИ) === */
-* {
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
-    touch-action: manipulation;
-}
-a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header {
-    -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
-    touch-action: manipulation;
-}
+/* === Глобальные стили и переменные === */
 :root {
     --primary-color: #007bff;
-    --secondary-color: #28a745;
+    --secondary-color: #28a745; /* Зеленый для успеха/активности */
     --bg-dark: #0d1117;
-    --card-bg: #161b22;
+    --card-bg: #161b22; /* Фон карточек */
     --text-color: #e6edf3;
     --accent-red: #dc3545;
+    /* === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТАРИФОВ === */
     --gold-color: #ffd700;
     --personal-color: var(--text-color);
     --family-color: var(--secondary-color);
     --premium-color: var(--gold-color);
     --toggle-active-bg: #37475a;
+}
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 body { 
     background: var(--bg-dark); 
@@ -47,7 +40,7 @@ a {
     color: inherit;
 }
 
-/* === МОДАЛЬНОЕ ОКНО === */
+/* === НОВОЕ МОДАЛЬНОЕ ОКНО (ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ) === */
 #modal-overlay {
     position: fixed;
     top: 0;
@@ -56,7 +49,7 @@ a {
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
-    display: none;
+    display: none; /* Скрыто по умолчанию */
     justify-content: center;
     align-items: center;
     z-index: 10002;
@@ -116,6 +109,7 @@ a {
     background: #0056b3;
 }
 
+
 /* === SPLASH SCREEN === */
 #splash-screen {
     position: fixed;
@@ -132,6 +126,8 @@ a {
     opacity: 1; 
     transition: opacity 0.7s ease-out; 
 }
+
+/* === АНИМАЦИЯ ВРАЩЕНИЯ === */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -139,6 +135,8 @@ a {
 .spin {
     animation: spin 1s linear infinite;
 }
+
+/* === Логотип и анимация === */
 .pulse-container { 
     position: relative;
     width: 120px; 
@@ -177,13 +175,14 @@ a {
     100% { transform: translate(-50%,-50%) scale(1.5); opacity:0; }
 }
 
-/* === АНИМАЦИЯ СТРАНИЦ === */
+/* === АНИМАЦИЯ СТРАНИЦ "ГЛУБОКОЕ ПОГРУЖЕНИЕ" === */
 .page {
     position: absolute; 
     top: 0;
     left: 50%;
     width: 100%;
     max-width: 600px; 
+    /* НОВЫЙ БАЗОВЫЙ ОТСТУП ДЛЯ ПК (МИНИМАЛЬНЫЙ) */
     padding: 20px 15px 20px 15px; 
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1), 
                 opacity 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
@@ -193,10 +192,20 @@ a {
     transform: translate(-50%, 0) scale(1);
     opacity: 1;
 }
+
+/* НОВОЕ ПРАВИЛО: Медиа-запрос для мобильных экранов (max-width: 600px) */
 @media (max-width: 600px) {
-    #home { padding-top: 15px; }
-    #subscription, #buy, #renew, #install, #status, #faq, #support { padding-top: 15px; }
+    /* Главная страница — минимальный отступ */
+    #home {
+        padding-top: 15px; /* было 50px → стало 30px */
+    }
+    
+    /* Все подстраницы — небольшой отступ */
+    #subscription, #buy, #renew, #install, #status, #faq, #support {
+        padding-top: 15px; /* было 100px → стало 50px */
+    }
 }
+
 .page.enter-forward {
     transform: translate(-50%, 0) scale(0.9);
     opacity: 0;
@@ -228,7 +237,7 @@ a {
     z-index: 15;
 }
 
-/* === ЗАГОЛОВКИ === */
+/* === Заголовки и текст === */
 h1 { 
     font-size: 2.2em; 
     margin-bottom: 5px; 
@@ -249,7 +258,7 @@ p {
     color: #b0b8c2;
 }
 
-/* === КАРТОЧКА ПОДПИСКИ === */
+/* === КРУПНАЯ КАРТОЧКА ПОДПИСКИ === */
 .subscription-status-card {
     display: flex;
     justify-content: space-between;
@@ -297,7 +306,7 @@ p {
     color: #b0b8c2;
 }
 
-/* === МЕНЮ === */
+/* === Главное меню (СЕТКА) === */
 .menu-grid { 
     display:grid; 
     grid-template-columns: repeat(3, 1fr); 
@@ -329,6 +338,7 @@ p {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
     border-color: var(--primary-color);
 }
+
 .menu-card.disabled {
     opacity: 0.6;
     cursor: pointer;
@@ -339,6 +349,8 @@ p {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important; 
     border-color: var(--primary-color) !important;
 }
+
+/* === СТИЛЬ ДЛЯ ПЛАШКИ "РАЗРАБОТКА" === */
 .development-badge {
     position: absolute;
     top: -5px; 
@@ -360,7 +372,7 @@ p {
     color: var(--primary-color);
 }
 
-/* === КНОПКИ === */
+/* === Кнопки (стандартные) === */
 .button { 
     display:block; 
     width:100%; 
@@ -393,7 +405,7 @@ p {
     opacity: 0.7;
 }
 
-/* === КАНАЛ === */
+/* === Специальная кнопка канала === */
 .channel-promo {
     margin: 30px auto 10px;
     padding: 15px;
@@ -421,7 +433,8 @@ p {
     background: #0056b3; 
 }
 
-/* === ПЕРЕКЛЮЧАТЕЛЬ ТАРИФОВ === */
+
+/* === Стили для переключателя тарифов === */
 .tariff-toggle-inside {
     display: flex;
     justify-content: center;
@@ -453,6 +466,8 @@ p {
 .tariff-toggle-inside .toggle-button:active:not(.active) {
     background: rgba(255,255,255,0.05);
 }
+
+/* === Стили для НЕАКТИВНЫХ тарифов === */
 .tariff-content.disabled {
     position: relative;
     pointer-events: none;
@@ -480,7 +495,8 @@ p {
     cursor: pointer;
 }
 
-/* === ТАРИФЫ === */
+
+/* === ОБЪЕДИНЕННЫЙ БЛОК ТАРИФОВ === */
 .compact-tariff-card {
     background: var(--card-bg); 
     border-radius: 15px;
@@ -534,7 +550,7 @@ p {
     display: block;
 }
 
-/* === ВЫБОР ДНЕЙ === */
+/* === БЛОК ВЫБОРА ДНЕЙ === */
 .pricing-card-block {
     background: var(--card-bg);
     border-radius: 15px;
@@ -585,7 +601,7 @@ p {
     margin: 20px auto 0;
 }
 
-/* === УСТАНОВКА, FAQ, СТАТУС === */
+/* === Стили для FAQ, Install, Status === */
 .install-section { 
     position: relative;
     margin-top: 30px;
@@ -664,6 +680,7 @@ p {
     max-width: 400px; 
     text-align: left;
 }
+/* НОВОЕ ПРАВИЛО: Центрирование заголовков h3 в блоках статуса */
 .status-section h3 { 
     text-align: center;
 }
@@ -685,7 +702,7 @@ p {
     max-width: 100%;
 }
 
-/* === ПОДДЕРЖКА === */
+/* === НОВЫЙ ДИЗАЙН РАЗДЕЛА ПОДДЕРЖКИ === */
 .support-container {
     display: flex;
     flex-direction: column;
@@ -741,14 +758,18 @@ p {
         <p class="launch-text" style="font-size: 1.2em; font-weight: 600; color: var(--text-color); margin-top: 30px;">Открываем приложение</p>
     </div>
 
+
     <div id="home" class="page"> 
+        
         <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
             <div class="pulse-circle"></div>
             <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
         </div>
+        
         <h1><span style="color: var(--text-color);">ON1X</span> VPN</h1>
+        
         <div class="subscription-status-card" onclick="showPage('subscription')">
             <div class="status-icon"><i class="fas fa-credit-card"></i></div>
             <div class="status-info">
@@ -757,6 +778,7 @@ p {
             </div>
             <div class="status-arrow"><i class="fas fa-chevron-right"></i></div>
         </div>
+        
         <div class="menu-grid">
             <div class="menu-card" onclick="showPage('install')"><i class="fas fa-download"></i>Установить приложение</div>
             <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5371698')"><i class="fas fa-user-plus"></i>Пригласить друзей</div>
@@ -764,6 +786,7 @@ p {
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
         </div>
+        
         <div class="channel-promo">
             <p>Следите за новостями, обновлениями и акциями</p>
             <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
@@ -771,9 +794,12 @@ p {
         </div>
     </div>
 
+ 
     <div id="subscription" class="page">
+        
         <h2>Подписка ON1X VPN</h2>
         <p>Покупайте, продлевайте, а также управляйте своей подпиской</p>
+        
         <div class="menu-grid subscription-actions-grid" style="max-width: 500px; margin: 30px auto; grid-template-columns: repeat(3, 1fr);">
             <div class="menu-card" onclick="showPage('buy')"><i class="fas fa-shopping-cart"></i>Купить подписку</div>
             <div class="menu-card" onclick="showPage('renew')"><i class="fas fa-sync-alt"></i>Продлить подписку</div>
@@ -789,9 +815,13 @@ p {
         </div>
     </div>
 
+
     <div id="buy" class="page">
+        
         <h2>Купить подписку</h2>
+        
         <div class="new-tariffs-container" id="buy-tariffs-container">
+            
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
@@ -807,8 +837,10 @@ p {
                         <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
                     </div>
                 </div>
+
                 <div class="pricing-card-block">
                     <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
                     <div id="buy-days-personal" data-tariff-name="personal">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2089758" onclick="selectBuyDay('personal', this)">
                             <span>30 дней</span>
@@ -827,19 +859,28 @@ p {
                             <span class="option-price">600 руб</span>
                         </div>
                     </div>
+
                     <div class="tariff-buy-button-container">
                         <a href="#" id="buy-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;"></div>
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;"></div>
+            
+            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
+                </div>
+            
+            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
+                </div>
+    
         </div>
     </div>
 
     <div id="renew" class="page">
+    
         <h2>Продлить подписку</h2>
+        
         <div class="new-tariffs-container" id="renew-tariffs-container">
+            
             <div class="tariff-content" data-tariff="personal">
                 <div class="compact-tariff-card unified-tariff-card">
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
@@ -855,8 +896,10 @@ p {
                         <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
                     </div>
                 </div>
+
                 <div class="pricing-card-block">
                     <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
                     <div id="renew-days-personal" data-tariff-name="personal">
                         <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2173534" onclick="selectRenewDay('personal', this)">
                             <span>30 дней</span>
@@ -875,22 +918,30 @@ p {
                             <span class="option-price">600 руб</span>
                         </div>
                     </div>
+
                     <div class="tariff-buy-button-container">
                         <a href="#" id="renew-button-personal" class="button disabled">Выберите срок</a>
                     </div>
                 </div>
             </div>
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;"></div>
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;"></div>
+            
+            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
+                 </div>
+    
+            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
+                </div>
+    
         </div>
     </div>
 
     <div id="install" class="page">
         <h2>Установка приложения</h2>
         <p>Выберите свое устройство</p>
+        
         <div class="install-section">
             <div class="recommended-badge">Рекомендуется</div>
             <h3><i class="fas fa-satellite-dish"></i> V2RayTun</h3>
+        
             <div class="faq-card">
                 <div class="faq-header"><i class="fab fa-apple"></i> iPhone/iOS <i class="fas fa-chevron-right arrow"></i></div>
                 <div class="faq-body">
@@ -939,7 +990,8 @@ p {
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
-                    <a href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
+                    <a 
+                    href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
@@ -973,7 +1025,8 @@ p {
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
                     <p style="font-size: 0.9em; color: var(--accent-red);">Ссылка — это ключ. Открывать ссылку не нужно!</p>
-                    <a href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
+                    <a 
+                    href="https://github.com/mdf45/v2raytun/releases/download/v2.5.8/v2RayTun_Setup.exe" target="_blank" class="button"><i class="fas fa-download"></i> Скачать приложение</a>
                 </div>
             </div>
             <div class="faq-card">
@@ -985,7 +1038,7 @@ p {
             </div>
         </div>
     </div>
-
+    
     <div id="status" class="page">
         <h2>Статус систем</h2>
         <div class="status-section">
@@ -996,6 +1049,7 @@ p {
             <div class="status-item"><span>Страница подписки</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
             <div class="status-item"><span>Уведомления</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
         </div>
+
         <div class="status-section">
             <h3>Сервера</h3>
             <div class="status-item"><span>Нидерланды #1</span><span class="status-dot green"><i class="fas fa-check-circle"></i> Онлайн</span></div>
@@ -1004,6 +1058,7 @@ p {
             <div class="status-item"><span>Россия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
             <div class="status-item"><span>Германия</span><span class="status-dot red"><i class="fas fa-times-circle"></i> Оффлайн</span></div>
         </div>
+        
         <button class="button" id="refresh-status-button" onclick="refreshSystemStatus()">
             <i class="fas fa-sync-alt"></i> Обновить данные
         </button>
@@ -1011,7 +1066,9 @@ p {
 
     <div id="faq" class="page">
         <h2>Часто задаваемые вопросы</h2>
+        
         <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу службу поддержки</p>
+        
         <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить. После оплаты вы автоматически получите ключ доступа.</div></div>
         <div class="faq-card"><div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы обновить подписку, вам необходимо зайти в клиент приложения V2RayTun или Happ и рядом с названием нашего сервиса, необходимо нажать на кнопку.</div></div>
         <div class="faq-card"><div class="faq-header">Сколько устройств можно подключить? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Подключить к одному ключу доступа можно 3 устройства.</div></div>
@@ -1022,6 +1079,7 @@ p {
 
     <div id="support" class="page">
         <h2>Поддержка</h2>
+        
         <div class="support-container">
             <div class="support-card">
                 <i class="fas fa-headset card-icon"></i>
@@ -1029,6 +1087,7 @@ p {
                 <p>Если у вас возникли трудности или есть вопросы, наша дружная команда поддержки готова помочь вам в Telegram.</p>
                 <a href="https://t.me/on1xVPN_admin" class="button"><i class="fab fa-telegram-plane"></i> Чат с поддержкой</a>
             </div>
+
         </div>
     </div>
 
@@ -1044,8 +1103,9 @@ p {
 </div>
 
 <script>
-// === МОДАЛЬНОЕ ОКНО ===
+// === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
 const modalOverlay = document.getElementById('modal-overlay');
+const modalPopup = document.getElementById('modal-popup');
 const modalTitle = document.getElementById('modal-title');
 const modalMessage = document.getElementById('modal-message');
 const modalCloseButton = document.getElementById('modal-close-button');
@@ -1055,13 +1115,21 @@ function showModalNotification(title, message) {
     modalMessage.textContent = message;
     modalOverlay.classList.add('visible');
 }
+
 function hideModalNotification() {
     modalOverlay.classList.remove('visible');
 }
-modalCloseButton.addEventListener('click', hideModalNotification);
-modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModalNotification(); });
 
-// === НАВИГАЦИЯ ===
+modalCloseButton.addEventListener('click', hideModalNotification);
+modalOverlay.addEventListener('click', (event) => {
+    if (event.target === modalOverlay) {
+        hideModalNotification();
+    }
+});
+
+
+// === ЛОГИКА НАВИГАЦИИ С ИСПОЛЬЗОВАНИЕМ КНОПКИ "НАЗАД" TELEGRAM ===
+// Карта для определения родительской страницы
 const parentMap = {
     'subscription': 'home',
     'buy': 'subscription',
@@ -1071,42 +1139,19 @@ const parentMap = {
     'faq': 'home',
     'support': 'home'
 };
-function getParentId(id) { return parentMap[id] || null; }
-function updateBackButton(targetId) {
-    if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
-        targetId === 'home' ? Telegram.WebApp.BackButton.hide() : Telegram.WebApp.BackButton.show();
-    }
+
+function getParentId(id) {
+    return parentMap[id] || null;
 }
 
-// === СБРОС СОСТОЯНИЙ (ФИКС ОБВОДКИ) ===
-function resetAllActiveStates() {
-    setTimeout(() => {
-        document.querySelectorAll('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header').forEach(el => {
-            if (el && typeof el.blur === 'function') el.blur();
-        });
-    }, 0);
-
-    document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('#buy-button-personal, #renew-button-personal').forEach(btn => {
-        btn.classList.add('disabled');
-        btn.href = '#';
-        btn.innerHTML = 'Выберите срок';
-        btn.onclick = null;
-    });
-    document.querySelectorAll('.faq-body').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.faq-header').forEach(h => h.classList.remove('active'));
-
-    ['buy', 'renew'].forEach(section => {
-        const container = document.getElementById(`${section}-tariffs-container`);
-        if (!container) return;
-        container.querySelectorAll('.toggle-button').forEach(b => b.classList.remove('active'));
-        container.querySelectorAll('.tariff-content').forEach(c => c.style.display = 'none');
-        const personalBtn = container.querySelector('.toggle-button[data-tariff="personal"]');
-        const personalContent = container.querySelector('.tariff-content[data-tariff="personal"]');
-        if (personalBtn) personalBtn.classList.add('active');
-        if (personalContent) personalContent.style.display = 'block';
-    });
-    document.querySelectorAll('.tariff-days-option').forEach(o => o.classList.remove('active'));
+function updateBackButton(targetId) {
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
+        if (targetId === 'home') {
+            Telegram.WebApp.BackButton.hide();
+        } else {
+            Telegram.WebApp.BackButton.show();
+        }
+    }
 }
 
 function showPage(id){
@@ -1117,19 +1162,29 @@ function showPage(id){
 
     if (!nextPage || nextPage.classList.contains('active')) return; 
 
-    resetAllActiveStates();
-
     window.scrollTo(0, 0);
 
     const currentPageId = currentPage ? currentPage.id : null;
     let isBack = false;
-    if (currentPageId) {
-        if (getParentId(currentPageId) === id || (id === 'home' && currentPageId !== 'home')) isBack = true;
-    }
 
+    // Определяем направление анимации (вперед или назад)
+    if (currentPageId) {
+        // Если новая страница является родителем текущей, значит, идем "назад"
+        if (getParentId(currentPageId) === id) {
+            isBack = true;
+        } 
+        // Если новая страница - 'home', а текущая - нет, значит, тоже идем "назад"
+        else if (id === 'home' && currentPageId !== 'home') {
+             isBack = true;
+        }
+        // Во всех остальных случаях (переход на дочернюю/соседнюю) - "вперед"
+    }
+    
     pages.forEach(p => {
         p.classList.remove('active', 'enter-forward', 'enter-backward', 'exit-forward', 'exit-backward');
-        if (p !== currentPage && p !== nextPage) p.style.display = 'none';
+        if (p !== currentPage && p !== nextPage) {
+             p.style.display = 'none';
+        }
     });
 
     nextPage.style.display = 'block'; 
@@ -1138,8 +1193,14 @@ function showPage(id){
     if (currentPage) {
         currentPage.style.display = 'block';
         currentPage.classList.add(isBack ? 'exit-backward' : 'exit-forward');
-        currentPage.style.zIndex = isBack ? '20' : '10';
-        nextPage.style.zIndex = isBack ? '10' : '20';
+        
+        if (isBack) {
+            currentPage.style.zIndex = '20';
+            nextPage.style.zIndex = '10';
+        } else {
+            currentPage.style.zIndex = '10';
+            nextPage.style.zIndex = '20';
+        }
         
         setTimeout(() => {
             if(currentPage) {
@@ -1156,30 +1217,45 @@ function showPage(id){
         nextPage.style.zIndex = '15'; 
     }, 10);
     
-    updateBackButton(id);
+    updateBackButton(id); // Управляем кнопкой "Назад" Telegram
 }
 
 function telegramBackButtonHandler() {
     const currentPage = document.querySelector('.page.active');
     if (!currentPage) return;
-    const parentId = getParentId(currentPage.id);
-    if (parentId) showPage(parentId);
-    else if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) Telegram.WebApp.close();
+    
+    const currentPageId = currentPage.id;
+    const parentId = getParentId(currentPageId);
+    
+    if (parentId) {
+        showPage(parentId); 
+    } else {
+        // Если на главной странице (нет родителя), закрываем MiniApp
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+            Telegram.WebApp.close();
+        }
+    }
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ===
-document.querySelectorAll('.faq-header').forEach(header => {
-    header.addEventListener('click', () => {
+// === ОБЩИЕ ФУНКЦИИ ===
+document.querySelectorAll('.faq-header').forEach(header=>{
+    header.addEventListener('click',()=>{
         const body = header.nextElementSibling;
         const wasActive = header.classList.contains('active');
+        
         document.querySelectorAll('.faq-body').forEach(b => b.style.display = 'none');
         document.querySelectorAll('.faq-header').forEach(h => h.classList.remove('active'));
-        if (!wasActive) { body.style.display = 'block'; header.classList.add('active'); }
+        
+        if(!wasActive) {
+            body.style.display = 'block';
+            header.classList.add('active');
+        }
     });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
+    
     setTimeout(() => {
         splashScreen.style.opacity = '0';
         setTimeout(() => {
@@ -1190,107 +1266,166 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 700);
     }, 1500);
 
+    // --- ДОБАВЛЕННЫЙ КОД: Отключение сворачивания по свайпу вниз ---
     if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-        Telegram.WebApp.ready();
-        if (Telegram.WebApp.disableVerticalSwipes) Telegram.WebApp.disableVerticalSwipes();
-    }
+        const WebApp = Telegram.WebApp;
+        WebApp.ready(); // Явно вызываем ready
 
+        // Отключаем вертикальные свайпы, чтобы предотвратить сворачивание
+        // при прокрутке контента. Сворачивание будет возможно только
+        // при свайпе вниз с верхнего края (заголовочной панели).
+        if (WebApp.disableVerticalSwipes) {
+            WebApp.disableVerticalSwipes();
+        } 
+    }
+    // -------------------------------------------------------------
+
+    // Инициализация кнопки "Назад" Telegram
     if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.BackButton) {
         Telegram.WebApp.BackButton.onClick(telegramBackButtonHandler);
-        Telegram.WebApp.BackButton.hide();
+        Telegram.WebApp.BackButton.hide(); // Скрыть на стартовой странице
     }
 
     if (document.getElementById('buy')) switchBuyTariff('personal');
     if (document.getElementById('renew')) switchRenewTariff('personal'); 
 });
 
-// === ПОКУПКА ===
+// === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
 function switchBuyTariff(tariffName) {
     if (tariffName === 'family' || tariffName === 'premium') {
         const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
         showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
         return;
     }
-    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => content.style.display = 'none');
+
+    document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => {
+        content.style.display = 'none';
+    });
     const activeContent = document.querySelector(`#buy-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
-    if (activeContent) activeContent.style.display = 'block';
-    document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tariff === tariffName));
-    document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => option.classList.remove('active'));
-    const buyButton = document.getElementById(`buy-button-${tariffName}`);
-    if (buyButton) {
-        buyButton.classList.add('disabled');
-        buyButton.href = '#';
-        buyButton.innerHTML = 'Выберите срок';
+    if (activeContent) {
+        activeContent.style.display = 'block';
+        document.querySelectorAll('#buy-tariffs-container .toggle-button').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.tariff === tariffName) {
+                btn.classList.add('active');
+            }
+        });
+        document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
+            option.classList.remove('active');
+        });
+        const buyButton = document.getElementById(`buy-button-${tariffName}`);
+        if (buyButton) {
+            buyButton.classList.add('disabled');
+            buyButton.href = '#';
+            buyButton.innerHTML = 'Выберите срок';
+        }
     }
 }
 
 function selectBuyDay(tariffName, selectedOption) {
-    document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => option.classList.remove('active'));
+    document.querySelectorAll(`#buy-days-${tariffName} .tariff-days-option`).forEach(option => {
+        option.classList.remove('active');
+    });
     selectedOption.classList.add('active');
     const buyButton = document.getElementById(`buy-button-${tariffName}`);
     if (buyButton) {
         buyButton.classList.remove('disabled');
         buyButton.href = selectedOption.dataset.link;
         buyButton.innerHTML = 'Купить';
+
         buyButton.onclick = null;
+
         buyButton.addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.href = this.href;
+            const url = this.href;
+
+            // СНАЧАЛА ПЕРЕХОД В БОТ
+            window.location.href = url;
+
+            // ПОТОМ ЗАКРЫТИЕ MiniApp (через 300 мс)
             setTimeout(() => {
-                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) Telegram.WebApp.close();
+                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                    Telegram.WebApp.close();
+                }
             }, 300);
         });
     }
 }
 
-// === ПРОДЛЕНИЕ ===
+// === ФУНКЦИИ ДЛЯ ПРОДЛЕНИЯ (ПРОДЛИТЬ) ===
 function switchRenewTariff(tariffName) {
     if (tariffName === 'family' || tariffName === 'premium') {
         const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
         showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
         return;
     }
-    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => content.style.display = 'none');
+
+    document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => {
+        content.style.display = 'none';
+    });
     const activeContent = document.querySelector(`#renew-tariffs-container .tariff-content[data-tariff="${tariffName}"]`);
-    if (activeContent) activeContent.style.display = 'block';
-    document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tariff === tariffName));
-    document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => option.classList.remove('active'));
-    const renewButton = document.getElementById(`renew-button-${tariffName}`);
-    if (renewButton) {
-        renewButton.classList.add('disabled');
-        renewButton.href = '#';
-        renewButton.innerHTML = 'Выберите срок';
+    if (activeContent) {
+        activeContent.style.display = 'block';
+        document.querySelectorAll('#renew-tariffs-container .toggle-button').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.tariff === tariffName) {
+                btn.classList.add('active');
+            }
+        });
+        document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
+            option.classList.remove('active');
+        });
+        const renewButton = document.getElementById(`renew-button-${tariffName}`);
+        if (renewButton) {
+            renewButton.classList.add('disabled');
+            renewButton.href = '#';
+            renewButton.innerHTML = 'Выберите срок';
+        }
     }
 }
 
 function selectRenewDay(tariffName, selectedOption) {
-    document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => option.classList.remove('active'));
+    document.querySelectorAll(`#renew-days-${tariffName} .tariff-days-option`).forEach(option => {
+        option.classList.remove('active');
+    });
     selectedOption.classList.add('active');
     const renewButton = document.getElementById(`renew-button-${tariffName}`);
     if (renewButton) {
         renewButton.classList.remove('disabled');
         renewButton.href = selectedOption.dataset.link;
         renewButton.innerHTML = 'Продлить';
+
         renewButton.onclick = null;
+
         renewButton.addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.href = this.href;
+            const url = this.href;
+
+            // СНАЧАЛА ПЕРЕХОД
+            window.location.href = url;
+
+            // ПОТОМ ЗАКРЫТИЕ
             setTimeout(() => {
-                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) Telegram.WebApp.close();
+                if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+                    Telegram.WebApp.close();
+                }
             }, 300);
         });
     }
 }
 
-// === СТАТУС ===
+// === ВОЗВРАЩЕННАЯ ФУНКЦИЯ: Обновление статуса систем ===
 function refreshSystemStatus() {
     const statusItems = document.querySelectorAll('.status-item');
     const refreshButton = document.getElementById('refresh-status-button');
+    
     refreshButton.disabled = true; 
     refreshButton.classList.add('disabled');
     refreshButton.innerHTML = '<i class="fas fa-sync-alt spin"></i> Обновление...';
+
     statusItems.forEach(item => {
         const statusDot = item.querySelector('.status-dot');
+        
         statusDot.classList.remove('green', 'red');
         statusDot.innerHTML = '<i class="fas fa-circle-notch spin"></i> Проверка';
     });
@@ -1307,16 +1442,25 @@ function refreshSystemStatus() {
             { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }, 
             { class: 'red', html: '<i class="fas fa-times-circle"></i> Оффлайн' }
         ];
+
         statusItems.forEach((item, index) => {
             const statusDot = item.querySelector('.status-dot');
+            // Используем остаток от деления, чтобы цикл статусов работал для всех элементов
             const status = originalStatuses[index % originalStatuses.length]; 
+            
             statusDot.classList.remove('green', 'red');
             statusDot.classList.add(status.class);
             statusDot.innerHTML = status.html;
         });
+        
         refreshButton.disabled = false;
         refreshButton.classList.remove('disabled');
         refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить данные';
+        
+        if (refreshButton.querySelector('.spin')) {
+            refreshButton.querySelector('.spin').classList.remove('spin');
+        }
+
         refreshButton.style.boxShadow = '0 0 8px rgba(40, 167, 69, 0.7)';
         setTimeout(() => {
             refreshButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.5)';
@@ -1324,32 +1468,20 @@ function refreshSystemStatus() {
     }, 1500);
 }
 
-// === ПРОЧЕЕ ===
-document.addEventListener('contextmenu', e => e.preventDefault());
+// === НОВЫЙ КОД: Запрет контекстного меню (правой кнопки) ===
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
 function goToLinkAndClose(url) {
     window.location.href = url;
-    setTimeout(() => { if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) Telegram.WebApp.close(); }, 300);
+    setTimeout(() => {
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) {
+            Telegram.WebApp.close();
+        }
+    }, 300);
 }
 
-// === ФИНАЛЬНЫЙ ФИКС ОБВОДКИ ===
-document.addEventListener('touchstart', function(e) {
-    const target = e.target;
-    if (target.matches('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header')) {
-        e.preventDefault();
-        setTimeout(() => {
-            if (typeof target.blur === 'function') target.blur();
-        }, 0);
-    }
-}, { passive: false });
-
-document.addEventListener('click', function(e) {
-    const target = e.target;
-    if (target.matches('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header')) {
-        setTimeout(() => {
-            if (typeof target.blur === 'function') target.blur();
-        }, 0);
-    }
-});
 </script>
 </body>
 </html>
