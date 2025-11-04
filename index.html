@@ -273,15 +273,11 @@ p {
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     border: 1px solid rgba(255,255,255,0.05);
 }
-.subscription-status-card:hover {
-    transform: none; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: var(--primary-color);
-}
+.subscription-status-card:hover,
 .subscription-status-card:active { 
     transform: none; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: transparent !important;
+    border-color: var(--primary-color);
 }
 .subscription-status-card .status-icon {
     font-size: 28px;
@@ -336,15 +332,11 @@ p {
     font-size: 0.85em;
     position: relative;
 }
-.menu-card:hover { 
-    transform: none; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: var(--primary-color);
-}
+.menu-card:hover,
 .menu-card:active { 
     transform: none; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
-    border-color: transparent !important;
+    border-color: var(--primary-color);
 }
 
 .menu-card.disabled {
@@ -397,17 +389,11 @@ p {
     cursor: pointer;
     text-align: center;
 }
-.button:hover { 
+.button:hover,
+.button:active { 
     transform: none; 
     background: #0056b3;
     box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
-    border-color: var(--primary-color);
-}
-.button:active { 
-    transform: none; 
-    background: #004085;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
-    border-color: transparent !important;
 }
 .button.disabled {
     background: #343a40 !important;
@@ -440,17 +426,11 @@ p {
     box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     border-color: transparent; 
 }
-.channel-promo .button:hover {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
-    transform: none; 
-    background: #0056b3; 
-    border-color: var(--primary-color);
-}
+.channel-promo .button:hover,
 .channel-promo .button:active {
     box-shadow: 0 2px 5px rgba(0,0,0,0.4); 
     transform: none; 
-    background: #004085; 
-    border-color: transparent !important;
+    background: #0056b3; 
 }
 
 
@@ -482,12 +462,9 @@ p {
     border-color: var(--primary-color);
     box-shadow: 0 0 8px rgba(0,123,255,0.5);
 }
-.tariff-toggle-inside .toggle-button:hover:not(.active) {
-    background: rgba(255,255,255,0.05);
-}
+.tariff-toggle-inside .toggle-button:hover:not(.active),
 .tariff-toggle-inside .toggle-button:active:not(.active) {
-    background: rgba(255,255,255,0.1);
-    border-color: transparent !important;
+    background: rgba(255,255,255,0.05);
 }
 
 /* === Стили для НЕАКТИВНЫХ тарифов === */
@@ -595,13 +572,10 @@ p {
     transition: background 0.2s, border-color 0.2s;
     border: 1px solid transparent;
 }
-.tariff-days-option:hover {
+.tariff-days-option:hover,
+.tariff-days-option:active {
     background: rgba(0,0,0,0.3);
     border-color: rgba(0,123,255,0.3);
-}
-.tariff-days-option:active {
-    background: rgba(0,0,0,0.4);
-    border-color: transparent !important;
 }
 .tariff-days-option.active {
     background: var(--primary-color); 
@@ -674,9 +648,7 @@ p {
     transition: background 0.2s; 
     color: var(--text-color);
 }
-.faq-header:hover { 
-    background: #2a3443;
-}
+.faq-header:hover,
 .faq-header:active { 
     background: #2a3443;
 }
