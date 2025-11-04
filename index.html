@@ -19,6 +19,7 @@
 }
 a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header {
     -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
     touch-action: manipulation;
 }
 :root {
@@ -1079,10 +1080,11 @@ function updateBackButton(targetId) {
 
 // === СБРОС СОСТОЯНИЙ (ФИКС ОБВОДКИ) ===
 function resetAllActiveStates() {
-    // СБРАСЫВАЕМ :active ДО СКРЫТИЯ
-    document.querySelectorAll('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header').forEach(el => {
-        if (el && typeof el.blur === 'function') el.blur();
-    });
+    setTimeout(() => {
+        document.querySelectorAll('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header').forEach(el => {
+            if (el && typeof el.blur === 'function') el.blur();
+        });
+    }, 0);
 
     document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('#buy-button-personal, #renew-button-personal').forEach(btn => {
@@ -1115,7 +1117,7 @@ function showPage(id){
 
     if (!nextPage || nextPage.classList.contains('active')) return; 
 
-    resetAllActiveStates(); // ДО АНИМАЦИИ
+    resetAllActiveStates();
 
     window.scrollTo(0, 0);
 
@@ -1328,6 +1330,26 @@ function goToLinkAndClose(url) {
     window.location.href = url;
     setTimeout(() => { if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.close) Telegram.WebApp.close(); }, 300);
 }
+
+// === ФИНАЛЬНЫЙ ФИКС ОБВОДКИ ===
+document.addEventListener('touchstart', function(e) {
+    const target = e.target;
+    if (target.matches('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header')) {
+        e.preventDefault();
+        setTimeout(() => {
+            if (typeof target.blur === 'function') target.blur();
+        }, 0);
+    }
+}, { passive: false });
+
+document.addEventListener('click', function(e) {
+    const target = e.target;
+    if (target.matches('a, button, [onclick], .menu-card, .subscription-status-card, .toggle-button, .tariff-days-option, .faq-header')) {
+        setTimeout(() => {
+            if (typeof target.blur === 'function') target.blur();
+        }, 0);
+    }
+});
 </script>
 </body>
 </html>
