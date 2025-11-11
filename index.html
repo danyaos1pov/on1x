@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ON1X VPN MiniApp</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -743,6 +743,47 @@ p {
 .support-card .button.secondary:hover {
     background: #37475a;
 }
+
+/* === НОВЫЕ СТИЛИ ДЛЯ ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ === */
+.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 20px auto;
+    max-width: 500px;
+    padding: 15px;
+    gap: 12px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-greeting {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: left;
+    margin-bottom: 3px;
+}
+.user-id {
+    font-size: 0.85em;
+    color: #b0b8c2;
+    text-align: left;
+}
+
+/* === ВЕРСИЯ ПРИЛОЖЕНИЯ === */
+.app-version {
+    margin-top: 30px;
+    font-size: 0.8em;
+    color: #6c757d;
+    text-align: center;
+}
 </style>
 </head>
 <body>
@@ -761,11 +802,12 @@ p {
 
     <div id="home" class="page"> 
         
-        <div class="pulse-container" style="margin: 30px auto 10px; width: 120px; height: 120px;">
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
-            <div class="pulse-circle"></div>
-            <img class="logo" src="https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0" alt="ON1X VPN">
+        <div class="user-profile">
+            <img id="user-avatar" class="user-avatar" src="" alt="Аватар пользователя">
+            <div>
+                <div id="user-greeting" class="user-greeting">Добро пожаловать, </div>
+                <div id="user-id" class="user-id"></div>
+            </div>
         </div>
         
         <h1><span style="color: var(--text-color);">ON1X</span> VPN</h1>
@@ -785,6 +827,7 @@ p {
             <div class="menu-card" onclick="showPage('status')"><i class="fas fa-shield-alt"></i>Статус систем</div>
             <div class="menu-card" onclick="showPage('support')"><i class="fas fa-headset"></i>Поддержка</div>
             <div class="menu-card" onclick="showPage('faq')"><i class="fas fa-lightbulb"></i>FAQ</div>
+            <div class="menu-card" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5372173')"><i class="fas fa-wallet"></i>Кошелек</div>
         </div>
         
         <div class="channel-promo">
@@ -792,6 +835,8 @@ p {
             <a href="https://t.me/ON1Xvpn" target="_blank" class="button"><i class="fab fa-telegram-plane"></i> Подписаться канал</a>
             <a href="https://vk.com/on1xvpn" target="_blank" class="button" style="background: #4C75A3; margin-top: 10px;"><i class="fab fa-vk"></i> Подписаться ВКонтакте</a>
         </div>
+
+        <div class="app-version">Версия приложения: 5.1.1</div>
     </div>
 
  
@@ -826,15 +871,15 @@ p {
                 <div class="compact-tariff-card unified-tariff-card">
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="buy">
-                        <div class="toggle-button active" data-tariff="personal" onclick="switchBuyTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="switchBuyTariff('family')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
+                        <div class="toggle-button active" data-tariff="personal" onclick="switchBuyTariff('personal')">Личный</div>
+                        <div class="toggle-button" data-tariff="family" onclick="switchBuyTariff('family')">Семейный</div>
+                        <div class="toggle-button" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
                     </div>
-                    <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
+                    <p class="tariff-slogan slogan-personal current-slogan">Для личного пользования</p>
                     <div class="tariff-features-list-v2">
                         <div><i class="fas fa-user"></i> 3 устройства</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
-                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 10 Гбит/с</div>
                     </div>
                 </div>
 
@@ -866,11 +911,93 @@ p {
                 </div>
             </div>
             
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
+            <div class="tariff-content" data-tariff="family" style="display: none;">
+                <div class="compact-tariff-card unified-tariff-card">
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <div class="tariff-toggle-inside" data-target="buy">
+                        <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личный</div>
+                        <div class="toggle-button active" data-tariff="family" onclick="switchBuyTariff('family')">Семейный</div>
+                        <div class="toggle-button" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
+                    </div>
+                    <p class="tariff-slogan slogan-family current-slogan">Идеально подходит для дома и семьи</p>
+                    <div class="tariff-features-list-v2">
+                        <div><i class="fas fa-users"></i> 6 устройств</div>
+                        <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 10 Гбит/с</div>
+                    </div>
                 </div>
+
+                <div class="pricing-card-block">
+                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
+                    <div id="buy-days-family" data-tariff-name="family">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2623788" onclick="selectBuyDay('family', this)">
+                            <span>30 дней</span>
+                            <span class="option-price">200 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2623787" onclick="selectBuyDay('family', this)">
+                            <span>60 дней</span>
+                            <span class="option-price">400 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2623765" onclick="selectBuyDay('family', this)">
+                            <span>90 дней</span>
+                            <span class="option-price">600 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2623764" onclick="selectBuyDay('family', this)">
+                            <span>180 дней</span>
+                            <span class="option-price">1200 руб</span>
+                        </div>
+                    </div>
+
+                    <div class="tariff-buy-button-container">
+                        <a href="#" id="buy-button-family" class="button disabled">Выберите срок</a>
+                    </div>
+                </div>
+            </div>
             
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
+            <div class="tariff-content" data-tariff="premium" style="display: none;">
+                <div class="compact-tariff-card unified-tariff-card">
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <div class="tariff-toggle-inside" data-target="buy">
+                        <div class="toggle-button" data-tariff="personal" onclick="switchBuyTariff('personal')">Личный</div>
+                        <div class="toggle-button" data-tariff="family" onclick="switchBuyTariff('family')">Семейный</div>
+                        <div class="toggle-button active" data-tariff="premium" onclick="switchBuyTariff('premium')">Премиум</div>
+                    </div>
+                    <p class="tariff-slogan slogan-premium current-slogan">Максимум возможностей</p>
+                    <div class="tariff-features-list-v2">
+                        <div><i class="fas fa-crown"></i> 15 устройств</div>
+                        <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
+                    </div>
                 </div>
+
+                <div class="pricing-card-block">
+                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
+                    <div id="buy-days-premium" data-tariff-name="premium">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2625008" onclick="selectBuyDay('premium', this)">
+                            <span>30 дней</span>
+                            <span class="option-price">350 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2625009" onclick="selectBuyDay('premium', this)">
+                            <span>60 дней</span>
+                            <span class="option-price">700 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2625030" onclick="selectBuyDay('premium', this)">
+                            <span>90 дней</span>
+                            <span class="option-price">1050 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2625031" onclick="selectBuyDay('premium', this)">
+                            <span>180 дней</span>
+                            <span class="option-price">2100 руб</span>
+                        </div>
+                    </div>
+
+                    <div class="tariff-buy-button-container">
+                        <a href="#" id="buy-button-premium" class="button disabled">Выберите срок</a>
+                    </div>
+                </div>
+            </div>
     
         </div>
     </div>
@@ -885,15 +1012,15 @@ p {
                 <div class="compact-tariff-card unified-tariff-card">
                     <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
                     <div class="tariff-toggle-inside" data-target="renew">
-                        <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личная</div>
-                        <div class="toggle-button developing" data-tariff="family" onclick="switchRenewTariff('family')">Семейная</div>
-                        <div class="toggle-button developing" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
+                        <div class="toggle-button active" data-tariff="personal" onclick="switchRenewTariff('personal')">Личный</div>
+                        <div class="toggle-button" data-tariff="family" onclick="switchRenewTariff('family')">Семейный</div>
+                        <div class="toggle-button" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
                     </div>
-                    <p class="tariff-slogan slogan-personal current-slogan">Идеально подходит для одного пользователя</p>
+                    <p class="tariff-slogan slogan-personal current-slogan">Для личного пользования</p>
                     <div class="tariff-features-list-v2">
                         <div><i class="fas fa-user"></i> 3 устройства</div>
                         <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
-                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 10 Гбит/с</div>
                     </div>
                 </div>
 
@@ -925,11 +1052,93 @@ p {
                 </div>
             </div>
             
-            <div class="tariff-content disabled" data-tariff="family" style="display: none;">
-                 </div>
-    
-            <div class="tariff-content disabled" data-tariff="premium" style="display: none;">
+            <div class="tariff-content" data-tariff="family" style="display: none;">
+                <div class="compact-tariff-card unified-tariff-card">
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <div class="tariff-toggle-inside" data-target="renew">
+                        <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личный</div>
+                        <div class="toggle-button active" data-tariff="family" onclick="switchRenewTariff('family')">Семейный</div>
+                        <div class="toggle-button" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
+                    </div>
+                    <p class="tariff-slogan slogan-family current-slogan">Идеально подходит для дома и семьи</p>
+                    <div class="tariff-features-list-v2">
+                        <div><i class="fas fa-users"></i> 6 устройств</div>
+                        <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 10 Гбит/с</div>
+                    </div>
                 </div>
+
+                <div class="pricing-card-block">
+                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
+                    <div id="renew-days-family" data-tariff-name="family">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2623776" onclick="selectRenewDay('family', this)">
+                            <span>30 дней</span>
+                            <span class="option-price">200 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2623775" onclick="selectRenewDay('family', this)">
+                            <span>60 дней</span>
+                            <span class="option-price">400 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2623773" onclick="selectRenewDay('family', this)">
+                            <span>90 дней</span>
+                            <span class="option-price">600 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2623772" onclick="selectRenewDay('family', this)">
+                            <span>180 дней</span>
+                            <span class="option-price">1200 руб</span>
+                        </div>
+                    </div>
+
+                    <div class="tariff-buy-button-container">
+                        <a href="#" id="renew-button-family" class="button disabled">Выберите срок</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tariff-content" data-tariff="premium" style="display: none;">
+                <div class="compact-tariff-card unified-tariff-card">
+                    <h4 style="margin: 0 0 10px 0; font-size: 1.1em; font-weight: 700;">Выберите тариф</h4>
+                    <div class="tariff-toggle-inside" data-target="renew">
+                        <div class="toggle-button" data-tariff="personal" onclick="switchRenewTariff('personal')">Личный</div>
+                        <div class="toggle-button" data-tariff="family" onclick="switchRenewTariff('family')">Семейный</div>
+                        <div class="toggle-button active" data-tariff="premium" onclick="switchRenewTariff('premium')">Премиум</div>
+                    </div>
+                    <p class="tariff-slogan slogan-premium current-slogan">Максимум возможностей</p>
+                    <div class="tariff-features-list-v2">
+                        <div><i class="fas fa-crown"></i> 15 устройств</div>
+                        <div><i class="fas fa-infinity"></i> Безлимитный интернет</div>
+                        <div><i class="fas fa-tachometer-alt"></i> Скорость до 25 Гбит/с</div>
+                    </div>
+                </div>
+
+                <div class="pricing-card-block">
+                    <h4 style="text-align: center; margin-top: 0; font-size: 1.1em; font-weight: 700;">Выберите срок подписки</h4>
+                    
+                    <div id="renew-days-premium" data-tariff-name="premium">
+                        <div class="tariff-days-option" data-days="30" data-link="https://t.me/on1xVPN_bot?start=c_2625020" onclick="selectRenewDay('premium', this)">
+                            <span>30 дней</span>
+                            <span class="option-price">350 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="60" data-link="https://t.me/on1xVPN_bot?start=c_2625021" onclick="selectRenewDay('premium', this)">
+                            <span>60 дней</span>
+                            <span class="option-price">700 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="90" data-link="https://t.me/on1xVPN_bot?start=c_2625022" onclick="selectRenewDay('premium', this)">
+                            <span>90 дней</span>
+                            <span class="option-price">1050 руб</span>
+                        </div>
+                        <div class="tariff-days-option" data-days="180" data-link="https://t.me/on1xVPN_bot?start=c_2625023" onclick="selectRenewDay('premium', this)">
+                            <span>180 дней</span>
+                            <span class="option-price">2100 руб</span>
+                        </div>
+                    </div>
+
+                    <div class="tariff-buy-button-container">
+                        <a href="#" id="renew-button-premium" class="button disabled">Выберите срок</a>
+                    </div>
+                </div>
+            </div>
     
         </div>
     </div>
@@ -951,6 +1160,7 @@ p {
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение V2RayTun.</li>
                         <li>В правом верхнем углу нажмите на "+".</li>
+                        <li>Вставить из буфера обмена.</li>
                         <li>Нажмите "Разрешить вставку".</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
@@ -1020,7 +1230,7 @@ p {
                         <li>Скачайте и установите приложение.</li>
                         <li>Откройте приложение.</li>
                         <li>В правом верхнем углу нажмите на "+".</li>
-                        <li>Теперь нажмите "Импорт из буфера обмена".</li>
+                        <li>Теперь нажмите "Импорт из буфера обмена,.</li>
                         <li>Подключитесь к VPN.</li>
                     </ol>
                     <p>Готово! VPN настроен и готов к работе!</p>
@@ -1069,12 +1279,12 @@ p {
         
         <p>Если вы не нашли ответа на свой вопрос, вы всегда можете обратиться в нашу службу поддержки</p>
         
-        <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать необходимый срок подписки и оплатить. После оплаты вы автоматически получите ключ доступа.</div></div>
-        <div class="faq-card"><div class="faq-header">Как обновить подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы обновить подписку, вам необходимо зайти в клиент приложения V2RayTun или Happ и рядом с названием нашего сервиса, необходимо нажать на кнопку.</div></div>
-        <div class="faq-card"><div class="faq-header">Сколько устройств можно подключить? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Подключить к одному ключу доступа можно 3 устройства.</div></div>
-        <div class="faq-card"><div class="faq-header">Превышен лимит устройств <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">При превышении лимита устройств, ключ доступа блокируется на 30 минут. Во время блокировки ключ отключается и не работает. Блокировка снимается автоматически по истечению времени.</div></div>
-        <div class="faq-card"><div class="faq-header">Как вернуть подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вернуть подписку, вам необходимо обратиться в нашу службу поддержки.</div></div>
-        <div class="faq-card"><div class="faq-header">Бонус за приглашения друзей <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">После того, как ваш друг перешел по вашей реферальной ссылке, а затем приобрел или продлил свою подписку, вы будете получать 15% от суммы оплаты друга.</div></div>
+        <div class="faq-card"><div class="faq-header">Как подключиться? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы подключиться, вам необходимо перейти в соответствующий раздел, затем выбрать тариф и необходимый срок подписки, а затем перейти к оплате. После оплаты вы автоматически получите ключ доступа.</div></div>
+        <div class="faq-card"><div class="faq-header">Лимит устройств <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Каждый тариф ограничивается определенным количеством устройств на одном ключе:<br>Личный - 3 устройства<br>Семейный - 6 устройств<br>Премиум - 15 устройств</div></div>
+        <div class="faq-card"><div class="faq-header">Как поменять тариф? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы поменять тариф, вам необходимо при продлении подписки выбрать необходимый тариф. Тариф сменится автоматически.</div></div>
+        <div class="faq-card"><div class="faq-header">Как вывести деньги с кошелька? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы вывести денежные средства на банковскую карту или криптокошелек, вам необходимо на главной странице перейти в раздел "Кошелек".</div></div>
+        <div class="faq-card"><div class="faq-header">Как вернуть подписку? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">Для того, чтобы оформить возврат подписки, вам необходимо перейти в раздел "Подписка ON1X VPN", а затем выбрать "Возврат подписки".</div></div>
+        <div class="faq-card"><div class="faq-header">Какой бонус за друга? <i class="fas fa-chevron-right arrow"></i></div><div class="faq-body">После того, как ваш друг перешел по вашей реферальной ссылке, то вы будете получать каждый раз 15%, когда друг будет приобретать/продлевать подписку.</div></div>
     </div> 
 
     <div id="support" class="page">
@@ -1104,6 +1314,7 @@ p {
 
 <script>
 // === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
+// (Оставил для возможных будущих уведомлений, но без вызова)
 const modalOverlay = document.getElementById('modal-overlay');
 const modalPopup = document.getElementById('modal-popup');
 const modalTitle = document.getElementById('modal-title');
@@ -1288,15 +1499,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (document.getElementById('buy')) switchBuyTariff('personal');
     if (document.getElementById('renew')) switchRenewTariff('personal'); 
+    
+        // === ДОБАВЛЕННЫЙ КОД: Отображение данных пользователя (БЕЗ БЛОКИРОВКИ) ===
+    if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        
+        const avatarImg = document.getElementById('user-avatar');
+        const greetingDiv = document.getElementById('user-greeting');
+        const idDiv = document.getElementById('user-id');
+        
+        if (user.photo_url) {
+            avatarImg.src = user.photo_url;
+        } else {
+            avatarImg.src = 'https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0';
+        }
+        
+        const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        greetingDiv.textContent = 'Добро пожаловать, ' + fullName;
+        idDiv.textContent = 'ID: ' + user.id;
+    }
+    // =================================================================
 });
 
 // === ФУНКЦИИ ДЛЯ ПОКУПКИ (КУПИТЬ) ===
 function switchBuyTariff(tariffName) {
-    if (tariffName === 'family' || tariffName === 'premium') {
-        const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
-        showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
-        return;
-    }
 
     document.querySelectorAll('#buy-tariffs-container .tariff-content').forEach(content => {
         content.style.display = 'none';
@@ -1354,11 +1580,6 @@ function selectBuyDay(tariffName, selectedOption) {
 
 // === ФУНКЦИИ ДЛЯ ПРОДЛЕНИЯ (ПРОДЛИТЬ) ===
 function switchRenewTariff(tariffName) {
-    if (tariffName === 'family' || tariffName === 'premium') {
-        const readableName = tariffName === 'family' ? 'Семейный' : 'Премиум';
-        showModalNotification(`Тариф в разработке`, `Тариф «${readableName}» скоро будет доступен. Мы уже работаем над этим!`);
-        return;
-    }
 
     document.querySelectorAll('#renew-tariffs-container .tariff-content').forEach(content => {
         content.style.display = 'none';
