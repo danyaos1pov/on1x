@@ -5,34 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ON1X VPN</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <script>
-    if (!Telegram.WebApp || !Telegram.WebApp.initDataUnsafe || !Telegram.WebApp.initDataUnsafe.user) {
-        document.addEventListener('DOMContentLoaded', function() {
-            // Заменяем все содержимое body на сообщение об ошибке
-            document.body.innerHTML = `
-                <div style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100vh;
-                    text-align: center;
-                    padding: 20px;
-                    color: #fff;
-                    background-color: #1a1a1a;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                ">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px; color: #ffc107;"></i>
-                    <h2>Ошибка доступа!</h2>
-                    <p>Пожалуйста, откройте приложение в Telegram!</p>
-                </div>
-            `;
-        });
-        // Останавливаем выполнение основного скрипта Mini App
-        throw new Error('Mini App must be opened within Telegram.');
-    }
-  </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -105,8 +77,8 @@ position: relative;
     }
 
     .logo-and-title {
-position: relative;
-top: -72px;
+      position: relative;
+top: -100px; /* ИЗМЕНЕНО */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -168,7 +140,7 @@ display: flex;
       justify-content: center;
       gap: 9px;
       transition: all 0.25s ease;
--webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: transparent;
 }
 
     .btn-orange { background: #fb7f1b; color: #ffffff;
@@ -215,42 +187,39 @@ align-items: center;
       color: #ffffff;
     }
 
-    .profile-header {
-      display: flex;
-align-items: center;
-      gap: 14px;
-      width: 100%;
-      max-width: 350px;
-      background: rgba(50, 50, 50, 0.75);
-      backdrop-filter: blur(20px);
-      border-radius: 16px;
-      padding: 14px 18px;
-border: 1px solid rgba(255,255,255,0.12);
-      margin-bottom: 20px;
+    /* НОВЫЕ СТИЛИ ДЛЯ ЦЕНТРИРОВАНИЯ ИМЕНИ/ID */
+    .centered-profile-info {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
     }
-
-    .profile-avatar {
-      width: 64px;
-height: 64px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2.5px solid #fb7f1b;
-      box-shadow: 0 4px 14px rgba(251,127,27,0.35);
-}
-
-    .profile-info { 
-      flex: 1;
-}
-    .profile-name { 
-      font-size: 18px; 
-      font-weight: 600; 
-      color: #ffffff;
-}
-    .profile-id { 
-      font-size: 13.5px; 
-      color: #ffffff99; 
-      margin-top: 2px;
-}
+    .centered-profile-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    .centered-profile-id {
+        font-size: 14px;
+        color: #ffffff99;
+        margin-top: 4px;
+        display: flex; /* ИЗМЕНЕНО */
+        justify-content: center; /* ИЗМЕНЕНО */
+        align-items: center; /* ИЗМЕНЕНО */
+        gap: 6px; /* ИЗМЕНЕНО */
+    }
+    .copy-icon { /* НОВЫЙ СТИЛЬ */
+        font-size: 16px !important; 
+        color: #ffffffaa;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 4px; 
+        border-radius: 4px;
+        line-height: 1; 
+    }
+    .copy-icon:active { /* НОВЫЙ СТИЛЬ */
+        color: #fb7f1b;
+    }
+    /* СТАРЫЕ СТИЛИ ДЛЯ .profile-header, .profile-avatar, .profile-info, .profile-name, .profile-id УДАЛЕНЫ */
 
     .profile-buttons {
       width: 100%;
@@ -583,7 +552,12 @@ onclick="openPage('purchase-page'); vibrate('heavy')">
             <span class="material-icons-round">shopping_cart</span> Купить
           </div>
         </div>
-
+        
+        <div class="btn-row">
+          <div class="btn btn-secondary btn-full" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=c_2293355'); vibrate('heavy')">
+            <span class="material-icons-round">card_giftcard</span> Протестировать (7 дней)
+          </div>
+        </div>
         <div class="btn-row">
           <div class="btn btn-secondary btn-full" onclick="openPage('app-page'); vibrate('medium')">
             <span class="material-icons-round">downloading</span> Установить приложение
@@ -592,6 +566,7 @@ onclick="openPage('purchase-page'); vibrate('heavy')">
 
         <div class="btn-row">
  
+
           <div class="btn btn-secondary" style="flex: 1;"
 onclick="goToLinkDirect('https://t.me/on1xVPN_support')">
             <span class="material-icons-round">support_agent</span> Поддержка
@@ -609,16 +584,14 @@ onclick="openPage('profile-page'); vibrate('heavy')">
         <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
         <div class="page-title">Профиль</div>
       </div>
-
-      <div class="profile-header">
-        <img id="user-avatar" 
-    src="" alt="Аватар" class="profile-avatar">
-        <div class="profile-info">
-          <div id="user-name" class="profile-name">Загрузка...</div>
-          <div id="user-id" class="profile-id">ID: —</div>
+      
+      <div class="centered-profile-info">
+        <div id="user-name" class="centered-profile-name">Загрузка...</div>
+        <div id="user-id-container" class="centered-profile-id" onclick="copyUserId()">
+          <span id="user-id-text">ID: —</span>
+          <span class="material-icons-round copy-icon">content_copy</span>
         </div>
       </div>
-
       <div class="profile-buttons">
         <div class="profile-btn" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=f_5331349')">
           <span class="material-icons-round">card_membership</span> Моя подписка
@@ -641,6 +614,7 @@ vibrate('heavy')">
           <i class="fab fa-telegram-plane"></i> Подписаться на канал
         </div>
      
+
       </div>
     </div>
 
@@ -665,6 +639,7 @@ vibrate('heavy')">
       <div class="page-header">
         <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
         <div 
+
     class="page-title">Установка приложения</div>
         <div class="page-subtitle">Выберите ваше устройство и следуйте простой инструкции</div>
       </div>
@@ -677,6 +652,7 @@ vibrate('heavy')">
         <div class="device-card" data-device="android" onclick="showInstallInstruction('android')">
           <i class="fab fa-android"></i>
    
+    
           <div>Android</div>
         </div>
         <div class="device-card" data-device="windows" onclick="showInstallInstruction('windows')">
@@ -687,7 +663,7 @@ vibrate('heavy')">
           <i class="fab fa-apple"></i>
           <div>Mac OS</div>
    
-         </div>
+     </div>
       
         <div class="device-card" data-device="linux" onclick="showInstallInstruction('linux')">
           <i class="fab fa-linux"></i>
@@ -714,7 +690,7 @@ vibrate('heavy')">
         <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
         <div class="page-title">Покупка подписки</div>
      
-    <div class="page-subtitle">Вы приобретаете новую подписку</div>
+   <div class="page-subtitle">Вы приобретаете новую подписку</div>
       </div>
 
      
@@ -726,7 +702,7 @@ vibrate('heavy')">
         <div class="tariff-item" data-days="60" onclick="selectTariff(this)">
           <span class="tariff-period">60 дней</span>
         
-   <span class="tariff-price">200 руб</span>
+  <span class="tariff-price">200 руб</span>
         </div>
         <div class="tariff-item" data-days="90" 
     onclick="selectTariff(this)">
@@ -737,7 +713,7 @@ vibrate('heavy')">
           <span class="tariff-period">180 дней</span>
           <span class="tariff-price">600 руб</span>
       
-    </div>
+  </div>
       </div>
 
       <div class="action-btn" onclick="processPayment('purchase')">
@@ -754,7 +730,7 @@ vibrate('heavy')">
       </div>
 
      
-  <div class="tariff-list">
+ <div class="tariff-list">
         <div class="tariff-item selected" data-days="30" onclick="selectTariff(this)">
           <span class="tariff-period">30 дней</span>
      
@@ -765,7 +741,7 @@ vibrate('heavy')">
           <span class="tariff-price">200 руб</span>
         </div>
       
-    <div class="tariff-item" data-days="90" onclick="selectTariff(this)">
+  <div class="tariff-item" data-days="90" onclick="selectTariff(this)">
           <span class="tariff-period">90 дней</span>
           <span class="tariff-price">300 руб</span>
        
@@ -778,7 +754,7 @@ vibrate('heavy')">
 
       <div class="action-btn" onclick="processPayment('extend')">
  
-        <span class="material-icons-round">autorenew</span> Продлить подписку
+       <span class="material-icons-round">autorenew</span> Продлить подписку
       </div>
     </div>
 
@@ -793,16 +769,44 @@ Telegram.WebApp.expand();
 
     const user = Telegram.WebApp.initDataUnsafe.user || {};
 if (user.id) {
-      document.getElementById('user-avatar').src = user.photo_url || 'https://via.placeholder.com/64/333333/ffffff?text=:)';
+      // document.getElementById('user-avatar').src = user.photo_url || 'https://via.placeholder.com/64/333333/ffffff?text=:)'; // УДАЛЕНО: Убран код для установки аватара
       const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ') ||
 user.username || 'Пользователь';
       document.getElementById('user-name').textContent = fullName;
-      document.getElementById('user-id').textContent = `ID: ${user.id}`;
+      document.getElementById('user-id-text').textContent = `ID: ${user.id}`; // ИЗМЕНЕНО: Обновлен ID элемента
 }
 
     function vibrate(type) {
       type === 'heavy' ? Telegram.WebApp.HapticFeedback.impactOccurred('heavy') : Telegram.WebApp.HapticFeedback.impactOccurred('medium');
 }
+    
+    // НОВАЯ ФУНКЦИЯ: Копирование ID пользователя
+    function copyUserId() {
+        vibrate('medium');
+        const userIdTextElement = document.getElementById('user-id-text');
+        // Извлекаем только ID из текста (например, из "ID: 1234567" получаем "1234567")
+        const idToCopy = userIdTextElement.textContent.replace('ID: ', '').trim();
+
+        if (!idToCopy || idToCopy === '—') {
+            Telegram.WebApp.showAlert('ID пользователя не загружен.');
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            return;
+        }
+
+        navigator.clipboard.writeText(idToCopy).then(() => {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            // Временное визуальное подтверждение
+            const tempText = userIdTextElement.textContent;
+            userIdTextElement.textContent = 'Скопировано!';
+            setTimeout(() => {
+                userIdTextElement.textContent = tempText;
+            }, 1000);
+        }).catch(err => {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            Telegram.WebApp.showAlert('Не удалось скопировать ID. Разрешите доступ к буферу обмена.');
+        });
+    }
+    // КОНЕЦ НОВОЙ ФУНКЦИИ
 
     function openPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -863,7 +867,7 @@ Telegram.WebApp.openLink(url);
             <li>Установите приложение;</li>
             <li>В правом верхнем углу нажмите «+»;</li>
        
-      <li>Выберите «Вставить из буфера обмена»;</li>
+     <li>Выберите «Вставить из буфера обмена»;</li>
             <li>Подключитесь к VPN.</li>
           </ol>
           <div class="install-btn" onclick="openAppStore('https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973')">
@@ -874,7 +878,7 @@ Telegram.WebApp.openLink(url);
       android: `
         <div class="instruction-box">
       
-      <h4><i class="fab fa-android"></i> Android</h4>
+    <h4><i class="fab fa-android"></i> Android</h4>
           <ol>
             <li>Скопируйте ключ (ссылку);</li>
             <li>Установите приложение;</li>
@@ -882,7 +886,7 @@ Telegram.WebApp.openLink(url);
             <li>Выберите «Вставить из буфера обмена»;</li>
             <li>Подключитесь к VPN.</li>
          
-  </ol>
+ </ol>
           <div class="install-btn" onclick="openAppStore('https://play.google.com/store/apps/details?id=com.happproxy')">
             <i class="fas fa-download"></i> Установить
           </div>
@@ -894,7 +898,7 @@ Telegram.WebApp.openLink(url);
           <ol>
             <li>Скопируйте ключ (ссылку);</li>
  
-            <li>Установите приложение;</li>
+           <li>Установите приложение;</li>
             <li>Внизу нажмите «Из буфера»;</li>
             <li>Подключитесь к VPN.</li>
           </ol>
@@ -904,7 +908,7 @@ Telegram.WebApp.openLink(url);
         </div>`,
 
     
-    macos: `
+  macos: `
         <div class="instruction-box">
           <h4><i class="fab fa-apple"></i> Mac OS</h4>
           <ol>
@@ -913,7 +917,7 @@ Telegram.WebApp.openLink(url);
             <li>В правом верхнем углу нажимайте «+»;</li>
             <li>Выберите «Вставить из буфера обмена»;</li>
     
-         <li>Подключитесь к VPN.</li>
+        <li>Подключитесь к VPN.</li>
           </ol>
           <div class="install-btn" onclick="openAppStore('https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973')">
             <i class="fas fa-download"></i> Установить
@@ -924,16 +928,16 @@ Telegram.WebApp.openLink(url);
         <div class="instruction-box">
           <h4><i class="fab fa-linux"></i> Linux</h4>
       
-      <ol>
+    <ol>
             <li>Скопируйте ключ (ссылку);</li>
             <li>Установите приложение;</li>
             <li>Внизу нажмите «Из буфера»;</li>
             <li>Подключитесь к VPN.</li>
-          </ol>
+            </ol>
           <div class="install-btn" onclick="openAppStore('https://github.com/Happ-proxy/happ-desktop/releases/')">
             <i class="fas fa-download"></i> Установить
    
-        </div>
+       </div>
         </div>`,
 
       androidtv: `
@@ -950,7 +954,7 @@ QR-код,
           </ol>
         </div>`
     };
-    function showInstallInstruction(device) {
+function showInstallInstruction(device) {
       vibrate('medium');
       document.getElementById('instruction-container').innerHTML = instructions[device] || '<div class="placeholder"><i class="fas fa-mobile-alt"></i><div>Инструкция скоро появится</div></div>';
 document.querySelectorAll('.device-card').forEach(c => c.classList.remove('selected'));
