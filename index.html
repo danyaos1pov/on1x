@@ -1,905 +1,972 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ON1X VPN</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root{
-            --primary-color:#3f88f7;
-            --bg-dark:#0d1117;--card-bg:#161b22;--text-color:#e6edf3;
-            --text-secondary:#b0b8c2;--border-color:rgba(255,255,255,.05);
-            --nav-bg-opacity:rgba(10,14,19,.7);
-            --nav-border:rgba(255,255,255,.1);
-            --nav-active:rgba(63,136,247,.25);
-            --reload-bg:#202938;--reload-text:#e6edf3;--reload-border:rgba(255,255,255,.05);
-            --updating-color:#8b949e;--price-color:#fff;
-            --secondary-btn-bg:#202938;--secondary-btn-text:#e6edf3;
-        }
-        [data-theme="light"]{
-            --primary-color:#3f88f7;
-            --bg-dark:#f8f9fa;--card-bg:#ffffff;--text-color:#1a1a1a;
-            --text-secondary:#555555;--border-color:#e0e0e0;
-            --nav-bg-opacity:rgba(240,240,240,.7);
-            --nav-border:rgba(0,0,0,.1);
-            --nav-active:rgba(63,136,247,.15);
-            --reload-bg:#d2e1f6;--reload-text:#1a1a1a;--reload-border:#d2e1f6;
-            --updating-color:#888888;--price-color:#1a1a1a;
-            --secondary-btn-bg:#d2e1f6;--secondary-btn-text:#1a1a1a;
-        }
-        *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
-        body{
-            background:var(--bg-dark);color:var(--text-color);min-height:100vh;overflow-x:hidden;padding-bottom:90px;
-            -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
-            -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;
-        }
-        a{color:inherit;text-decoration:none;}
-        .page{display:none;opacity:0;transition:opacity .2s;}
-        .page.active{display:block;opacity:1;}
-        .main-content{padding:20px 15px;max-width:600px;margin:0 auto;}
-        .header{margin:20px auto 8px;text-align:center;position:relative;}
-        .header h1{font-size:2.5em;color:var(--primary-color);margin:0;line-height:1.1;}
-        .header h1 span{color:var(--text-color);}
-        .header .tagline{font-size:1.05em;color:var(--text-secondary);margin-top:4px;font-weight:500;}
-        .settings-icon{
-            position:absolute;right:0;top:50%;transform:translateY(-50%);width:36px;height:36px;
-            background:var(--card-bg);border:1px solid var(--border-color);border-radius:50%;display:flex;
-            align-items:center;justify-content:center;cursor:pointer;font-size:1.1em;color:var(--primary-color);
-            box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
-        .user-profile{display:flex;align-items:center;gap:12px;margin:10px auto 20px;max-width:500px;
-            padding:15px;background:var(--card-bg);border-radius:15px;box-shadow:1px 4px 10px rgba(0,0,0,.15);
-            border:1px solid var(--border-color);}
-        .user-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;}
-        .user-greeting{font-size:1.1em;font-weight:600;color:var(--text-color);margin-bottom:3px;}
-        .user-id{font-size:.85em;color:var(--text-secondary);}
-        .subscription-block{background:var(--card-bg);border-radius:18px;padding:20px 18px;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);margin-bottom:16px;}
-        .block-title{font-size:1.1em;font-weight:600;color:var(--text-color);margin-bottom:14px;text-align:center;}
-        .action-buttons-row{display:flex;gap:8px;margin-bottom:12px;}
-        .tg-button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 0;
-            background:var(--primary-color);color:#fff;font-weight:500;font-size:1em;border-radius:8px;
-            cursor:pointer;}
-        .tg-button.single-button{margin-top:12px;}
-        .profile-menu{display:flex;flex-direction:column;gap:8px;}
-        .profile-menu-btn{
-            display:flex;align-items:center;gap:12px;padding:14px 16px;
-            background:var(--secondary-btn-bg);color:var(--secondary-btn-text);
-            font-size:1em;border-radius:12px;cursor:pointer;border:none !important;
-        }
-        .profile-menu-btn i{font-size:1.2em;color:var(--primary-color);width:24px;text-align:center;}
-        .profile-menu-btn .btn-text{flex:1;text-align:center;margin-left:-18px;}
-        .reload-btn{
-            background:var(--reload-bg);color:var(--reload-text);border:1px solid var(--reload-border);
-            padding:10px 20px;border-radius:12px;font-size:.9em;font-weight:500;cursor:pointer;
-            width:180px;margin:20px auto 0;display:flex;align-items:center;justify-content:center;gap:8px;
-        }
-        .reload-btn.full{width:100%;margin:16px 0 0;}
-        .balance-card{background:var(--card-bg);border-radius:18px;padding:18px;margin:20px 0;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);text-align:center;}
-        .balance-label{font-size:.9em;color:var(--text-secondary);margin-bottom:6px;}
-        .balance-value{font-size:1.8em;font-weight:700;color:var(--text-color);margin-bottom:16px;}
-        .balance-actions{display:flex;gap:10px;}
-        .balance-btn{flex:1;padding:12px 0;background:var(--primary-color);color:#fff;font-weight:500;
-            font-size:.95em;border-radius:8px;cursor:pointer;display:flex;align-items:center;
-            justify-content:center;gap:8px;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ON1X VPN</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-        /* НИЖНЕЕ МЕНЮ */
-        .bottom-nav{
-            position:fixed;bottom:16px;left:30px;right:30px;
-            background:var(--nav-bg-opacity);
-            border:1px solid var(--nav-border);
-            border-radius:20px;overflow:hidden;display:flex;
-            padding:8px 12px;gap:8px;z-index:1000;
-            backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-            height:72px;
-        }
-        .nav-item{
-            flex:1;padding:10px 0;color:var(--text-secondary);font-size:.8em;font-weight:600;text-align:center;
-            border-radius:12px;cursor:pointer;display:flex;flex-direction:column;
-            align-items:center;gap:4px;
-        }
-        .nav-item i{font-size:1.35em;}
-        .nav-item.active{color:var(--primary-color);background:var(--nav-active);font-weight:700;}
-        .nav-item.active i{transform:scale(1.15);}
+  <style>
+    * { margin: 0;
+padding: 0; box-sizing: border-box; }
 
-        .settings-block{background:var(--card-bg);border-radius:18px;padding:20px;margin:20px 0;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);}
-        .setting-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;
-            border-bottom:1px solid var(--border-color);font-size:1em;}
-        .setting-item:last-child{border-bottom:none;}
-        .setting-label{font-weight:500;color:var(--text-color);}
-        .toggle-switch{position:relative;width:48px;height:26px;background:#ccc;border-radius:50px;cursor:pointer;}
-        .toggle-switch input{opacity:0;width:0;height:0;}
-        .slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:50px;transition:.3s;}
-        .slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;
-            background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
-        input:checked+.slider{background:var(--primary-color);}
-        input:checked+.slider:before{transform:translateX(22px);}
+    html, body {
+      height: 100vh;
+      background-color: #1a1a1a;
+-webkit-user-select: none;
+      user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      overflow: hidden;
+}
 
-        .faq-accordion{background:var(--card-bg);border-radius:18px;margin:20px 0;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);overflow:hidden;}
-        .faq-item{border-bottom:1px solid var(--border-color);}
-        .faq-item:last-child{border-bottom:none;}
-        .faq-question{padding:16px 18px;background:transparent;color:var(--text-color);font-weight:600;
-            font-size:1em;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-            user-select:none;}
-        .faq-question i{color:var(--text-secondary);transition:transform .3s;font-size:.9em;}
-        .faq-question.active i{transform:rotate(180deg);color:var(--primary-color);}
-        .faq-answer{max-height:0;overflow:hidden;padding:0 18px;color:var(--text-secondary);
-            font-size:.95em;line-height:1.6;transition:max-height .3s,padding .3s;}
-        .faq-answer.open{max-height:500px;padding:16px 18px;}
+    body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+justify-content: center;
+    }
 
-        .tariff-selection-block,.duration-block{background:var(--card-bg);border-radius:18px;
-            padding:18px;margin:20px 0;box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);}
-        .tariff-title,.duration-title{text-align:center;font-size:1.1em;font-weight:600;
-            color:var(--text-color);margin-bottom:16px;}
-        .tariff-buttons{display:flex;margin-bottom:16px;border-radius:12px;overflow:hidden;
-            border:2px solid var(--border-color);}
-        .tariff-btn{flex:1;padding:14px 0;background:var(--card-bg);border:none !important;
-            font-size:1em;font-weight:600;color:var(--text-color);text-align:center;cursor:pointer;}
-        .tariff-btn.selected{background:var(--nav-active);color:var(--primary-color);font-weight:700;}
-        .tariff-features-row{display:flex;justify-content:space-around;gap:12px;font-size:.9em;
-            color:var(--text-secondary);padding:12px 0;border-top:1px solid var(--border-color);}
-        .feature-item{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
-        .feature-item i{color:var(--primary-color);font-size:1.3em;}
-        .feature-item span{font-size:.85em;text-align:center;}
-        .duration-options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
-        .duration-option{background:var(--card-bg);border:2px solid var(--border-color);
-            border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;
-            align-items:center;cursor:pointer;font-size:1em;font-weight:500;}
-        .duration-option.selected{border-color:var(--primary-color);background:var(--nav-active);
-            color:var(--primary-color);font-weight:700;}
-        .duration-option .price{color:var(--price-color)!important;font-weight:700;}
-        .buy-full-button{width:100%;padding:16px 0;background:var(--primary-color);color:#fff;
-            font-weight:600;font-size:1.1em;border-radius:12px;cursor:pointer;
-            display:flex;align-items:center;justify-content:center;gap:8px;}
-        .buy-full-button.disabled{background:#555;opacity:.6;pointer-events:none;}
+    .pages-container {
+      position: absolute;
+      top: 0; left: 0;
+right: 0; bottom: 0;
+      overflow: hidden;
+    }
 
-        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);
-            z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;
-            pointer-events:none;transition:opacity .3s;}
-        .modal-overlay.active{opacity:1;pointer-events:auto;}
-        .modal{background:var(--card-bg);border-radius:18px;padding:24px;max-width:90%;width:380px;
-            text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);border:1px solid var(--border-color);}
-        .modal h3{font-size:1.2em;margin-bottom:12px;color:var(--text-color);}
-        .modal p{font-size:.95em;color:var(--text-secondary);line-height:1.5;margin-bottom:20px;}
-        .modal .close-btn{background:var(--primary-color);color:#fff;border:none;padding:12px 24px;
-            border-radius:12px;font-weight:600;cursor:pointer;}
+    .page {
+      position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      will-change: opacity;
+transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      overflow: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+}
 
-        .news-block{background:var(--card-bg);border-radius:18px;padding:20px 18px;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);
-            margin-bottom:16px;text-align:center;}
-        .news-text{font-size:1em;color:var(--text-color);margin-bottom:14px;line-height:1.5;}
-        .subscribe-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-            padding:13px 0;background:var(--primary-color);color:#fff;font-weight:500;
-            font-size:1em;border-radius:8px;width:100%;cursor:pointer;}
+    .page.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+      z-index: 10;
+}
 
-        .status-block{background:var(--card-bg);border-radius:18px;padding:20px 18px;
-            box-shadow:0 6px 16px rgba(0,0,0,.15);border:1px solid var(--border-color);
-            margin:20px 0;text-align:center;}
-        .status-block-title{font-size:1.1em;font-weight:600;color:var(--text-color);margin-bottom:16px;}
-        .status-list{display:flex;flex-direction:column;gap:12px;padding:8px 0;}
-        .status-item{display:flex;justify-content:space-between;align-items:center;
-            font-size:1em;color:var(--text-color);padding:6px 0;}
-        .status-indicator{display:flex;align-items:center;gap:6px;font-weight:600;font-size:0.95em;}
-        .status-indicator i{font-size:0.7em;}
-        .status-indicator.online{color:#4ade80;}
-        .status-indicator.offline{color:#f87171;}
-        .status-item.updating .status-indicator{color:var(--updating-color);opacity:0.7;}
-        .status-item.updating .status-indicator i{color:var(--updating-color);}
+    #purchase-page,
+    #extend-page {
+      padding-bottom: 90px;
+}
 
-        .device-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0;}
-        .device-btn{background:var(--card-bg);border:1px solid var(--border-color);
-            border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;
-            font-size:.95em;color:var(--text-color);display:flex;flex-direction:column;
-            align-items:center;gap:8px;}
-        .device-btn i{font-size:1.6em;color:var(--primary-color);}
-        .device-btn.active{border-color:var(--primary-color);background:var(--nav-active);
-            color:var(--primary-color);font-weight:600;}
-        .device-instruction{margin-top:20px;min-height:200px;}
-        .instruction-content{background:var(--card-bg);border:1px solid var(--border-color);
-            border-radius:16px;padding:20px;line-height:1.7;font-size:.95em;color:var(--text-secondary);}
-        .instruction-content h4{color:var(--text-color);font-size:1.2em;margin-bottom:12px;
-            display:flex;align-items:center;gap:8px;}
-        .instruction-content ol{padding-left:20px;margin:12px 0;}
-        .instruction-content li{margin:8px 0;}
-        .instruction-content a{color:var(--primary-color);text-decoration:none;}
-        .instruction-placeholder{text-align:center;padding:40px 20px;color:var(--text-secondary);
-            font-size:1.1em;}
-        .instruction-placeholder i{font-size:2.5em;color:var(--text-secondary);margin-bottom:12px;opacity:.5;}
-        .download-faq-btn{
-            display:flex;align-items:center;gap:12px;padding:14px 16px;
-            background:var(--secondary-btn-bg);color:var(--secondary-btn-text);
-            font-size:1em;border-radius:12px;cursor:pointer;
-            border:none !important;margin-top:16px;text-decoration:none;
-        }
-        .download-faq-btn i{font-size:1.2em;color:var(--primary-color);width:24px;text-align:center;}
-        .download-faq-btn .btn-text{flex:1;text-align:center;margin-left:-18px;}
-        .note{margin-top:16px;padding:12px;background:rgba(255,255,255,.05);
-            border-radius:10px;font-size:.9em;color:var(--text-secondary);}
-        .success{color:#4ade80;font-weight:600;margin-top:12px;}
-        .warning{color:#f87171;font-weight:600;}
-        .app-version{margin-top:30px;font-size:.8em;color:var(--text-secondary);text-align:center;}
+    #main-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+position: relative;
+      width: 100%;
+      height: 100%;
+    }
 
-        /* ЗАЩИТА */
-        *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
-          -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
-        img,a,button,input,.tg-button,.profile-menu-btn,.buy-full-button,.reload-btn,
-        .close-btn,.nav-item,.device-btn,.faq-question,.download-faq-btn{
-            -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
-        }
-    </style>
+    .logo-and-title {
+      position: relative;
+top: -100px; /* ИЗМЕНЕНО */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+}
+
+    .logo { 
+      width: 80vw; 
+      max-width: 150px; 
+      height: auto; 
+      pointer-events: none;
+user-drag: none; 
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+margin-top: -8px;
+    }
+    .title span:first-child { color: #ffffff;
+}
+    .title span:last-child  { color: #ff3411;
+}
+
+    .bottom-card {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+background: rgba(255, 255, 255, 0.11);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 18px;
+      padding: 20px;
+      z-index: 15;
+border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      max-width: 460px;
+      margin: 0 auto;
+}
+
+    .btn-row { 
+      display: flex; 
+      gap: 12px; 
+      margin-bottom: 12px;
+}
+    .btn-row:last-child { margin-bottom: 0; }
+    .btn-full { width: 100%;
+}
+
+    .btn {
+      height: 48px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: all 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+}
+
+    .btn-orange { background: #fb7f1b; color: #ffffff;
+}
+    .btn-secondary { 
+      background: rgba(255,255,255,0.09); 
+      color: #ffffffdd; 
+      border: 1px solid rgba(255,255,255,0.2);
+}
+    .btn:active { transform: scale(0.96); }
+
+    .material-icons-round { font-size: 22px !important;
+}
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-top: 40px;
+}
+
+    .page-header .logo-mini { 
+      width: 60px; 
+      margin-bottom: 12px;
+}
+    .page-title { 
+      font-size: 28px; 
+      font-weight: 700; 
+      color: #ffffff; 
+      margin-bottom: 8px;
+}
+    .page-subtitle { 
+      font-size: 15px; 
+      color: #ffffffaa; 
+      max-width: 320px;
+margin: 0 auto; 
+      line-height: 1.5; 
+    }
+
+    #profile-page {
+      display: flex;
+      flex-direction: column;
+align-items: center;
+      padding: 20px 20px 40px;
+      color: #ffffff;
+    }
+
+    /* НОВЫЕ СТИЛИ ДЛЯ ЦЕНТРИРОВАНИЯ ИМЕНИ/ID */
+    .centered-profile-info {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .centered-profile-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    .centered-profile-id {
+        font-size: 14px;
+        color: #ffffff99;
+        margin-top: 4px;
+        display: flex; /* ИЗМЕНЕНО */
+        justify-content: center; /* ИЗМЕНЕНО */
+        align-items: center; /* ИЗМЕНЕНО */
+        gap: 6px; /* ИЗМЕНЕНО */
+    }
+    .copy-icon { /* НОВЫЙ СТИЛЬ */
+        font-size: 16px !important; 
+        color: #ffffffaa;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 4px; 
+        border-radius: 4px;
+        line-height: 1; 
+    }
+    .copy-icon:active { /* НОВЫЙ СТИЛЬ */
+        color: #fb7f1b;
+    }
+    /* СТАРЫЕ СТИЛИ ДЛЯ .profile-header, .profile-avatar, .profile-info, .profile-name, .profile-id УДАЛЕНЫ */
+
+    .profile-buttons {
+      width: 100%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+gap: 10px;
+    }
+
+    .profile-btn {
+      height: 50px;
+      background: rgba(255,255,255,0.08);
+border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+padding: 0 18px;
+      transition: all 0.25s ease;
+    }
+
+    .profile-btn:active {
+      transform: scale(0.97);
+background: rgba(251,127,27,0.15);
+      border-color: #fb7f1b;
+    }
+
+    .channel-block {
+      width: 100%;
+      max-width: 350px;
+margin-top: 30px;
+      text-align: center;
+      padding: 20px;
+      background: rgba(50, 50, 50, 0.75);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+}
+
+    .channel-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+}
+
+    .channel-desc {
+      font-size: 14px;
+      color: #ffffffaa;
+      margin-bottom: 16px;
+      line-height: 1.5;
+}
+
+    .telegram-btn {
+      height: 48px;
+      background: #229ed9;
+      color: #ffffff !important;
+      font-size: 16px;
+font-weight: 600;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+box-shadow: 0 4px 12px rgba(34, 158, 217, 0.3);
+    }
+
+    .telegram-btn:active {
+      transform: scale(0.96);
+background: #1e8cc7;
+    }
+
+    #invite-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+padding: 20px 16px 40px;
+      color: #ffffff;
+    }
+
+    .invite-content {
+      width: 100%;
+max-width: 350px;
+      text-align: center;
+    }
+
+    .invite-text {
+      font-size: 16px;
+      line-height: 1.6;
+color: #ffffffdd;
+      margin-bottom: 30px;
+    }
+
+    .invite-btn {
+      height: 52px;
+      background: #fb7f1b;
+color: #ffffff;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+}
+
+    .invite-btn:active {
+      transform: scale(0.96);
+}
+
+    .sub-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px;
+}
+
+    .tariff-list {
+      width: 100%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tariff-item {
+      background: rgba(50, 50, 50, 0.75);
+backdrop-filter: blur(20px);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ffffff;
+      font-weight: 500;
+      cursor: pointer;
+transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .tariff-item.selected {
+      border: 2px solid #fb7f1b;
+}
+
+    .action-btn {
+      width: calc(100% - 32px);
+      max-width: 350px;
+      height: 48px;
+border-radius: 14px;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: #fb7f1b;
+      color: #ffffff;
+      position: fixed;
+bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    .action-btn:active { 
+      transform: translateX(-50%) scale(0.96);
+}
+
+    #app-page {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 16px 40px;
+color: #ffffff;
+    }
+
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+margin: 0 auto 30px; /* Центрируем */
+      width: 100%;
+/* Заполняет ширину родительского контейнера (который уже имеет padding 16px) */
+      max-width: 380px;
+/* Удален конфликтный padding: 0 16px; */
+    }
+
+    .device-card {
+      background: rgba(255,255,255,0.08);
+backdrop-filter: blur(20px);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 20px 10px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .device-card i {
+      font-size: 2.4em;
+color: #fb7f1b;
+      margin-bottom: 10px;
+    }
+
+    .device-card:active {
+      transform: scale(0.94);
+      background: rgba(251,127,27,0.2);
+}
+
+    .device-card.selected {
+      border: 2px solid #fb7f1b !important;
+      background: rgba(255,255,255,0.08) !important;
+}
+
+    #instruction-container {
+      width: 100%;
+/* Заполняет ширину родительского контейнера */
+      max-width: 380px;
+      margin: 10px auto 0;
+/* Центрируем, используя auto */
+    }
+
+    .instruction-box {
+      background: rgba(50,50,50,0.75);
+backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+      padding: 20px;
+      color: #ffffff;
+      line-height: 1.6;
+      font-size: 15px;
+}
+
+    .instruction-box h4 {
+      font-size: 19px;
+      margin-bottom: 18px;
+      text-align: center;
+      display: flex;
+align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #fb7f1b;
+    }
+
+    .instruction-box ol { 
+      padding-left: 22px;
+margin: 14px 0; 
+    }
+    .instruction-box li { 
+      margin: 8px 0;
+}
+
+    .install-btn {
+      margin-top: 20px;
+      width: 100%;
+      height: 50px;
+      background: #fb7f1b;
+color: #ffffff;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+}
+
+    .install-btn:active { 
+      transform: scale(0.96);
+}
+
+    .placeholder {
+      text-align: center;
+      color: #ffffff88;
+      font-size: 17px;
+      padding: 60px 20px;
+}
+
+    .placeholder i { 
+      font-size: 48px; 
+      opacity: 0.3; 
+      margin-bottom: 16px;
+display: block; 
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      right: 0;
+bottom: 0;
+      width: 500vw; 
+      height: 500vh;
+      background: radial-gradient(circle at 100% 100%,
+                rgba(251,127,27,0.85) 0%,
+                rgba(251,127,27,0.50) 15%,
+                rgba(251,127,27,0.20) 35%,
+                transparent 65%);
+transform: translate(45%, 45%);
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
 </head>
-<body data-theme="dark">
+<body oncontextmenu="return false;">
 
-    <!-- СТРАНИЦА ПОДПИСКИ -->
-    <div id="subscription-page" class="page active">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Свобода. Безопасность. Надежность.</div>
-                <div class="settings-icon" onclick="showPage('settings-page')">
-                    <i class="fas fa-cog"></i>
-                </div>
-            </div>
+  <div class="pages-container">
 
-            <div class="user-profile">
-                <img id="user-avatar-sub" class="user-avatar" src="" alt="Аватар">
-                <div>
-                    <div id="user-greeting-sub" class="user-greeting">Добро пожаловать, </div>
-                    <div id="user-id-sub" class="user-id"></div>
-                </div>
-            </div>
+    <div id="main-page" class="page active">
+      <div class="logo-and-title">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo">
+        <div class="title"><span>ON1X</span><span> VPN</span></div>
+      </div>
 
-            <div class="subscription-block">
-                <div class="block-title">Подписка ON1X VPN</div>
-                <div class="action-buttons-row">
-                    <div class="tg-button" onclick="showPage('buy-page')">
-                        <i class="fas fa-shopping-cart"></i> Купить
-                    </div>
-                    <div class="tg-button" onclick="showPage('extend-page')">
-                        <i class="fas fa-clock"></i> Продлить
-                    </div>
-                </div>
-                <div class="tg-button single-button" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=c_2293355')">
-                        <i class="fas fa-gift"></i> Тестовый период
-                </div>
-            </div>
-
-            <div class="subscription-block">
-                <div class="block-title">Управление подпиской</div>
-                <div class="profile-menu">
-                    <div class="profile-menu-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5331349')">
-                        <i class="fas fa-key"></i><div class="btn-text">Моя подписка</div>
-                    </div>
-                    <div class="profile-menu-btn" onclick="showChangeTariffModal()">
-                        <i class="fas fa-exchange-alt"></i><div class="btn-text">Сменить тариф</div>
-                    </div>
-                    <div class="profile-menu-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5098822')">
-                        <i class="fas fa-undo"></i><div class="btn-text">Возврат подписки</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="news-block">
-                <div class="news-text">Следите за новостями, обновлениями и розыгрышами</div>
-                <div class="subscribe-btn" onclick="goToLinkAndClose('https://t.me/ON1Xvpn')">
-                    <i class="fas fa-bell"></i> Подписаться в Telegram
-                </div>
-            </div>
-
-            <!-- КНОПКА "ПЕРЕЗАГРУЗИТЬ" УДАЛЕНА -->
+      <div class="bottom-card">
+        <div class="btn-row">
+          <div class="btn btn-orange" style="flex: 1;"
+onclick="openPage('extend-page'); vibrate('heavy')">
+            <span class="material-icons-round">autorenew</span> Продлить
+          </div>
+          <div class="btn btn-orange" style="flex: 1;"
+onclick="openPage('purchase-page'); vibrate('heavy')">
+            <span class="material-icons-round">shopping_cart</span> Купить
+          </div>
         </div>
+        
+        <div class="btn-row">
+          <div class="btn btn-secondary btn-full" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=c_2293355'); vibrate('heavy')">
+            <span class="material-icons-round">card_giftcard</span> Протестировать (7 дней)
+          </div>
+        </div>
+        <div class="btn-row">
+          <div class="btn btn-secondary btn-full" onclick="openPage('app-page'); vibrate('medium')">
+            <span class="material-icons-round">downloading</span> Установить приложение
+          </div>
+        </div>
+
+        <div class="btn-row">
+ 
+
+          <div class="btn btn-secondary" style="flex: 1;"
+onclick="goToLinkDirect('https://t.me/on1xVPN_support')">
+            <span class="material-icons-round">support_agent</span> Поддержка
+          </div>
+          <div class="btn btn-secondary" style="flex: 1;"
+onclick="openPage('profile-page'); vibrate('heavy')">
+            <span class="material-icons-round">person</span> Профиль
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- ПРОФИЛЬ -->
     <div id="profile-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Свобода. Безопасность. Надежность.</div>
-            </div>
-
-            <div class="user-profile">
-                <img id="user-avatar-prof" class="user-avatar" src="" alt="Аватар">
-                <div>
-                    <div id="user-greeting-prof" class="user-greeting">Добро пожаловать, </div>
-                    <div id="user-id-prof" class="user-id"></div>
-                </div>
-            </div>
-
-            <div class="balance-card">
-                <div class="balance-label">Ваш баланс</div>
-                <div id="balance-value" class="balance-value">0 RUB</div>
-                <div class="balance-actions">
-                    <div class="balance-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_3781780')">
-                        <i class="fas fa-arrow-up"></i> Вывести
-                    </div>
-                    <div class="balance-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5494846')">
-                        <i class="fas fa-plus"></i> Пополнить
-                    </div>
-                </div>
-            </div>
+      <div class="page-header">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
+        <div class="page-title">Профиль</div>
+      </div>
+      
+      <div class="centered-profile-info">
+        <div id="user-name" class="centered-profile-name">Загрузка...</div>
+        <div id="user-id-container" class="centered-profile-id" onclick="copyUserId()">
+          <span id="user-id-text">ID: —</span>
+          <span class="material-icons-round copy-icon">content_copy</span>
         </div>
+      </div>
+      <div class="profile-buttons">
+        <div class="profile-btn" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=f_5331349')">
+          <span class="material-icons-round">card_membership</span> Моя подписка
+        </div>
+        
+<div class="profile-btn" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=f_5372173')">
+  
+           <span class="material-icons-round">account_balance_wallet</span> Управление кошельком
+        </div>
+        <div class="profile-btn" onclick="openPage('invite-page');
+vibrate('heavy')">
+          <span class="material-icons-round">group_add</span> Пригласить друзей
+        </div>
+      </div>
+
+      <div class="channel-block">
+        <div class="channel-title">Наш Telegram канал</div>
+        <div class="channel-desc">Все самые актуальные новости и розыгрыши в нашем канале</div>
+        <div class="telegram-btn" onclick="goToLinkDirect('https://t.me/ON1Xvpn')">
+          <i class="fab fa-telegram-plane"></i> Подписаться на канал
+        </div>
+     
+
+      </div>
     </div>
 
-    <!-- МЕНЮ -->
-    <div id="menu-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Свобода. Безопасность. Надежность.</div>
-            </div>
+    <div id="invite-page" class="page">
+      <div class="page-header">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
+        <div class="page-title">Пригласить друзей</div>
+      </div>
 
-            <div class="user-profile">
-                <img id="user-avatar-menu" class="user-avatar" src="" alt="Аватар">
-                <div>
-                    <div id="user-greeting-menu" class="user-greeting">Добро пожаловать, </div>
-                    <div id="user-id-menu" class="user-id"></div>
-                </div>
-            </div>
-
-            <div class="profile-menu">
-                <div class="profile-menu-btn" onclick="showPage('install-page')">
-                    <i class="fas fa-mobile-alt"></i><div class="btn-text">Установить приложение</div>
-                </div>
-                <div class="profile-menu-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_bot?start=f_5371698')">
-                    <i class="fas fa-user-friends"></i><div class="btn-text">Пригласить друзей</div>
-                </div>
-                <div class="profile-menu-btn" onclick="showPage('faq-page')">
-                    <i class="fas fa-question-circle"></i><div class="btn-text">FAQ</div>
-                </div>
-                <div class="profile-menu-btn" onclick="goToLinkAndClose('https://t.me/on1xVPN_admin')">
-                    <i class="fas fa-headset"></i><div class="btn-text">Поддержка</div>
-                </div>
-                <div class="profile-menu-btn" onclick="showPage('status-page')">
-                    <i class="fas fa-server"></i><div class="btn-text">Статус систем</div>
-                </div>
-                <div class="profile-menu-btn" onclick="showPage('settings-page')">
-                    <i class="fas fa-cog"></i><div class="btn-text">Настройки приложения</div>
-                </div>
-            </div>
+      <div class="invite-content">
+        <div class="invite-text">
+          Приводи друзей и получай бонусы!
+Просто отправь ссылку, и после того, как друг купит или продлит подписку, ты получишь 15% от суммы оплаты
         </div>
+        <div class="invite-btn" onclick="goToLinkDirect('https://t.me/on1xVPN_bot?start=f_3099252')">
+          <span class="material-icons-round">share</span> Пригласить друзей
+        </div>
+      </div>
     </div>
 
-    <!-- НАСТРОЙКИ -->
-    <div id="settings-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Настройки приложения</div>
-            </div>
+    <div id="app-page" class="page">
+      <div class="page-header">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
+        <div 
 
-            <div class="settings-block">
-                <div class="setting-item">
-                    <div class="setting-label">Светлая тема</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
+    class="page-title">Установка приложения</div>
+        <div class="page-subtitle">Выберите ваше устройство и следуйте простой инструкции</div>
+      </div>
 
-                <button class="reload-btn full" onclick="reloadApp()">
-                    <i class="fas fa-sync"></i> Перезагрузить приложение
-                </button>
-            </div>
-
-            <div class="app-version">Версия: 6.1</div>
+      <div class="device-grid">
+        <div class="device-card" data-device="iphone" onclick="showInstallInstruction('iphone')">
+          <i class="fab fa-apple"></i>
+          <div>iPhone</div>
         </div>
+        <div class="device-card" data-device="android" onclick="showInstallInstruction('android')">
+          <i class="fab fa-android"></i>
+   
+    
+          <div>Android</div>
+        </div>
+        <div class="device-card" data-device="windows" onclick="showInstallInstruction('windows')">
+          <i class="fab fa-windows"></i>
+          <div>Windows</div>
+        </div>
+        <div class="device-card" data-device="macos" onclick="showInstallInstruction('macos')">
+          <i class="fab fa-apple"></i>
+          <div>Mac OS</div>
+   
+     </div>
+      
+        <div class="device-card" data-device="linux" onclick="showInstallInstruction('linux')">
+          <i class="fab fa-linux"></i>
+          <div>Linux</div>
+        </div>
+        <div class="device-card" data-device="androidtv" onclick="showInstallInstruction('androidtv')">
+          <i class="fas fa-tv"></i>
+          <div>Android TV</div>
+        </div>
+      
+</div>
+
+      <div id="instruction-container">
+        <div class="placeholder">
+ 
+          <i class="fas fa-mobile-alt"></i>
+          <div>Выберите ваше устройство</div>
+        </div>
+      </div>
     </div>
 
-    <!-- FAQ -->
-    <div id="faq-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Часто задаваемые вопросы</div>
-            </div>
+    <div id="purchase-page" class="page sub-page">
+      <div class="page-header">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
+        <div class="page-title">Покупка подписки</div>
+     
+   <div class="page-subtitle">Вы приобретаете новую подписку</div>
+      </div>
 
-            <div class="faq-accordion">
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Как подключиться? <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        Для того, чтобы подключиться, вам необходимо в разделе "Подписка" нажать кнопку "Купить", а затем выбрать необходимый тариф.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Лимит устройств <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        Каждый тариф ограничивается определённым количеством устройств на одном ключе:<br>
-                        <strong>Личный</strong> — 3 устройства<br>
-                        <strong>Семейный</strong> — 6 устройств<br>
-                        <strong>Навсегда</strong> — от 3 до 6 устройств
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Как поменять тариф? <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        Для того, чтобы поменять тариф, вам необходимо при продлении подписки выбрать другой тариф.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Как вывести деньги с кошелька? <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        Для того, чтобы вывести денежные средства на банковскую карту или криптокошелёк, вам необходимо перейти в раздел "Профиль" и под балансом нажать кнопку "Вывести".
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Как вернуть подписку? <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        Для того, чтобы оформить возврат подписки, вам необходимо перейти в раздел "Подписка", а затем выбрать "Возврат подписки".
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        Какой бонус за друга? <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        После того, как ваш друг перешёл по вашей реферальной ссылке, вы будете получать каждый раз <strong>15%</strong>, когда друг будет приобретать/продлевать подписку.
-                    </div>
-                </div>
-            </div>
+     
+      <div class="tariff-list">
+        <div class="tariff-item selected" data-days="30" onclick="selectTariff(this)">
+          <span class="tariff-period">30 дней</span>
+          <span class="tariff-price">100 руб</span>
         </div>
+        <div class="tariff-item" data-days="60" onclick="selectTariff(this)">
+          <span class="tariff-period">60 дней</span>
+        
+  <span class="tariff-price">200 руб</span>
+        </div>
+        <div class="tariff-item" data-days="90" 
+    onclick="selectTariff(this)">
+          <span class="tariff-period">90 дней</span>
+          <span class="tariff-price">300 руб</span>
+        </div>
+        <div class="tariff-item" data-days="180" onclick="selectTariff(this)">
+          <span class="tariff-period">180 дней</span>
+          <span class="tariff-price">600 руб</span>
+      
+  </div>
+      </div>
+
+      <div class="action-btn" onclick="processPayment('purchase')">
+        <span class="material-icons-round">shopping_cart</span> Купить 
+    подписку
+      </div>
     </div>
 
-    <!-- СТРАНИЦА КУПИТЬ ПОДПИСКУ -->
-    <div id="buy-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Купить подписку</div>
-            </div>
+    <div id="extend-page" class="page sub-page">
+      <div class="page-header">
+        <img src="https://psv4.userapi.com/s/v1/d2/7YOAE0rRsbmFbpCBTt8P93kEQlqivjZneY04wFEo4Ghv6Rc8hSxYvaBPdnRYFYj2oBAaB0xjlwRyjVKId3cUDbdvT9c4W_2XP1DgMiWaRD0P8SoYNUfvdNVrB7dtgXxTisfOCXLquFpJ/vfyvfyvfyvfy.png" alt="ON1X VPN" class="logo-mini">
+        <div class="page-title">Продление подписки</div>
+        <div class="page-subtitle">Вы продлеваете существующую подписку</div>
+      </div>
 
-            <div class="tariff-selection-block">
-                <div class="tariff-title">Выберите тариф</div>
-                <div class="tariff-buttons">
-                    <div class="tariff-btn selected" data-tariff="personal" onclick="selectTariff(this,'buy-page')">Личный</div>
-                    <div class="tariff-btn" data-tariff="family" onclick="selectTariff(this,'buy-page')">Семейный</div>
-                    <div class="tariff-btn" data-tariff="forever" onclick="selectTariff(this,'buy-page')">Навсегда</div>
-                </div>
-                <div id="tariff-features-buy" class="tariff-features-row"></div>
-            </div>
-
-            <div class="duration-block">
-                <div class="duration-title">Выберите срок подписки</div>
-                <div id="duration-options-buy" class="duration-options"></div>
-                <div id="buy-full-button-buy" class="buy-full-button disabled">
-                    <i class="fas fa-shopping-cart"></i> Выберите тариф
-                </div>
-            </div>
+     
+ <div class="tariff-list">
+        <div class="tariff-item selected" data-days="30" onclick="selectTariff(this)">
+          <span class="tariff-period">30 дней</span>
+     
+          <span class="tariff-price">100 руб</span>
         </div>
+        <div class="tariff-item" data-days="60" onclick="selectTariff(this)">
+          <span class="tariff-period">60 дней</span>
+          <span class="tariff-price">200 руб</span>
+        </div>
+      
+  <div class="tariff-item" data-days="90" onclick="selectTariff(this)">
+          <span class="tariff-period">90 дней</span>
+          <span class="tariff-price">300 руб</span>
+       
+      </div>
+        <div class="tariff-item" data-days="180" onclick="selectTariff(this)">
+          <span class="tariff-period">180 дней</span>
+          <span class="tariff-price">600 руб</span>
+        </div>
+      </div>
+
+      <div class="action-btn" onclick="processPayment('extend')">
+ 
+       <span class="material-icons-round">autorenew</span> Продлить подписку
+      </div>
     </div>
 
-    <!-- СТРАНИЦА ПРОДЛИТЬ ПОДПИСКУ -->
-    <div id="extend-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Продлить подписку</div>
-            </div>
+  </div>
 
-            <div class="tariff-selection-block">
-                <div class="tariff-title">Выберите тариф</div>
-                <div class="tariff-buttons">
-                    <div class="tariff-btn selected" data-tariff="personal" onclick="selectTariff(this,'extend-page')">Личный</div>
-                    <div class="tariff-btn" data-tariff="family" onclick="selectTariff(this,'extend-page')">Семейный</div>
-                    <div class="tariff-btn" data-tariff="forever" onclick="selectTariff(this,'extend-page')">Навсегда</div>
-                </div>
-                <div id="tariff-features-extend" class="tariff-features-row"></div>
-            </div>
+  <script>
+    Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+    Telegram.WebApp.setBackgroundColor('#1a1a1a');
+    Telegram.WebApp.setHeaderColor('#1a1a1a');
+    Telegram.WebApp.disableVerticalSwipes();
 
-            <div class="duration-block">
-                <div class="duration-title">Выберите срок продления</div>
-                <div id="duration-options-extend" class="duration-options"></div>
-                <div id="buy-full-button-extend" class="buy-full-button disabled">
-                    <i class="fas fa-clock"></i> Выберите тариф
-                </div>
-            </div>
-        </div>
-    </div>
+    const user = Telegram.WebApp.initDataUnsafe.user || {};
+if (user.id) {
+      // document.getElementById('user-avatar').src = user.photo_url || 'https://via.placeholder.com/64/333333/ffffff?text=:)'; // УДАЛЕНО: Убран код для установки аватара
+      const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ') ||
+user.username || 'Пользователь';
+      document.getElementById('user-name').textContent = fullName;
+      document.getElementById('user-id-text').textContent = `ID: ${user.id}`; // ИЗМЕНЕНО: Обновлен ID элемента
+}
 
-    <!-- СТРАНИЦА СТАТУС СИСТЕМ -->
-    <div id="status-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Статус систем</div>
-            </div>
+    function vibrate(type) {
+      type === 'heavy' ? Telegram.WebApp.HapticFeedback.impactOccurred('heavy') : Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+}
+    
+    // НОВАЯ ФУНКЦИЯ: Копирование ID пользователя
+    function copyUserId() {
+        vibrate('medium');
+        const userIdTextElement = document.getElementById('user-id-text');
+        // Извлекаем только ID из текста (например, из "ID: 1234567" получаем "1234567")
+        const idToCopy = userIdTextElement.textContent.replace('ID: ', '').trim();
 
-            <div class="status-block">
-                <div class="status-block-title">Система</div>
-                <div class="status-list">
-                    <div class="status-item" data-name="MiniApp">
-                        <span>MiniApp</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="БОТ Telegram">
-                        <span>БОТ Telegram</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="API Сервер">
-                        <span>API Сервер</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Страница подписки">
-                        <span>Страница подписки</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Уведомления">
-                        <span>Уведомления</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="status-block">
-                <div class="status-block-title">Сервера</div>
-                <div class="status-list">
-                    <div class="status-item" data-name="Нидерланды #1">
-                        <span>Нидерланды #1</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Нидерланды #2">
-                        <span>Нидерланды #2</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Нидерланды #3">
-                        <span>Нидерланды #3</span>
-                        <span class="status-indicator online"><i class="fas fa-circle"></i> Онлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Россия">
-                        <span>Россия</span>
-                        <span class="status-indicator offline"><i class="fas fa-circle"></i> Оффлайн</span>
-                    </div>
-                    <div class="status-item" data-name="Германия">
-                        <span>Германия</span>
-                        <span class="status-indicator offline"><i class="fas fa-circle"></i> Оффлайн</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="reload-btn full" onclick="updateSystemStatus()">
-                <i class="fas fa-sync"></i> Обновить
-            </button>
-        </div>
-    </div>
-
-    <!-- УСТАНОВКА ПРИЛОЖЕНИЯ -->
-    <div id="install-page" class="page">
-        <div class="main-content">
-            <div class="header">
-                <h1><span>ON1X</span> VPN</h1>
-                <div class="tagline">Установка приложения</div>
-            </div>
-
-            <div class="device-selector">
-                <div class="device-btn" data-device="iphone" onclick="showDeviceInstruction('iphone')"><i class="fab fa-apple"></i><span>iPhone / iPad</span></div>
-                <div class="device-btn" data-device="android" onclick="showDeviceInstruction('android')"><i class="fab fa-android"></i><span>Android</span></div>
-                <div class="device-btn" data-device="windows" onclick="showDeviceInstruction('windows')"><i class="fab fa-windows"></i><span>Windows</span></div>
-                <div class="device-btn" data-device="macos" onclick="showDeviceInstruction('macos')"><i class="fab fa-apple"></i><span>Mac OS</span></div>
-                <div class="device-btn" data-device="linux" onclick="showDeviceInstruction('linux')"><i class="fab fa-linux"></i><span>Linux</span></div>
-                <div class="device-btn" data-device="androidtv" onclick="showDeviceInstruction('androidtv')"><i class="fas fa-tv"></i><span>Android TV</span></div>
-            </div>
-
-            <div id="device-instruction" class="device-instruction">
-                <div class="instruction-placeholder"><i class="fas fa-mobile-alt"></i><p>Выберите ваше устройство</p></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- МОДАЛЬНОЕ ОКНО -->
-    <div id="change-tariff-modal" class="modal-overlay">
-        <div class="modal">
-            <h3>Смена тарифа</h3>
-            <p>Для того, чтобы сменить тариф, при продлении подписки необходимо выбрать другой тариф.</p>
-            <button class="close-btn" onclick="closeModal()"><i class="fas fa-check"></i> Понятно</button>
-        </div>
-    </div>
-
-    <!-- НИЖНЕЕ МЕНЮ -->
-    <div class="bottom-nav">
-        <div class="nav-item active" data-page="subscription-page" onclick="showPage('subscription-page')">
-            <i class="fas fa-key"></i> Подписка
-        </div>
-        <div class="nav-item" data-page="profile-page" onclick="showPage('profile-page')">
-            <i class="fas fa-wallet"></i> Профиль
-        </div>
-        <div class="nav-item" data-page="menu-page" onclick="showPage('menu-page')">
-            <i class="fas fa-bars"></i> Меню
-        </div>
-    </div>
-
-    <script>
-        /* ------------------- ЗАЩИТА ------------------- */
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('selectstart', e => e.preventDefault());
-        document.addEventListener('dragstart', e => e.preventDefault());
-        document.addEventListener('copy', e => e.preventDefault());
-        document.addEventListener('cut', e => e.preventDefault());
-        document.addEventListener('paste', e => e.preventDefault());
-
-        /* ------------------- ТЕМА ------------------- */
-        const themeToggle = document.getElementById('theme-toggle'), body = document.body;
-        function applyTheme(t) {
-            body.setAttribute('data-theme', t);
-            themeToggle.checked = t === 'light';
-            localStorage.setItem('on1x-theme', t);
-        }
-        applyTheme(localStorage.getItem('on1x-theme') || 'dark');
-        themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'light' : 'dark'));
-
-        /* ------------------- ПЕРЕЗАГРУЗКА ------------------- */
-        function reloadApp() {
-            Telegram?.WebApp?.restart ? Telegram.WebApp.restart() : location.reload();
+        if (!idToCopy || idToCopy === '—') {
+            Telegram.WebApp.showAlert('ID пользователя не загружен.');
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            return;
         }
 
-        /* ------------------- НАВИГАЦИЯ ------------------- */
-        let lastMainPage = 'subscription-page';
-        function showPage(id, from = null) {
-            if (from) lastMainPage = from;
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === id));
-
-            if (Telegram?.WebApp?.BackButton) {
-                const mainPages = ['subscription-page', 'profile-page', 'menu-page'];
-                if (mainPages.includes(id)) {
-                    Telegram.WebApp.BackButton.hide();
-                } else {
-                    Telegram.WebApp.BackButton.show();
-                    Telegram.WebApp.BackButton.onClick(() => showPage(lastMainPage));
-                }
-            }
-            if (id === 'buy-page' || id === 'extend-page') initBuyPage(id);
-            if (id === 'install-page') setTimeout(detectAndShowDevice, 100);
-        }
-        document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', () => {
-            lastMainPage = i.dataset.page;
-            showPage(i.dataset.page);
-        }));
-
-        /* ------------------- ПЕРЕХОД ПО ССЫЛКЕ ------------------- */
-        function goToLinkAndClose(url) {
-            window.location.href = url;
-            setTimeout(() => { Telegram?.WebApp?.close && Telegram.WebApp.close(); }, 300);
-        }
-
-        /* ------------------- МОДАЛЬ ------------------- */
-        function showChangeTariffModal() { document.getElementById('change-tariff-modal').classList.add('active'); }
-        function closeModal() { document.getElementById('change-tariff-modal').classList.remove('active'); }
-
-        /* ------------------- FAQ ------------------- */
-        function toggleFaq(el) {
-            const ans = el.nextElementSibling, open = ans.classList.contains('open');
-            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-            document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
-            if (!open) { ans.classList.add('open'); el.classList.add('active'); }
-        }
-
-        /* ------------------- ТАРИФЫ ------------------- */
-        const tariffData = {
-            personal: { devices: 3, speed: 'Скорость до 10 Гбит/с', traffic: 'Безлимит трафик', icon: 'fa-user' },
-            family: { devices: 6, speed: 'Скорость до 10 Гбит/с', traffic: 'Безлимит трафик', icon: 'fa-users' },
-            forever: { devices: 'от 3 до 6', speed: 'Скорость до 10 Гбит/с', traffic: 'Безлимит трафик', icon: 'fa-users-cog' }
-        };
-        const tariffPrices = {
-            personal: [
-                { days: 30, price: 100 },
-                { days: 60, price: 200 },
-                { days: 90, price: 300 },
-                { days: 180, price: 600 }
-            ],
-            family: [
-                { days: 30, price: 200 },
-                { days: 60, price: 400 },
-                { days: 90, price: 600 },
-                { days: 180, price: 1200 }
-            ],
-            forever: [
-                { devices: 3, price: 4000 },
-                { devices: 4, price: 4500 },
-                { devices: 5, price: 5000 },
-                { devices: 6, price: 5500 }
-            ]
-        };
-        const selection = { 'buy-page': { tariff: null, duration: null }, 'extend-page': { tariff: null, duration: null } };
-
-        function initBuyPage(pageId) {
-            selection[pageId] = { tariff: null, duration: null };
-            const def = document.querySelector(`#${pageId} .tariff-btn[data-tariff="personal"]`);
-            def && selectTariff(def, pageId);
-        }
-
-        function selectTariff(btn, pageId) {
-            const isBuy = pageId === 'buy-page', prefix = isBuy ? 'buy' : 'extend';
-            document.querySelectorAll(`#${pageId} .tariff-btn`).forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            const t = btn.dataset.tariff; selection[pageId].tariff = t; selection[pageId].duration = null;
-            const f = tariffData[t], fe = document.getElementById(`tariff-features-${prefix}`);
-
-            const devicesText = t === 'forever' ? f.devices : `${f.devices} устройства`;
-
-            fe.innerHTML = `
-                <div class="feature-item"><i class="fas ${f.icon}"></i><span>${devicesText}</span></div>
-                <div class="feature-item"><i class="fas fa-tachometer-alt"></i><span>${f.speed}</span></div>
-                <div class="feature-item"><i class="fas fa-infinity"></i><span>${f.traffic}</span></div>`;
-
-            const oc = document.getElementById(`duration-options-${prefix}`); oc.innerHTML = '';
-            const forever = t === 'forever';
-            document.querySelector(`#${pageId} .duration-title`).textContent = forever ?
-                (isBuy ? 'Выберите кол-во устройств' : 'Выберите кол-во устройств') :
-                (isBuy ? 'Выберите срок подписки' : 'Выберите срок продления');
-
-            tariffPrices[t].forEach(it => {
-                const opt = document.createElement('div'); opt.className = 'duration-option';
-                const label = forever ? `${it.devices} устройства` : `${it.days} дней`;
-                const val = forever ? it.devices : it.days;
-                opt.innerHTML = `<span>${label}</span><span class="price">${it.price} ₽</span>`;
-                opt.onclick = () => {
-                    document.querySelectorAll(`#${pageId} .duration-option`).forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                    selection[pageId].duration = { ...it, value: val };
-                    updateBuyButton(pageId);
-                };
-                oc.appendChild(opt);
-            });
-            updateBuyButton(pageId);
-        }
-
-        function updateBuyButton(pageId) {
-            const isBuy = pageId === 'buy-page', prefix = isBuy ? 'buy' : 'extend';
-            const btn = document.getElementById(`buy-full-button-${prefix}`), sel = selection[pageId];
-            if (sel.tariff && sel.duration) {
-                btn.classList.remove('disabled');
-                const suf = sel.tariff === 'forever' ? sel.duration.value : sel.duration.days;
-
-                let url = '';
-                if (isBuy) {
-                    if (sel.tariff === 'personal') {
-                        const links = {30: 'c_2089758', 60: 'c_2089793', 90: 'c_2300579', 180: 'c_2300580'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    } else if (sel.tariff === 'family') {
-                        const links = {30: 'c_2623788', 60: 'c_2623787', 90: 'c_2623765', 180: 'c_2623764'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    } else if (sel.tariff === 'forever') {
-                        const links = {3: 'c_2625008', 4: 'c_2625009', 5: 'c_2625030', 6: 'c_2625031'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    }
-                } else {
-                    if (sel.tariff === 'personal') {
-                        const links = {30: 'c_2173534', 60: 'c_2173536', 90: 'c_2231867', 180: 'c_2231869'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    } else if (sel.tariff === 'family') {
-                        const links = {30: 'c_2623776', 60: 'c_2623775', 90: 'c_2623773', 180: 'c_2623772'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    } else if (sel.tariff === 'forever') {
-                        const links = {3: 'c_2625020', 4: 'c_2625021', 5: 'c_2625022', 6: 'c_2625023'};
-                        url = `https://t.me/on1xVPN_bot?start=${links[suf]}`;
-                    }
-                }
-
-                btn.innerHTML = `<i class="fas fa-${isBuy ? 'shopping-cart' : 'clock'}"></i> ${isBuy ? 'Купить' : 'Продлить'} за ${sel.duration.price} ₽`;
-                btn.onclick = () => goToLinkAndClose(url);
-            } else {
-                btn.classList.add('disabled'); btn.onclick = null;
-                let ph = !sel.tariff ? 'Выберите тариф' : (sel.tariff === 'forever' ? 'Выберите кол-во устройств' :
-                    (isBuy ? 'Выберите срок подписки' : 'Выберите срок продления'));
-                btn.innerHTML = `<i class="fas fa-${isBuy ? 'shopping-cart' : 'clock'}"></i> ${ph}`;
-            }
-        }
-
-        /* ------------------- ПОЛЬЗОВАТЕЛЬ + БАЛАНС ------------------- */
-        let loaded = false;
-        function loadUserData() {
-            if (loaded) return; loaded = true;
-            if (!Telegram?.WebApp?.initDataUnsafe?.user) return;
-            const u = Telegram.WebApp.initDataUnsafe.user;
-            const uid = u.id, avatar = u.photo_url || 'https://sun9-8.userapi.com/s/v1/ig2/YBkIITuiQ13e1vw3WhNGJekU_fMB3jXEeTjqLb-EAnydjnDmqCVu7sATDepkrUUo6UXWQ4x74BtgfBrgdhWUZZlN.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640&from=bu&cs=640x0';
-            const greet = `Добро пожаловать, ${u.first_name}${u.last_name ? ' ' + u.last_name : ''}`;
-            ['sub', 'prof', 'menu'].forEach(s => {
-                const el = document.getElementById(`user-avatar-${s}`);
-                if (el) el.src = avatar;
-                const g = document.getElementById(`user-greeting-${s}`);
-                if (g) g.textContent = greet;
-                const id = document.getElementById(`user-id-${s}`);
-                if (id) id.textContent = `ID: ${uid}`;
-            });
-
-            const API_URL = 'https://script.google.com/macros/s/AKfycbw02X1b1uJXdqTY7u5IUCfmDjwuqLwd4tBkgbwq8DCZXlsnX5swXKlgarpwm1JsBSCV/exec';
-            fetch(`${API_URL}?id=${uid}`)
-                .then(r => r.ok ? r.json() : Promise.reject())
-                .then(d => {
-                    const bal = Number(d.balance || 0);
-                    const formatted = bal % 1 === 0 ? bal.toFixed(0) : bal.toFixed(1).replace(/\.0$/, '');
-                    document.getElementById('balance-value').textContent = `${formatted.replace('.', ',')} RUB`;
-                })
-                .catch(() => {
-                    document.getElementById('balance-value').textContent = '0 RUB';
-                });
-        }
-
-        /* ------------------- СТАТУС СИСТЕМ ------------------- */
-        function updateSystemStatus() {
-            const items = document.querySelectorAll('#status-page .status-item');
-            items.forEach(item => {
-                item.classList.add('updating');
-                const indicator = item.querySelector('.status-indicator');
-                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Проверка...';
-            });
-
+        navigator.clipboard.writeText(idToCopy).then(() => {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            // Временное визуальное подтверждение
+            const tempText = userIdTextElement.textContent;
+            userIdTextElement.textContent = 'Скопировано!';
             setTimeout(() => {
-                const mockResponses = {
-                    'MiniApp': 'online',
-                    'БОТ Telegram': 'online',
-                    'API Сервер': 'online',
-                    'Страница подписки': 'online',
-                    'Уведомления': 'online',
-                    'Нидерланды #1': 'online',
-                    'Нидерланды #2': 'online',
-                    'Нидерланды #3': 'online',
-                    'Россия': 'offline',
-                    'Германия': 'offline'
-                };
-
-                items.forEach(item => {
-                    const name = item.dataset.name;
-                    const status = mockResponses[name] || 'online';
-                    const statusText = status === 'online' ? 'Онлайн' : 'Оффлайн';
-                    const indicator = item.querySelector('.status-indicator');
-                    indicator.innerHTML = `<i class="fas fa-circle"></i> ${statusText}`;
-                    indicator.className = 'status-indicator ' + status;
-                    item.classList.remove('updating');
-                });
-            }, 2500);
-        }
-
-        /* ------------------- УСТАНОВКА — ИНСТРУКЦИИ ------------------- */
-        const deviceInstructions = {
-            iphone: `<div class="instruction-content"><h4><i class="fab fa-apple"></i> iPhone / iPad</h4><ol><li>Скопируйте ключ (ссылка) доступа</li><li>Скачайте и установите приложение</li><li>Откройте приложение</li><li>В правом верхнем углу нажмите на "+" </li><li>Нажмите "Добавить из буфера"</li><li>Нажмите "Разрешить вставку"</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div><div class="note"><span class="warning">Ссылка — это ключ. Открывать ссылку не нужно!</span></div><a href="https://apps.apple.com/ru/app/v2raytun/id6476628951" target="_blank" class="download-faq-btn"><i class="fas fa-download"></i><div class="btn-text">Скачать приложение</div></a></div>`,
-            android: `<div class="instruction-content"><h4><i class="fab fa-android"></i> Android</h4><ol><li>Скопируйте ключ (ссылка) доступа</li><li>Скачайте и установите приложение</li><li>Откройте приложение</li><li>В правом верхнем углу нажмите на "+" </li><li>Теперь нажмите "Импорт из буфера обмена"</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div><div class="note"><span class="warning">Ссылка — это ключ. Открывать ссылку не нужно!</span></div><a href="https://play.google.com/store/apps/details?id=com.v2raytun.android" target="_blank" class="download-faq-btn"><i class="fas fa-download"></i><div class="btn-text">Скачать приложение</div></a></div>`,
-            windows: `<div class="instruction-content"><h4><i class="fab fa-windows"></i> Windows</h4><ol><li>Скопируйте ключ (ссылка) доступа</li><li>Скачайте и установите приложение</li><li>Откройте приложение</li><li>В правом верхнем углу нажмите на "+" </li><li>Теперь нажмите "Импорт из буфера обмена"</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div><div class="note"><span class="warning">Ссылка — это ключ. Открывать ссылку не нужно!</span></div><a href="https://storage.v2raytun.com/v2RayTun_Setup.exe" target="_blank" class="download-faq-btn"><i class="fas fa-download"></i><div class="btn-text">Скачать приложение</div></a></div>`,
-            macos: `<div class="instruction-content"><h4><i class="fab fa-apple"></i> Mac OS</h4><ol><li>Скопируйте ключ (ссылка) доступа</li><li>Скачайте и установите приложение</li><li>Откройте приложение</li><li>В правом верхнем углу нажмите на "+" </li><li>Теперь нажмите "Импорт из буфера обмена"</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div><div class="note"><span class="warning">Ссылка — это ключ. Открывать ссылку не нужно!</span></div><a href="https://apps.apple.com/en/app/v2raytun/id6476628951" target="_blank" class="download-faq-btn"><i class="fas fa-download"></i><div class="btn-text">Скачать приложение</div></a></div>`,
-            linux: `<div class="instruction-content"><h4><i class="fab fa-linux"></i> Linux</h4><ol><li>Скопируйте ключ (ссылка) доступа</li><li>Скачайте и установите приложение</li><li>Откройте приложение</li><li>В правом верхнем углу нажмите на "+" </li><li>Теперь нажмите "Импорт из буфера обмена"</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div><div class="note"><span class="warning">Ссылка — это ключ. Открывать ссылку не нужно!</span></div><a href="https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-Linux-x64.AppImage" target="_blank" class="download-faq-btn"><i class="fas fa-download"></i><div class="btn-text">Скачать приложение</div></a></div>`,
-            androidtv: `<div class="instruction-content"><h4><i class="fas fa-tv"></i> Android TV</h4><ol><li>Установите приложение V2RayTun из Google Play.</li><li>Установите и откройте приложение</li><li>Откройте раздел "Управление"</li><li>Нажмите "Импорт с телефона"</li><li>Откройте приложение на телефоне</li><li>Нажмите на кнопку с QR-Код</li><li>Отсканируйте QR-Код на телевизоре с помощью телефона</li><li>Подключитесь к VPN</li></ol><div class="success">Готово! VPN настроен и готов к работе!</div></div>`
-        };
-
-        function showDeviceInstruction(device) {
-            const container = document.getElementById('device-instruction');
-            container.innerHTML = deviceInstructions[device];
-            document.querySelectorAll('.device-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.device === device));
-            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function detectAndShowDevice() {
-            const ua = navigator.userAgent.toLowerCase();
-            let detected = 'android';
-            if (/iphone|ipad|ipod/.test(ua)) detected = 'iphone';
-            else if (/windows/.test(ua)) detected = 'windows';
-            else if (/macintosh/.test(ua)) detected = 'macos';
-            else if (/linux/.test(ua) && !/android/.test(ua)) detected = 'linux';
-            else if (/android.*tv|smart-tv|android tv/.test(ua)) detected = 'androidtv';
-            showDeviceInstruction(detected);
-        }
-
-        /* ------------------- ИНИЦИАЛИЗАЦИЯ ------------------- */
-        document.addEventListener('DOMContentLoaded', () => {
-            Telegram?.WebApp?.ready();
-            Telegram?.WebApp?.disableVerticalSwipes?.();
-            loadUserData();
+                userIdTextElement.textContent = tempText;
+            }, 1000);
+        }).catch(err => {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            Telegram.WebApp.showAlert('Не удалось скопировать ID. Разрешите доступ к буферу обмена.');
         });
-    </script>
+    }
+    // КОНЕЦ НОВОЙ ФУНКЦИИ
+
+    function openPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      Telegram.WebApp.BackButton.show();
+if (pageId === 'app-page') {
+        const ua = navigator.userAgent.toLowerCase();
+        let device = 'android';
+if (/iphone|ipad|ipod/.test(ua)) device = 'iphone';
+        else if (/macintosh|mac os x/.test(ua)) device = 'macos';
+        else if (/windows/.test(ua)) device = 'windows';
+else if (/linux/.test(ua) && !/android/.test(ua)) device = 'linux';
+        else if (/android.*(tv|smarttv|smart-tv)/i.test(ua) || /crkey/.test(ua)) device = 'androidtv';
+
+        showInstallInstruction(device);
+}
+    }
+
+    function selectTariff(el) {
+      vibrate('medium');
+      el.closest('.tariff-list').querySelectorAll('.tariff-item').forEach(i => i.classList.remove('selected'));
+el.classList.add('selected');
+    }
+
+    function processPayment(type) {
+      vibrate('heavy');
+      const selected = document.querySelector('.page.active .tariff-item.selected');
+if (!selected) return;
+      const days = selected.getAttribute('data-days');
+      const links = {
+        purchase: { '30': 'https://t.me/on1xVPN_bot?start=c_2089758', '60': 'https://t.me/on1xVPN_bot?start=c_2089793', '90': 'https://t.me/on1xVPN_bot?start=c_2300579', '180': 'https://t.me/on1xVPN_bot?start=c_2300580' },
+        extend:   { '30': 'https://t.me/on1xVPN_bot?start=c_2173534', '60': 'https://t.me/on1xVPN_bot?start=c_2173536', '90': 'https://t.me/on1xVPN_bot?start=c_2231867', '180': 'https://t.me/on1xVPN_bot?start=c_2231869' }
+      };
+const url = links[type][days];
+      if (url) {
+        window.location.href = url;
+setTimeout(() => Telegram.WebApp.close(), 300);
+      }
+    }
+
+    function goToLinkDirect(url) {
+      vibrate('medium');
+window.location.href = url;
+      setTimeout(() => Telegram.WebApp.close(), 300);
+    }
+
+    function openAppStore(url) {
+      vibrate('medium');
+Telegram.WebApp.openLink(url);
+    }
+
+    const instructions = {
+      iphone: `
+        <div class="instruction-box">
+          <h4><i class="fab fa-apple"></i> iPhone / iPad</h4>
+          <ol>
+            <li>Скопируйте ключ (ссылку);</li>
+            <li>Установите приложение;</li>
+            <li>В правом верхнем углу нажмите «+»;</li>
+       
+     <li>Выберите «Вставить из буфера обмена»;</li>
+            <li>Подключитесь к VPN.</li>
+          </ol>
+          <div class="install-btn" onclick="openAppStore('https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973')">
+            <i class="fas fa-download"></i> Установить
+          </div>
+        </div>`,
+
+      android: `
+        <div class="instruction-box">
+      
+    <h4><i class="fab fa-android"></i> Android</h4>
+          <ol>
+            <li>Скопируйте ключ (ссылку);</li>
+            <li>Установите приложение;</li>
+            <li>В правом верхнем углу нажмите «+»;</li>
+            <li>Выберите «Вставить из буфера обмена»;</li>
+            <li>Подключитесь к VPN.</li>
+         
+ </ol>
+          <div class="install-btn" onclick="openAppStore('https://play.google.com/store/apps/details?id=com.happproxy')">
+            <i class="fas fa-download"></i> Установить
+          </div>
+        </div>`,
+
+      windows: `
+        <div class="instruction-box">
+          <h4><i class="fab fa-windows"></i> Windows</h4>
+          <ol>
+            <li>Скопируйте ключ (ссылку);</li>
+ 
+           <li>Установите приложение;</li>
+            <li>Внизу нажмите «Из буфера»;</li>
+            <li>Подключитесь к VPN.</li>
+          </ol>
+          <div class="install-btn" onclick="openAppStore('https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe')">
+            <i class="fas fa-download"></i> Установить
+          </div>
+        </div>`,
+
+    
+  macos: `
+        <div class="instruction-box">
+          <h4><i class="fab fa-apple"></i> Mac OS</h4>
+          <ol>
+            <li>Скопируйте ключ (ссылку);</li>
+            <li>Установите приложение;</li>
+            <li>В правом верхнем углу нажимайте «+»;</li>
+            <li>Выберите «Вставить из буфера обмена»;</li>
+    
+        <li>Подключитесь к VPN.</li>
+          </ol>
+          <div class="install-btn" onclick="openAppStore('https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973')">
+            <i class="fas fa-download"></i> Установить
+          </div>
+        </div>`,
+
+      linux: `
+        <div class="instruction-box">
+          <h4><i class="fab fa-linux"></i> Linux</h4>
+      
+    <ol>
+            <li>Скопируйте ключ (ссылку);</li>
+            <li>Установите приложение;</li>
+            <li>Внизу нажмите «Из буфера»;</li>
+            <li>Подключитесь к VPN.</li>
+            </ol>
+          <div class="install-btn" onclick="openAppStore('https://github.com/Happ-proxy/happ-desktop/releases/')">
+            <i class="fas fa-download"></i> Установить
+   
+       </div>
+        </div>`,
+
+      androidtv: `
+        <div class="instruction-box">
+          <h4><i class="fas fa-tv"></i> Android TV</h4>
+          <ol>
+            <li>Установите приложение Happ из Google Play;</li>
+            <li>Откройте приложение;</li>
+            <li>На экране появится 
+QR-код, 
+            который необходимо отсканировать;</li>
+            <li>В открывшемся браузере сайт, необходимо вставить ключ (ссылку);</li>
+            <li>Подключитесь к VPN.</li>
+          </ol>
+        </div>`
+    };
+function showInstallInstruction(device) {
+      vibrate('medium');
+      document.getElementById('instruction-container').innerHTML = instructions[device] || '<div class="placeholder"><i class="fas fa-mobile-alt"></i><div>Инструкция скоро появится</div></div>';
+document.querySelectorAll('.device-card').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`.device-card[data-device="${device}"]`).classList.add('selected');
+    }
+
+    Telegram.WebApp.BackButton.onClick(() => {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('main-page').classList.add('active');
+      Telegram.WebApp.BackButton.hide();
+    });
+Telegram.WebApp.BackButton.hide();
+  </script>
 </body>
 </html>
